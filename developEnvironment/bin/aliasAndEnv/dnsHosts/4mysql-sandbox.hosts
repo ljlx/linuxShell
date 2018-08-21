@@ -1,0 +1,11 @@
+#命名规则-> 功能.host名.网络环境
+#nas局域网直连
+#10.192.1.1 master.test.nas.lan
+#10.192.1.1 slave.test.nas.lan
+#10.192.1.1 slave2.test.nas.lan
+
+127.0.0.1 master.test.nas.lan
+
+#0.0.0.0:14822和0.0.0.0:14823
+127.0.0.1 slave2.test.nas.lan
+127.0.0.1 slave3.test.nas.lan

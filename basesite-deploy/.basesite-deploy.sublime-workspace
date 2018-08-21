@@ -1,0 +1,308 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"for",
+				"forin	for … in … done"
+			],
+			[
+				"fun",
+				"function"
+			],
+			[
+				"g",
+				"g_height"
+			],
+			[
+				"backg",
+				"background-color:   (property)"
+			],
+			[
+				"cha",
+				"chartHx"
+			],
+			[
+				"ch",
+				"chartHx"
+			],
+			[
+				"res",
+				"resource"
+			],
+			[
+				"va",
+				"value"
+			],
+			[
+				"back",
+				"background-color:   (property)"
+			],
+			[
+				"scr",
+				"script	Tag"
+			],
+			[
+				"test",
+				"testReg"
+			],
+			[
+				"reg",
+				"regobj2"
+			],
+			[
+				"margin",
+				"margin-top"
+			],
+			[
+				"mar",
+				"margin-top"
+			],
+			[
+				"tes",
+				"testValue"
+			]
+		]
+	},
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 127.0,
+		"selected_items":
+		[
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"ins",
+				"Package Control: Install Package"
+			],
+			[
+				"pcadd",
+				"Package Control: Add Repository"
+			],
+			[
+				"pca",
+				"Package Control: Add Channel"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			],
+			[
+				"setshel",
+				"Set Syntax: Shell Script (Bash)"
+			],
+			[
+				"setjava",
+				"Set Syntax: Java"
+			],
+			[
+				"setshell",
+				"Set Syntax: Shell Script (Bash)"
+			],
+			[
+				"sethtml",
+				"Set Syntax: HTML"
+			],
+			[
+				"setjs",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"ssethtml",
+				"Set Syntax: HTML"
+			],
+			[
+				"new file",
+				"GoSublime: New Go File"
+			],
+			[
+				"new",
+				"File: New View into File"
+			],
+			[
+				"packin",
+				"Package Control: Install Package"
+			],
+			[
+				"sethtm",
+				"Set Syntax: HTML"
+			]
+		],
+		"width": 528.0
+	},
+	"console":
+	{
+		"height": 309.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404' + 'e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)",
+			"import  urllib.request,os;pf='Package Control.sublime-package';ipp=sublime.installed_packages_path();urllib.request.install_opener(urllib.request.build_opener(urllib.request.ProxyHandler()));open(os.path.join(ipp,pf),'wb').write(urllib.request.urlopen('http://sublime.wbond.NET/'+pf.replace(' ',' ')).read())"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/F/Project_Management/LinuxShell/basesite-deploy/bin/install.sh",
+		"/C/ProgramFiles/Sublime text 3/Data/Packages/Package Control/Package Control.sublime-settings",
+		"/C/ProgramFiles/Sublime text 3/Data/Packages/User/Package Control.sublime-settings",
+		"/C/ProgramFiles/Sublime text 3/Data/Packages/LiveStyle/LiveStyle.sublime-settings",
+		"/C/ProgramFiles/Sublime text 3/Data/Packages/ColorPicker/ColorPicker.sublime-settings",
+		"/C/ProgramFiles/Sublime text 3/Data/Packages/TortoiseSVN/TortoiseSVN.sublime-settings",
+		"/C/ProgramFiles/Sublime text 3/Data/Packages/User/TortoiseSVN.sublime-settings",
+		"/C/ProgramFiles/Sublime text 3/Data/Packages/User/Xdebug.sublime-settings",
+		"/F/Project_Management/LinuxShell/utils-shell/batchAddUser.sh",
+		"/F/Project_Management/LinuxShell/tomcat-deploy/.basesite-deploy.sublime-project",
+		"/F/Project_Management/LinuxShell/tomcat-deploy/basesite-package.sh",
+		"/C/ProgramFiles/Sublime text 3/Data/Packages/User/Side Bar Folders.sublime-settings",
+		"/G/Linux/Shell/tomcat运维/basesite-deploy/basesite-package.sh",
+		"/G/Linux/Shell/tomcat运维/basesite-deploy/tomcat部署.sublime-project"
+	],
+	"find":
+	{
+		"height": 26.0
+	},
+	"find_in_files":
+	{
+		"height": 93.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			",",
+			"`,\n",
+			",",
+			"id",
+			"`,\n",
+			"  ",
+			"private",
+			"span",
+			"-->",
+			",",
+			",\n",
+			"  ",
+			"             ",
+			"id             \nschool_id      \ntitle          \ncontent        \npictureUrls    \ngood_comment_no\ncommentCounts  \nbrowse_no      \nstatus         \ncreate_user_id \npublish_user_id\npublish_time   \n",
+			"      \n",
+			"id",
+			"             \n",
+			">\n",
+			"info",
+			"col-md-2",
+			"\"></",
+			"inputUserName",
+			"inputEmail3",
+			"p",
+			"\");\n"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			""
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"incremental_find":
+	{
+		"height": 26.0
+	},
+	"input":
+	{
+		"height": 35.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"replace":
+	{
+		"height": 48.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"settings":
+	{
+		"xdebug":
+		{
+			"hide_conflict": false
+		}
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 188.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

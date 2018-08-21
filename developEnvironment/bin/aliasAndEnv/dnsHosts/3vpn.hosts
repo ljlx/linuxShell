@@ -1,0 +1,11 @@
+#用于构建个人vpn网络之间的dns,多机一般同时启用的
+10.193.2.1 idea.thesunboy.com
+10.193.2.51 vpn.company
+10.193.2.52 vpn.aeye-xc
+10.193.2.1 vpn.vpn
+10.193.2.203 vpn.home
+10.193.2.206 vpn.hk
+10.193.2.207 vpn.nas
+10.193.1.2 vpn.home.nas
+10.193.2.1 mysvn.thesunboy.com
+10.193.2.1 svn.aeye.xc

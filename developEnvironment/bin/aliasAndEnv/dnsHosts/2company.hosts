@@ -1,0 +1,6 @@
+#用于在公司业务之间切换的
+222.240.217.26 t1.wbcd.wan
+222.240.217.26 t1.wbcdsl.wan
+192.168.2.144 t1.wbcdsl.lan
+192.168.2.146 wbcd.wbcd.com
+192.168.2.78 docker.hanxu.wbcd
