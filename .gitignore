@@ -1,0 +1,10 @@
+*.iml
+*.swp
+*.ipr
+*.iws
+.idea/
+*.exe
+*.tar.gz
+.tmp/
+
+
