@@ -17,7 +17,7 @@ function stop(){
 	   else
 	    local rdpPid=$(ps aux | grep -v grep | grep ".\.remmina.*${rdpId}" | awk '{print $2}'|xargs);
 
-        if [ ! -z ${rdpPid} ]; then
+        if [ ! -z '${rdpPid}' ]; then
             local logtxt="PID:[${rdpPid}],rdpId:[${rdpId}]";
             echo "#kill-15 -> ${logtxt}";
             local txt=$(/bin/kill -15 ${rdpPid});
@@ -36,7 +36,7 @@ function stop(){
 
 function start(){
 	
-    exec $(nohup remmina -c $@ & 2>&1 > /dev/null);
+    remmina -c $@ & 2>&1 > /dev/null;
     return $?;
 }
 
@@ -49,7 +49,13 @@ case $1 in
     shift;
     rdpName=$1;
     stop ${rdpName};
-    nohup $(start ~/.remmina/${rdpName}.remmina);
+    start ~/.remmina/${rdpName}.remmina;
    ;;
+	"stop")
+	shift;
+rdpName=$1;
+echo $1;
+	stop ${rdpName};
+;;
 
 esac
