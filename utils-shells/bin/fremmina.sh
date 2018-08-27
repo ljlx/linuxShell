@@ -35,8 +35,7 @@ function stop(){
 
 
 function start(){
-	
-   nohup remmina -c $@ & 2>&1 > /dev/null;
+   remmina -c $@ & 2>&1 > /dev/null;
     return $?;
 }
 
