@@ -22,7 +22,8 @@ evn=os.getenv("PUB_SHELLS");
 os.name;
 
 print(evn);
-print(os.uname());
+alll = os.uname()
+print(alll);
 print(os.getuid());
 
 rootdir=os.listdir("/");
