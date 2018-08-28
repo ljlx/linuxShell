@@ -9,18 +9,25 @@
 # datetime-and-array
 # ---------------------------------------------------
 
+import random
 import time;
 from datetime import datetime
 
+random.rand
 # allMinuteNums = range(1, 60, 1);所有的，步进为1
 allMinuteNums = range(1, 60, 2)
 # for item in allMinuteNums:
 # print(item)
 
 for item in range(4):
-    time.sleep(3)
+    # time.sleep(1)
     nowMinu = datetime.today().second
     if nowMinu in allMinuteNums:
         print("now minute is odd:", nowMinu)
     else:
         print("now minute is not odd,even:", nowMinu)
+
+for item in range(10, 0, -1):
+    time.sleep(1)
+    print("system halt....", item);
+print("system halt successful");
