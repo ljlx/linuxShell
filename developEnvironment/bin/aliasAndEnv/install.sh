@@ -8,7 +8,7 @@
 ###-----------------说明-------------------------###
 #  安装开发环境脚本,主要是根据参数执行其下所有 或者指定的脚本,并且创建一个良好的执行环境 供子脚本执行
 ####################################################
-baseDir=/usr/pubShells/developEnvironment/bin/aliasAndEnv
+baseDir=/usr/linuxShell/developEnvironment/bin/aliasAndEnv
 
 #环境变量
 myshell_BaseDir=""
