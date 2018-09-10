@@ -2,6 +2,8 @@
 *.swp
 *.ipr
 *.iws
+*.jpg
+*.txt
 .idea/
 *.exe
 *.tar.gz
