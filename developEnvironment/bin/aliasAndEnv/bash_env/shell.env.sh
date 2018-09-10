@@ -8,7 +8,7 @@
 ###-----------------说明-------------------------###
 #
 ####################################################
-export PUB_SHELLS=/usr/pubShells
+export PUB_SHELLS=/usr/linuxShell/
 
 export PATH=${PUB_SHELLS}/utils-shells/bin:$PATH
 
