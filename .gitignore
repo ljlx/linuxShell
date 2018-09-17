@@ -3,10 +3,9 @@
 *.ipr
 *.iws
 *.jpg
-*.txt
 .idea/
 *.exe
 *.tar.gz
 .tmp/
-
-
+output.txt
+__pycache__
