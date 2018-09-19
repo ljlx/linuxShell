@@ -10,8 +10,12 @@
 # ---------------------------------------------------
 import random
 
+__author__ = 'hanxu'
+__site__ = 'https://www.thesunboy.com'
+
+
+
 # 定义一个随机数生成器,
 def getRandom():
     while True:
         yield random.randint
-
