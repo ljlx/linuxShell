@@ -9,7 +9,7 @@
 #  将公钥文件夹下的公钥生成进auth*文件中
 ####################################################
 source ${PUB_FACTION}/getHomePath.sh
-svnPath=svn://mysvn.thesunboy.com:8443/releaseServer/shellScript/trunk/developEnvironment/bin/aliasAndEnv/mySshPubs/pubs
+#svnPath=svn://mysvn.thesunboy.com:8443/releaseServer/shellScript/trunk/developEnvironment/bin/aliasAndEnv/mySshPubs/pubs
 pubsDir=$(_getHomePath)/.ssh/pubs/
 authFile=$(_getHomePath)/.ssh/authorized_keys
 authBackDir=$(_getHomePath)/.ssh/backAuth/
@@ -20,9 +20,9 @@ if [ ! -d ${authBackDir} ];then
 fi
 if [ ! -d ${pubsDir} ];then
     mkdir ${pubsDir}
-    if [ ! -z $(which svn) ]; then
-        $(which svn) checkout ${svnPath} ${pubsDir} ;
-    fi
+#    if [ ! -z $(which svn) ]; then
+#        $(which svn) checkout ${svnPath} ${pubsDir} ;
+#    fi
 fi
 
 #关于字符串截取的说明：
