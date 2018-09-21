@@ -14,8 +14,22 @@ __author__ = 'hanxu'
 __site__ = 'https://www.thesunboy.com'
 
 
+def _2nj1(x):
+    return 2 * x + 1
 
-# 定义一个随机数生成器,
-def getRandom():
-    while True:
-        yield random.randint
+
+userIdList3 = [_2nj1(item) for item in range(1, 10) if item % 2 == 0]
+print(userIdList3)
+
+
+# 定义一个随机数,列表生成器,
+def getRandom(numseed: int):
+    jj = random.randint.__str__()
+    print(jj)
+    return jj
+
+
+randomData = [getRandom(item) for item in range(1, 10)]
+print(randomData)
+for item in getRandom():
+    print(next(item))
