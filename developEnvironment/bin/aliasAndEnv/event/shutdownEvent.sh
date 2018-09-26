@@ -4,7 +4,7 @@ notify=/usr/bin/notify-send
 
 $notify "准备关机了。";
 
-eventRootDir=/home/$(whoami)/autoshells
+eventRootDir=/home/$(whoami)/.autoshells
 eventShellDir=$eventRootDir/shell.d
 
 
