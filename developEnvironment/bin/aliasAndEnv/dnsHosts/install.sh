@@ -5,7 +5,7 @@
 # AuthorSite: https://www.thesunboy.com/
 # Created Time: 2018-05-18 下午12:36
 #---------------------说明--------------------------
-#  安装本机host自定义host信息
+#  安装dnsmasq配置信息
 #---------------------------------------------------
 
 dnsconfFileName="dnsmasq.hanxu.conf"
