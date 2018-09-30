@@ -8,9 +8,10 @@
 #  安装本机host自定义host信息
 #---------------------------------------------------
 
+dnsconfFileName="dnsmasq.hanxu.conf"
 
-
-
+sudo echo "conf-file=/etc/${dnsconfFileName}" >> /etc/dnsmasq.more.conf
+sudo cp -r ./dnsmasq_hanxu.d /etc/
 
 
 
