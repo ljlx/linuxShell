@@ -10,9 +10,10 @@
 ####################################################
 source ${PUB_FACTION}/getHomePath.sh
 #svnPath=svn://mysvn.thesunboy.com:8443/releaseServer/shellScript/trunk/developEnvironment/bin/aliasAndEnv/mySshPubs/pubs
-pubsDir=$(_getHomePath)/.ssh/pubs/
-authFile=$(_getHomePath)/.ssh/authorized_keys
-authBackDir=$(_getHomePath)/.ssh/backAuth/
+homepath=$(_getHomePath)
+pubsDir=${homepath}/.ssh/pubs/
+authFile=${homepath}/.ssh/authorized_keys
+authBackDir=${homepath}/.ssh/backAuth/
 
 
 if [ ! -d ${authBackDir} ];then

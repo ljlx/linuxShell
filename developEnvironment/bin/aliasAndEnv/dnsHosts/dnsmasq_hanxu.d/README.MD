@@ -77,6 +77,27 @@ address=/ipv6.test.com/fe80::20d:60ff:fe36:f83123456
 
 
 
+对参数的解释
+
+resolve-file　　   定义dnsmasq从哪里获取上游DNS服务器的地址， 默认是从/etc/resolv.conf获取。
+
+strict-order　　   表示严格按照resolv-file文件中的顺序从上到下进行DNS解析，直到第一个解析成功为止。
+
+listen-address     定义dnsmasq监听的地址，默认是监控本机的所有网卡上。局域网内主机若要使用dnsmasq服务时，指定本机的IP地址。
+
+address　　　　  启用泛域名解析，即自定义解析a记录，如下配置为demon.com这个域名：
+
+address=/demon.com/127.0.0.1  #访问demon.com时的所有域名都会被解析成127.0.0.1
+
+bogus-nxdomain  为防止DNS污染，使用参数定义的DNS解析的服务器。注意：如果是阿里云服务器上配置dnsmasq要启用此项。
+
+server　　　　　　指定dnsmasq程序使用哪个DNS服务器进行解析。       对于不同的网站可以使用不同的域名对应解析如下配置
+
+server=/google.com/8.8.8.8    #表示对于google的服务，使用谷歌的DNS解析。
+
+以上配置完毕后，需要重启dnsmasq服务，重启完毕后局域网中的其他机器，就可以通过该DNS服务器解析公网的域名。
+
+
 3、启动服务
 
 service dnsmasq start 

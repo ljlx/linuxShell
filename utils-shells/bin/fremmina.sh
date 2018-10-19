@@ -36,7 +36,7 @@ function stop(){
 
 function start(){
 	
-   nohup remmina -c $@ & 2>&1 > /dev/null;
+    remmina -c $@ & 2>&1 > /dev/null;
     return $?;
 }
 
@@ -49,7 +49,7 @@ case $1 in
     shift;
     rdpName=$1;
     stop ${rdpName};
-    start ~/.remmina/${rdpName}.remmina;
+   $(start ~/.remmina/${rdpName}.remmina);
    ;;
 	"stop")
 	shift;
