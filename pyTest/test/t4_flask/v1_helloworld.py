@@ -27,7 +27,8 @@ def pwd():
 def ls():
     dirlist = os.listdir("/")
     print(dirlist)
-    return dirlist
+    respstr = '\r\n'.join(dirlist)
+    return respstr
 
 
 app.run(port=8081, debug=True)
