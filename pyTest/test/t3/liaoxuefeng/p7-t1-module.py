@@ -20,6 +20,16 @@ print(sys.path)
 # 添加自己的模块路径
 # 方法一:
 sys.path.append("./tmp/")
+
+
 # 这种方法是在运行时修改，运行结束后失效。
 # 第二种方法是设置环境变量PYTHONPATH，该环境变量的内容会被自动添加到模块搜索路径中。
 # 设置方式与设置Path环境变量类似。注意只需要添加你自己的搜索路径，Python自己本身的搜索路径不受影响。
+
+def test():
+    print("程序参数:{0}".format(sys.argv))
+
+
+if __name__ == '__main__':
+    print(__name__)
+    test()
