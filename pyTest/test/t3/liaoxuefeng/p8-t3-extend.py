@@ -12,9 +12,13 @@
 # ----------start----------这是父类声明----------start----------
 
 class Animal(object):
+    animalType = None
+    count = 0
 
     def __init__(self):
+        Animal.count += 1
         self.name = '动物'
+        self.animalType = 'unknow.'
 
     def job(self):
         self.work = ''
@@ -32,6 +36,8 @@ class Animal(object):
         log = "hi,i am {},i like eat {}, i can work {} with speed[{}]"
         log = log.format(self.name, self.food, self.work, self.level)
         print(log)
+        print("实力次数:", Animal.count)
+        print('我是', self.animalType)
 
 
 # ----------end------------这是父类声明----------end------------
@@ -43,6 +49,8 @@ class Dog(Animal):
 
 
 class Cat(Animal):
+    like = None
+
     def job(self):
         self.food = '鱼'
         self.work = '爬树,抓老鼠'
@@ -113,7 +121,64 @@ if __name__ == '__main__':
     # True
     print(isinstance((1, 2, 3), (list, tuple)))
     # 总是优先使用isinstance()判断类型，可以将指定类型及其子类“一网打尽”。
+    print(type(cat1.job))
+    print(type(123))
+    print(type("1234"))
+    print(type('123'))
+    if hasattr(cat1, "like"):
+        setattr(cat1, "like", "falsh")
+    print(cat1.like)
+    print(dir(cat1))
+    # cat1.animalType='cat'
+    print(cat1.animalType)
+    cat1.printInfo()
+
+
 # ----------end------------Main方法----------end------------
 
 
+# ----------start----------py的反射,动态给类加方法,属性,以及禁止措施----------start----------
+class student:
+    name = None
+    age = None
 
+    def __init__(self):
+        student.name = ''
+        student.age = 0
+
+    # slots的修饰有点像java的final修饰符.禁止(python外部)(java子类)随意修改类
+    # 追加的方法,需要和变量一样在slots中事先声明
+    # 'student' object attribute 'age' is read-only
+    # 只对该类生效,子类如果不定义不生效,定义了则继承
+    # __slots__ = ('oname', 'oage', 'addyearAge', 'classNewAge')
+    # ,'age')已经在类中声明了的,就不可以在slots中再次声明
+    # 除非在子类中也定义__slots__，这样，子类实例允许定义的属性就是自身的__slots__加上父类的__slots__。
+    def printInfo(self):
+        log = "name:{},age:{}".format(self.name, self.age)
+        if hasattr(self, 'oname'):
+            log += ",oname:{}".format(self.oname)
+        print(log)
+
+
+stu1 = student()
+stu1.oname = 'test extend name for slots'
+# stu1.test = ''  # 如果类使用了slots特殊变量,则自定义的实例变量只可以使用该变量所定义的
+stu1.printInfo()
+
+
+# 给student追加新的函数方法(实在变态,动态追加方法,相当于java里的cglib,动态修改类,追加新的方法)
+def addage(self, aage):
+    self.age += aage
+
+
+from types import MethodType
+
+stu1.addyearAge = MethodType(addage, stu1)
+stu1.addyearAge(10)
+# student.classNewAge = MethodType(addage, student)
+student.classNewAge = addage
+stu1.classNewAge(5)
+stu1.printInfo()
+
+# ----------end------------py的反射,动态给类加方法,属性,以及禁止措施----------end------------
+# 具体参见 https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/00143186739713011a09b63dcbd42cc87f907a778b3ac73000#0
