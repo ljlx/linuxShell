@@ -131,6 +131,7 @@ if __name__ == '__main__':
     print(dir(cat1))
     # cat1.animalType='cat'
     print(cat1.animalType)
+    print(Cat.__mro__)
     cat1.printInfo()
 
 

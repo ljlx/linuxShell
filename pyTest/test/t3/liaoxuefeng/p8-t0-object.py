@@ -56,12 +56,29 @@ class Student(object):
         for item in self.mlist:
             item.print_score()
 
+    @property
+    def sex(self):
+        return self._sex
+
+    @sex.setter
+    def sex(self, value):
+        self._sex = value
+
+    def idcard(self):
+        return 'idcard:' + str(self.sex)
+
     def __print_all__(self):
         for item in self.mlist:
             item.print_score()
 
 
 xiaomin = Student('hanxu', 99)
+xiaomin.sex =44
+# TypeError: 'str' object is not callable
+# xiaomin.idcard = 9
+# 'newidcard'
+print(xiaomin.idcard())
+
 hx_1 = Student('hx_count', 99)
 hx_2 = Student('hx_count2', 99)
 hx_3 = Student('hx_count3', 99)
