@@ -166,4 +166,37 @@ class Student(object):
 hanxu = Student('hanxu')
 print("name[{}],score[{}],is {} ago.".format(hanxu.name, hanxu.scores, hanxu.age()))
 
+
+# 参考
+# https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/0014319098638265527beb24f7840aa97de564ccc7f20f6000#2
+# 总结
+# 这实际上可以把一个类的所有属性和方法调用全部动态化处理了，不需要任何特殊手段。
+#
+# 这种完全动态调用的特性有什么实际作用呢？作用就是，可以针对完全动态的情况作调用
+# __getattr__和__getattribute__区别? 调用起来感觉有点像java的反射直接使用了proxy.tostring. 内部方法循环调用造成栈溢出.
+# 区别应该就是__getattr是代码显式调用不存在的属性才会触发,而attribute是所有的属性方法,比如str方法也会触发.
+class Chain(object):
+    def __init__(self, path=''):
+        self._path = path
+
+    def __getattr__(self, path):
+        if isinstance(path, classmethod):
+            return Chain(self._path)
+        return Chain("%s/%s" % (self._path, path))
+
+    def __call__(self, *args, **kwargs):
+        # TODO 如何取出调用的method名
+        print(self._path)
+
+    def printPath(self):
+        print(self._path)
+
+
+hanxuChain0 = Chain().user.list.detail.hanxu
+hanxuChain0.printPath()
+hanxuChain = Chain().user.list.detail
+# 掉不存在的方法时,先调用了getattr,在调用了call
+hanxuChain.hanxu()
+hanxuChain.printPath()
+
 # ----------end------------避免has no attribute 异常,使用getattr特殊方法----------end------------
