@@ -51,7 +51,7 @@ case $1 in
     stop ${rdpName};
    $(start ~/.remmina/${rdpName}.remmina);
    ;;
-	"stop")
+    "stop")
 	shift;
 rdpName=$1;
 echo $1;
