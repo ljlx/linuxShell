@@ -16,6 +16,7 @@ def fact(n:int):
 def fact_iter(num, product):
     if num == 1:
         return product
+    print("num:{},product:{}".format(num, product))
     return fact_iter(num - 1, num * product)
 
 inti=int(input("num:"))

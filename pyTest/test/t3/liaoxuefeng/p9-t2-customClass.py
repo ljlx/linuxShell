@@ -4,11 +4,11 @@
 # File Name: p9-t2-customClass.py
 # Author: hanxu
 # AuthorSite: https://www.thesunboy.com/
+# GitSource: https://github.com/hx940929/linuxShell
 # Created Time: 2018-11-3-下午2:57
 # ---------------------说明--------------------------
 # 定制化类,重载预制的各种方法,比如tostring,length,slots等
 # ---------------------------------------------------
-
 
 class originalStudeng(object):
 
@@ -133,3 +133,37 @@ print(sliceFib)
 # 之类根据需要复写
 
 # ----------end------------iter使用----------end------------
+
+
+# !/usr/bin/python3.5
+# EASY-INSTALL-ENTRY-SCRIPT: 'pip==9.0.1','console_scripts','pip'
+__requires__ = 'pip==9.0.1'
+
+
+# load_entry_point('pip==9.0.1', 'console_scripts', 'pip')()
+
+# if __name__ == '__main__':
+#     sys.exit(
+#
+#         load_entry_point('pip==9.0.1', 'console_scripts', 'pip')()
+#     )
+
+
+# ----------start----------避免has no attribute 异常,使用getattr特殊方法----------start----------
+class Student(object):
+
+    def __init__(self, name):
+        self.name = name
+
+    def __getattr__(self, attr):
+        print("try find a str attribute: %s" % attr)
+        if attr == 'scores':
+            return 99
+        if attr == 'age':
+            return lambda: 25
+
+
+hanxu = Student('hanxu')
+print("name[{}],score[{}],is {} ago.".format(hanxu.name, hanxu.scores, hanxu.age()))
+
+# ----------end------------避免has no attribute 异常,使用getattr特殊方法----------end------------
