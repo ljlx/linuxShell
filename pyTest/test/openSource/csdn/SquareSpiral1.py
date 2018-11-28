@@ -42,7 +42,10 @@ def test2():
         #     t.left(90)
         # else:
         t.left(91)
+
+
 2
+
 
 def test3():
     turtle1 = turtle.Pen()
@@ -59,5 +62,23 @@ def test3():
     turtle1.color("red")
 
 
-test3()
+def fn(n):
+    return (n - 1) + (n - 2)
+
+
+def test4():
+    # forward = float(input("forward:"))
+    # right = float(input("right:"))
+
+    turtle4 = turtle.Pen()
+    turtle4.color("purple")
+    turtle4.pensize(2)
+    turtle4.speed(10)
+    for i in range(300):
+        if i > 3:
+            turtle4.forward(50)
+            result=fn(i)
+            turtle4.right(result)
+
+test4()
 print('end')
