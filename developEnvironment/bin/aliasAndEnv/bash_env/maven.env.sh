@@ -10,7 +10,7 @@
 ####################################################
 defaultHome='/usr/share/maven';
 defaultRepo='/usr/share/maven-repo';
-myMvnHome='~/.m2/mavenBin';
+myMvnHome='~/.m2/';
 myMvnRepo='~/.m2/repository';
 userHome=$(_getHomePath);
 m2Home=${userHome}'.m2';
@@ -28,7 +28,7 @@ if [[ -d ${defaultRepo} && ! -d ${myMvnRepo} ]]; then
     ln -s ${defaultRepo} ${myMvnRepo};
 fi
 
-export M2_HOME=~/.m2/mavenBin;
-export M2_RESP=~/.m2/repository
-export PATH=$PATH:$M2_HOME/bin
+#export M2_HOME=${myMvnHome};
+export M2_RESP=${myMvnRepo}
+#export PATH=$PATH:$M2_HOME/bin
 echo "maven env set finish"

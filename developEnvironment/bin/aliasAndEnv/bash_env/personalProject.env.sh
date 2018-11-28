@@ -8,6 +8,7 @@
 #  设置各种工作目录的环境变量
 #---------------------------------------------------
 personalCodeWorkDir=/home/hanxu/document/project/code/personal/
-
+workCodeDir=/home/hanxu/document/project/code/work/
+export WORKDIR=${workCodeDir};
 export PERCDIR=${personalCodeWorkDir};
 echo "apply个人代码目录：PERCDIR=[${personalCodeWorkDir}]";

@@ -42,20 +42,25 @@ function start(){
 
 case $1 in
     "id")
-    shift;
+        shift;
     #nohup $(start ~/.remmina/1530511931692.remmina);
    ;;
     "name")
-    shift;
-    rdpName=$1;
-    stop ${rdpName};
-   $(start ~/.remmina/${rdpName}.remmina);
+        shift;
+        rdpName=$1;
+        stop ${rdpName};
+        $(start ~/.remmina/${rdpName}.remmina);
    ;;
     "stop")
-	shift;
-rdpName=$1;
-echo $1;
-	stop ${rdpName};
-;;
+	    shift;
+        rdpName=$1;
+        echo $1;
+	    stop ${rdpName};
+    ;;
 
+    *)
+        rdpName='sma'
+        stop ${rdpName};
+        $(start ~/.remmina/${rdpName}.remmina);
+    ;;
 esac
