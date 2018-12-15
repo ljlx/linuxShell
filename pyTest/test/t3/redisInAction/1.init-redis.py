@@ -25,8 +25,14 @@ for item in keyvalue1:
 keystr = str(keyvalue1)
 print(keystr)
 
-listtest1 = redcli.lrange('test1', 0, 20);
-while True:
-    for item in listtest1:
-        print("redis:{%s}" % item)
-    redcli.lpush('test1', item)
+listtest1 = redcli.lrange('test1', 0, 20)
+redcli.zadd("testz", test=1, test2=2, test7=7, test5=5)
+# while True:
+#     for item in listtest1:
+#         print("redis:{%s}" % item)
+#     redcli.lpush('test1', item)
+print("使用阻塞版本的pop-api...")
+# sdf = redcli.lpush("testblpop", "jjj", "kkk")
+# print(sdf)
+resu = redcli.blpop(keys='testblpop', timeout=0)
+print("使用阻塞版本的pop-api...取出数据:{}".format(resu))
