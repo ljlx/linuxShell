@@ -14,6 +14,17 @@ from redis import Redis
 
 redcli = Redis(host='localhost', port=10000)
 
+
+def addRedisdata(redcli: Redis, nums):
+    index = 1
+    while index != nums:
+        keystr = "test-{}".format(index)
+        valuestr = "tvalue-{}".format(index)
+        redcli.set(keystr, valuestr)
+        index = index + 1
+
+
+addRedisdata(redcli, 100 * 10000)
 print(redcli.get('key'))
 print(redcli.get('s'))
 keyvalue1 = redcli.get('key')
@@ -31,8 +42,8 @@ redcli.zadd("testz", test=1, test2=2, test7=7, test5=5)
 #     for item in listtest1:
 #         print("redis:{%s}" % item)
 #     redcli.lpush('test1', item)
-print("使用阻塞版本的pop-api...")
+# print("使用阻塞版本的pop-api...")
 # sdf = redcli.lpush("testblpop", "jjj", "kkk")
 # print(sdf)
-resu = redcli.blpop(keys='testblpop', timeout=0)
+# resu = redcli.blpop(keys='testblpop', timeout=0)
 print("使用阻塞版本的pop-api...取出数据:{}".format(resu))
