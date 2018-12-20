@@ -9,10 +9,6 @@
 #  
 # ---------------------------------------------------
 
-# from redis import Redis
-
-# redcli = Redis(host='localhost', port=10000)
 import os
 
-mkresu = os.mkdir(path='/tmp/githook/testhook/pyhook/')
-print(mkresu)
+os.mkdir(path='/tmp/githook/testhook/pyhook/')
