@@ -47,15 +47,19 @@ case ${server} in
     comp)
         sshRemote hanxu@vpn.company
 	    ;;
-    wbt1)
+    t1)
 	shift;
 	user=${@};
 	if [[ -z ${user} ]];then
 		user=$(whoami);
 	fi
-	sshRemote ${user}@t1.wbcds1.wan
+	sshRemote ${user}@t1.company.wan
 	    ;;
-    oth*)
+   t2)
+	sshRemote hanxu@jumps.linkdood.cn
+
+	;;
+     oth*)
 	    shift;
 	    sshRemote $@
 	    ;;
