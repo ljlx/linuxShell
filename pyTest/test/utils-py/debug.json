@@ -1,0 +1,17 @@
+{
+  "name": "我的香港阿里云-ubuntu",
+  "code": "hk",
+  "host": "thesunboy.com",
+  "port": 1113,
+  "addTime": "2018-01-01 12:12:12",
+  "identityFile": "~/.ssh/local.pri",
+  "keepAlive": true,
+  "sshOption": [
+    {
+      "SendEnv": "LANG LC_*",
+      "HashKnownHosts": "yes",
+      "GSSAPIAuthentication": "yes",
+      "GSSAPIDelegateCredentials": "no"
+    }
+  ]
+}

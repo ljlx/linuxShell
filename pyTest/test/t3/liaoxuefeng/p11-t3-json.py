@@ -51,7 +51,7 @@ list1.append(dict(test1=3, test2=today.strftime("%Y-%m-%d %H:%M:%S")))
 testjson = dict(jarray=list1, test="jsontest")
 testjson = dict(subjson=testjson, title="jsonTitle")
 jsonStr = json.dumps(testjson)
-print("py对象->json字符串:" + jsonStr)
+print("py对象->json字符串:", jsonStr)
 
 jsonobj = json.loads(jsonStr)
 print("json字符串->py对象:{}".format(jsonobj))
@@ -131,7 +131,7 @@ fileList = list()
 # https://www.cnblogs.com/pangguoping/p/5791432.html
 # 查看当前这个文件打开数量
 # lsof -N /home/hanxu/document/project/code/personal/develop/linuxShell/pyTest/test/utils-py/debug.json |wc
-testFileLimit = True
+testFileLimit = False
 while testFileLimit:
     try:
 
@@ -159,4 +159,6 @@ while testFileLimit:
 # ----------end------------测试文件打开数量上限----------end------------
 
 with open(file=strFile, mode='r') as wfile:
-    wfile.readlines();
+    # listLine = wfile.readlines()
+    # print(listLine.__len__())
+    print(wfile.read())
