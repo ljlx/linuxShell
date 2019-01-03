@@ -10,17 +10,16 @@
 # 使用python来重写fssh.sh脚本
 # ---------------------------------------------------
 import json as xjson
-from datetime import datetime as xdate
 
 
 class sshConfig(object):
 
     def __init__(self):
-        self.name = ""
-        self.code = ""
-        self.host = ""
+        self.name = None
+        self.code = None
+        self.host = None
         # self.port = 22
-        self.addTime = xdate.today()
+        # self.addTime = xdate.today()
         self.identityFile = "~/.ssh/local.pri"
         self.keepAlive = True
 
@@ -36,12 +35,15 @@ class sshConfig(object):
 
     def tojson(self):
         # xjson.dumps(self, ensure_ascii=True)
-        xjson.dumps(self)
+        return xjson.dumps(self, default=lambda obj: obj.__dict__)
 
 
 hk = sshConfig()
-hk.name = "aliyun-hk"
-hk.code = "hk",
-hk.host = "thesunboy.com",
+hk.name = "aliyun阿里-hk"
+hk.code = "hk"
+hk.host = "thesunboy.com"
 hk.port = 1113
-print(hk.tojson())
+# print(hk.tojson())
+strjson = xjson.dumps(hk, ensure_ascii=False, default=lambda obj: obj.__dict__)
+print(xjson.dumps({'数字': 123, '字符': '一二三'}, ensure_ascii=True))
+print(strjson)
