@@ -151,6 +151,8 @@ while testFileLimit:
         # 最后一步是调用close()方法关闭文件。文件使用完毕后必须关闭，因为文件对象会占用操作系统的资源，并且操作系统同一时间能打开的文件数量也是有限的：
         if False:
             fileitem.close()
+# 常见py异常类型如下.
+# https://docs.python.org/3/library/exceptions.html#exception-hierarchy
 # 总结
 #     每次使用try..except...finally file.close() 这种模板式代码太麻烦. py引入了with关键字来解决.
 # with open(file=strFile) as wFile:
@@ -162,3 +164,12 @@ with open(file=strFile, mode='r') as wfile:
     # listLine = wfile.readlines()
     # print(listLine.__len__())
     print(wfile.read())
+
+import logging
+
+logger = logging.getLogger("test")
+logger.setLevel("DEBUG")
+logger.info("info log")
+logger.debug("debug log..")
+logger.warn("warn log..")
+logger.error("error log..")
