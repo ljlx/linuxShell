@@ -55,7 +55,7 @@ print(calc(*tuple1))
 print(calc(*list2))
 
 
-# 关键字参数
+# 关键字参数,类似是传了一个map进来,其实就是个dict
 
 def person(name, age, **extend):
     log = "name:{0},age:{1},extend:[{2}]".format(name, age, extend)
