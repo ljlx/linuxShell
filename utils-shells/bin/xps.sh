@@ -1,8 +1,9 @@
 #!/bin/bash
 #--------------------------------------------------
-# File Name: ${NAME}
+# File Name: xps.sh
 # Author: hanxu
-# AuthorSite: https://www.thesunboy.com/
+# AuthorSite: http://www.thesunboy.com/
+# GitSource: https://github.com/hx940929/linuxShell
 # Created Time: 2018-12-29 下午6:51
 #---------------------说明--------------------------
 #

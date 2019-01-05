@@ -93,11 +93,19 @@ def testByte():
     # print(allascii)
 
 
+# python 文件打开的方式
+# model     说明          注意
+# r         只读方式打开      文件必须存在
+# w         只写方式打开      文件不存在创建文件 & 文件存在则清空文件
+# a          j
+
+
 def readBinFile(file="/bin/ls"):
     with codecs.open(file, mode="rb") as rbinFile:
         rindexCount = 0
         while rbinFile.readable():
             rindexCount += 1
+            # 自己想到的方式就是通过判断bls是否等于0,不过这个方式不好
             bls = rbinFile.read(4096)
             if rindexCount == 30:
                 print()
