@@ -93,11 +93,23 @@ def testByte():
     # print(allascii)
 
 
+# https://www.imooc.com/video/8038 来自慕课网学习笔记
 # python 文件打开的方式
 # model     说明          注意
 # r         只读方式打开      文件必须存在
 # w         只写方式打开      文件不存在创建文件 & 文件存在则清空文件
-# a          j
+# a         追加方式打开      文件不存在创建文件
+# r+/w+     读写方式打开
+# a+        追加和读写方式打开
+# 以上任意一种追加b   为二进制方式打开. 比如 rb,wb,rb+ ab+...
+
+def writeFile(file="/tmp/pytest/io.txt"):
+    with open(file, mode='a') as wfile:
+        if wfile.writable():
+            wfile.write("test")
+            wfile.writelines("testline")
+            print("写入文件完成:", file)
+            wfile.flush()
 
 
 def readBinFile(file="/bin/ls"):
@@ -118,7 +130,8 @@ def readBinFile(file="/bin/ls"):
 if __name__ == '__main__':
     print("开始测试")
     # readTextFile()
-    testByte()
+    # testByte()
+    writeFile()
     # readBinFile()
 # def file_like_objct():
 # 像open()函数返回的这种有个read()方法的对象，在Python中统称为file-like Object。除了file外，还可以是内存的字节流，网络流，自定义流等等。
