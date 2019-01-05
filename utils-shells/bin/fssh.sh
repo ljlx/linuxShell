@@ -20,8 +20,9 @@ server=$1;
 function sshRemote(){
     echo "try connecting [${2}]";
     echo $@;
-    $(which ssh) -i ${authFile} $@
-
+#    TODO 将来在使用python改写这个脚本的时候,需要考虑,如果config文件配置了密钥,就不再带-i参数
+#    $(which ssh) -i ${authFile} $@
+    $(which ssh) $@
 }
 
 

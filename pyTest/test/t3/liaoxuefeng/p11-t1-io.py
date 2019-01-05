@@ -10,7 +10,7 @@
 # io操作
 # ---------------------------------------------------
 
-def readFile(strFile: str = None):
+def readTextFile(strFile: str = None):
     if strFile == None or strFile.isspace():
         strFile = "/home/hanxu/document/project/code/personal/develop/linuxShell/pyTest/test/utils-py/debug.json"
     # ----------start----------测试文件打开数量上限----------start----------
@@ -55,9 +55,61 @@ def readFile(strFile: str = None):
         print("读取文件成功,", outputtext)
 
 
-if __name__ == '__main__':
-    readFile()
+import codecs
 
+
+def testByte():
+    b = (b'python')
+    barr = (b'p'b'y'b't')
+    print(b)
+    print(barr)
+    print(b[0])
+    # 我们可以用 b"*" 的形式创建一个字节类型，前提条件是这里的 * 必须是 ASCII 中可用的字符，否则将会超出限制
+    # 那么问题来了，我们发现上面的 ASCII 表里面所有的字符只占据了 [31, 127]，那对于这一范围之外的数字我们要怎么才能表示为字节类型？答案就是用特殊的转义符号x+十六进制数字
+    # [31,127] 之外的应该是一些控制字符,无法直接显示的
+    # 0～31及127(共33个)是控制字符或通信专用字符（其余为可显示字符
+    # 32～126(共95个)是字符(32是空格）,其中48～57为0到9十个阿拉伯数字。
+    # 65～90为26个大写英文字母，97～122号为26个小写英文字母，其余为一些标点符号、运算符号等
+    # https://baike.baidu.com/item/ASCII/309296?fr=aladdin
+    print(b'xjjj')
+    print(b'x24')
+    print(b'xjjj'.__len__())
+    byteData = bytes([66, 67, 68])
+    print("字节转字符:", byteData)
+    print("字节转16进制:", byteData.hex())
+    print("从16进制转成字节对象,在以ascii打印", bytes.fromhex("6e 7a 7b 7c 7d 42"))
+    print("从字符B转成字节,在转成16进制:", b'B'.hex())
+    # b'B'.hex()
+    print("测试int的构造参数,int类型:", int(123456))
+    print("测试int的构造参数,:", int("123456"))
+    print("测试int的构造参数,:", int(b'123456'.hex(), base=10))
+    allascii = []
+    for i in range(32, 126):
+        bytesi = bytes([i])
+        allascii.append(str(bytesi))
+        # print("字节位[{}],转译字符[{}],Hex[{}]".format(i, bytesi, bytesi.hex()))
+    # print(allascii)
+
+
+def readBinFile(file="/bin/ls"):
+    with codecs.open(file, mode="rb") as rbinFile:
+        rindexCount = 0
+        while rbinFile.readable():
+            rindexCount += 1
+            bls = rbinFile.read(4096)
+            if rindexCount == 30:
+                print()
+            print("{},当前批次读取直接数:{}".format(rindexCount, bls.__len__()))
+            # if isinstance(bls, bytes):
+            #     for i in bls:
+            #         print(i)
+
+
+if __name__ == '__main__':
+    print("开始测试")
+    # readTextFile()
+    testByte()
+    # readBinFile()
 # def file_like_objct():
 # 像open()函数返回的这种有个read()方法的对象，在Python中统称为file-like Object。除了file外，还可以是内存的字节流，网络流，自定义流等等。
 # file-like Object不要求从特定类继承，只要写个read()方法就行。
