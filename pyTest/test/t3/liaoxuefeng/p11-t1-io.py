@@ -79,10 +79,12 @@ def testByte():
     print("字节转16进制:", byteData.hex())
     print("从16进制转成字节对象,在以ascii打印", bytes.fromhex("6e 7a 7b 7c 7d 42"))
     print("从字符B转成字节,在转成16进制:", b'B'.hex())
-    # b'B'.hex()
     print("测试int的构造参数,int类型:", int(123456))
-    print("测试int的构造参数,:", int("123456"))
-    print("测试int的构造参数,:", int(b'123456'.hex(), base=10))
+    print("测试int的构造参数,字符串类型:", int("123456"))
+
+    print("测试int的构造参数,将字母B,转成16进制字符串,再以16进制解析该字符串为10进制的数字:", int(b'B'.hex(), base=10))
+    print("测试int的构造参数,以10进制解析字符串[42]为10进制的数字:", int("42", base=10))
+    print("测试int的构造参数,以16进制解析字符串[42]为10进制的数字:", int("42", base=16))
     allascii = []
     for i in range(32, 126):
         bytesi = bytes([i])
