@@ -10,6 +10,27 @@
 # io操作
 # ---------------------------------------------------
 
+
+def mkdir(dirPath="/tmp/pytest"):
+    import os
+    if dirPath:
+        print("开始创建目录:", dirPath)
+        dirPath = dirPath.strip()
+        # 如果有则,去掉尾部的\符号
+        dirPath = dirPath.rstrip("\\")
+        dirIsExist = os.path.exists(dirPath)
+        if not dirIsExist:
+            # 创建当成目录:linux-> mkdir,应该可以通过参数控制
+            # os.mkdir(dirPath)
+            # 创建多级目录:linux-> mkdir -p
+            os.makedirs(dirPath)
+            print("创建目录成功:", dirPath)
+            return True
+        else:
+            print("该目录[]已存在,不需要创建.".format(dirPath))
+            return False
+
+
 def readTextFile(strFile: str = None):
     if strFile == None or strFile.isspace():
         strFile = "/home/hanxu/document/project/code/personal/develop/linuxShell/pyTest/test/utils-py/debug.json"
@@ -104,12 +125,40 @@ def testByte():
 # 以上任意一种追加b   为二进制方式打开. 比如 rb,wb,rb+ ab+...
 
 def writeFile(file="/tmp/pytest/io.txt"):
+    mkdir(dirPath=file.replace("io.txt", ""))
     with open(file, mode='a') as wfile:
         if wfile.writable():
-            wfile.write("test")
-            wfile.writelines("testline")
+            wfile.write("test-AAAA@")
+            wfile.writelines("testline-AAA#")
             print("写入文件完成:", file)
             wfile.flush()
+            # 在文件末尾追加
+    with open(file, mode='r+') as wfile:
+        if wfile.writable():
+            wfile.write("testR+R+R+@")
+            wfile.writelines("testline-R+R+R+$")
+            print("写入文件完成:", file)
+            wfile.flush()
+    #             在文件开头覆盖写的方式,已有内容没有清除.
+    with open(file, mode='w') as wfile:
+        if wfile.writable():
+            from random import Random
+            xrandom = Random()
+            wfile.write("我是覆盖写入.{}".format(xrandom.randint(1, 100)))
+            wfile.flush()
+
+
+def readTextFile2(file="/tmp/pytest/io.txt"):
+    with open(file, mode='r', encoding='gbk') as rtxtFile:
+        print("指定gbk编码读取文件:", rtxtFile.read())
+    with open(file, mode='r', encoding='utf-8') as rtxtFile:
+        print("指定utf-8编码读取文件:", rtxtFile.read())
+    with open(file, mode='r', errors='ignore') as rtxtFile:
+        #         文件遇到编码错误时会忽略错误,(一个文件用多个编码处理),但是可能这样会导致不正确的业务处理,看需要,有时可能需要显示部分内容出来
+        #           默认是strict, 抛出异常
+        #         查看详细的说明,见api文档,builtins.py-411行3.5.2版本.
+        #          查看更多errors的选项,使用 import codecs >>> help(codecs.Codec)
+        print("遇到错误情况:", rtxtFile.read())
 
 
 def readBinFile(file="/bin/ls"):
@@ -127,11 +176,25 @@ def readBinFile(file="/bin/ls"):
             #         print(i)
 
 
+def writeByte():
+    """ 写入内存字节流 """
+    from io import BytesIO
+    f = BytesIO()
+    # https://blog.csdn.net/iiiiher/article/details/77439996
+    byteGood = '中文,中午好'.encode('utf-8')
+    f.write(byteGood)
+    f.flush()
+    byteGoodv = f.getvalue()
+    print(byteGoodv)
+
+
 if __name__ == '__main__':
     print("开始测试")
-    # readTextFile()
-    # testByte()
+    writeByte()
     writeFile()
+    readTextFile2()
+    # testByte()
+
     # readBinFile()
 # def file_like_objct():
 # 像open()函数返回的这种有个read()方法的对象，在Python中统称为file-like Object。除了file外，还可以是内存的字节流，网络流，自定义流等等。
