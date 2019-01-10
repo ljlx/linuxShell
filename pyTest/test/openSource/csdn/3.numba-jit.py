@@ -42,4 +42,25 @@ def foo(x, y):
     return s
 
 
-print(foo(1, 100000000))
+# decompile_func能将函数的代码对象反编译成ast语法树，而str_ast能直观地显示ast语法树，使用这两个工具学习Python的ast语法树是很有帮助的。
+
+#
+# print
+# str_ast(decompile_func(add2))
+# FunctionDef(args=arguments(args=[Name(ctx=Param(),
+#                                       id='a'),
+#                                  Name(ctx=Param(),
+#                                       id='b')],
+#                            defaults=[],
+#                            kwarg=None,
+#                            vararg=None),
+#             body=[Return(value=BinOp(left=Name(ctx=Load(),
+#                                                id='a'),
+#                                      op=Add(),
+#                                      right=Name(ctx=Load(),
+#                                                 id='b')))],
+#             decorator_list=[],
+#             name='add2')
+
+if __name__ == '__main__':
+    print(foo(1, 100000000))
