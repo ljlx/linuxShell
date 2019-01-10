@@ -79,40 +79,6 @@ def readTextFile(strFile: str = None):
 import codecs
 
 
-def testByte():
-    b = (b'python')
-    barr = (b'p'b'y'b't')
-    print(b)
-    print(barr)
-    print(b[0])
-    # 我们可以用 b"*" 的形式创建一个字节类型，前提条件是这里的 * 必须是 ASCII 中可用的字符，否则将会超出限制
-    # 那么问题来了，我们发现上面的 ASCII 表里面所有的字符只占据了 [31, 127]，那对于这一范围之外的数字我们要怎么才能表示为字节类型？答案就是用特殊的转义符号x+十六进制数字
-    # [31,127] 之外的应该是一些控制字符,无法直接显示的
-    # 0～31及127(共33个)是控制字符或通信专用字符（其余为可显示字符
-    # 32～126(共95个)是字符(32是空格）,其中48～57为0到9十个阿拉伯数字。
-    # 65～90为26个大写英文字母，97～122号为26个小写英文字母，其余为一些标点符号、运算符号等
-    # https://baike.baidu.com/item/ASCII/309296?fr=aladdin
-    print(b'xjjj')
-    print(b'x24')
-    print(b'xjjj'.__len__())
-    byteData = bytes([66, 67, 68])
-    print("字节转字符:", byteData)
-    print("字节转16进制:", byteData.hex())
-    print("从16进制转成字节对象,在以ascii打印", bytes.fromhex("6e 7a 7b 7c 7d 42"))
-    print("从字符B转成字节,在转成16进制:", b'B'.hex())
-    print("测试int的构造参数,int类型:", int(123456))
-    print("测试int的构造参数,字符串类型:", int("123456"))
-
-    print("测试int的构造参数,将字母B,转成16进制字符串,再以16进制解析该字符串为10进制的数字:", int(b'B'.hex(), base=10))
-    print("测试int的构造参数,以10进制解析字符串[42]为10进制的数字:", int("42", base=10))
-    print("测试int的构造参数,以16进制解析字符串[42]为10进制的数字:", int("42", base=16))
-    allascii = []
-    for i in range(32, 126):
-        bytesi = bytes([i])
-        allascii.append(str(bytesi))
-        # print("字节位[{}],转译字符[{}],Hex[{}]".format(i, bytesi, bytesi.hex()))
-    # print(allascii)
-
 
 # https://www.imooc.com/video/8038 来自慕课网学习笔记
 # python 文件打开的方式
@@ -149,8 +115,10 @@ def writeFile(file="/tmp/pytest/io.txt"):
 
 
 def readTextFile2(file="/tmp/pytest/io.txt"):
-    with open(file, mode='r', encoding='gbk') as rtxtFile:
+    with open(file, mode='r', encoding='gbk',errors='ignore') as rtxtFile:
         print("指定gbk编码读取文件:", rtxtFile.read())
+    # with open(file, mode='r', encoding='gb2312') as rtxtFile:
+    #     print("指定gbk编码读取文件:", rtxtFile.read())
     with open(file, mode='r', encoding='utf-8') as rtxtFile:
         print("指定utf-8编码读取文件:", rtxtFile.read())
     with open(file, mode='r', errors='ignore') as rtxtFile:
@@ -158,6 +126,7 @@ def readTextFile2(file="/tmp/pytest/io.txt"):
         #           默认是strict, 抛出异常
         #         查看详细的说明,见api文档,builtins.py-411行3.5.2版本.
         #          查看更多errors的选项,使用 import codecs >>> help(codecs.Codec)
+        # 网上看到 还有设置replace的,作用时,无法编码的字符就显示为'?',这样用户可以看到数据是损坏的
         print("遇到错误情况:", rtxtFile.read())
 
 
@@ -176,22 +145,31 @@ def readBinFile(file="/bin/ls"):
             #         print(i)
 
 
-def writeByte():
+def writeByteIO(text:str='hello.hanxu'):
     """ 写入内存字节流 """
     from io import BytesIO
     f = BytesIO()
     # https://blog.csdn.net/iiiiher/article/details/77439996
-    byteGood = '中文,中午好'.encode('utf-8')
+    byteGood =text.encode('utf-8')
+    # sigened 是否考虑符号位.
+    bint = int.from_bytes(byteGood, byteorder='big', signed=False)
+    bint2 = int.from_bytes(byteGood, byteorder='little', signed=False)
+    bint3 = int.from_bytes(byteGood, byteorder='big', signed=True)
+    bint4 = int.from_bytes(byteGood, byteorder='little', signed=True)
     f.write(byteGood)
     f.flush()
     byteGoodv = f.getvalue()
     print(byteGoodv)
+    print(byteGoodv.decode())
+
 
 
 if __name__ == '__main__':
     print("开始测试")
-    writeByte()
+
     writeFile()
+    writeByteIO('hello.python')
+    writeByteIO('hello.含蓄')
     readTextFile2()
     # testByte()
 
