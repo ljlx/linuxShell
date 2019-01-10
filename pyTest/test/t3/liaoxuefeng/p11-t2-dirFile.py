@@ -20,7 +20,6 @@ def osInfo():
     print(os.name)
     print(os.uname())
     osenv = os.environ
-    osenv.
     print("classpath:", os.getenv("CLASSPATH"))
     print("个人doc目录:", os.getenv("PERCDIR"))
     print("工作doc目录:", os.getenv("WORKDIR"))
@@ -29,3 +28,27 @@ def osInfo():
 
 if __name__ == '__main__':
     osInfo()
+
+def getAbsPath(pathStr: str):
+    """
+    获取指定目录,的物理路径
+    :param pathStr:
+    :return:
+    """
+    import os
+    path = os.path.abspath(pathStr)
+    return path
+
+
+def genDirWithParentDir(pathStr):
+    import os
+    joinresu = os.path.join(pathStr, 'testdir1', 'testdir2', 'testdir3')
+    return joinresu
+
+
+if __name__ == '__main__':
+    pathtmp = getAbsPath("/tmp/pytest")
+    pathPytestDir = genDirWithParentDir(pathtmp)
+    print(pathPytestDir)
+    osInfo()
+
