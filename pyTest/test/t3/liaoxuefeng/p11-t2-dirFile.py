@@ -29,6 +29,7 @@ def osInfo():
 if __name__ == '__main__':
     osInfo()
 
+
 def getAbsPath(pathStr: str):
     """
     获取指定目录,的物理路径
@@ -46,9 +47,14 @@ def genDirWithParentDir(pathStr):
     return joinresu
 
 
-if __name__ == '__main__':
-    pathtmp = getAbsPath("/tmp/pytest")
-    pathPytestDir = genDirWithParentDir(pathtmp)
-    print(pathPytestDir)
-    osInfo()
+def findAllPyFile():
+    import os
+    filePyList = [x for x in os.listdir('.') if os.path.isfile(x) and os.path.splitext(x)[1] == '.py']
+    print(filePyList)
 
+if __name__ == '__main__':
+    # pathtmp = getAbsPath("/tmp/pytest")
+    # pathPytestDir = genDirWithParentDir(pathtmp)
+    # print(pathPytestDir)
+    # osInfo()
+    findAllPyFile()
