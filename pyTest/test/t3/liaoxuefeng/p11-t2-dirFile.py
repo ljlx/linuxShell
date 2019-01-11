@@ -82,10 +82,20 @@ def genDirWithParentDir(pathStr):
 # 其实也就是 sh-util-> 可能就是调用了系统封装的命令,而不是直接调用系统的原生函数
 
 def listCurDir(dir='.'):
+    """
+    列表
+    :param dir:
+    """
     import os
-    listdir_os.listdir(dir)
+    listAlldir = os.listdir(dir)
     listdir = [x for x in os.listdir(dir) if os.path.isdir(x)]
     print(listdir)
+
+
+def findAllPyFile():
+    import os
+    filePyList = [x for x in os.listdir('.') if os.path.isfile(x) and os.path.splitext(x)[1] == '.py']
+    print(filePyList)
 
 
 if __name__ == '__main__':
@@ -94,3 +104,4 @@ if __name__ == '__main__':
     # print(pathPytestDir)
     # osInfo()
     listCurDir("/home/hanxu")
+    findAllPyFile()
