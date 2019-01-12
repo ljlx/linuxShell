@@ -147,14 +147,24 @@ def useSubProcessWithModule():
     subprocess模块可以让我们非常方便地启动一个子进程，然后控制其输入和输出
     :return:
     """
-    import subprocess
-    cmd = "nslookup"
-    domain = "www.qq.com"
-    print("$ %s %s" % (cmd, domain))
-    r = subprocess.call([cmd, domain])
-    s = subprocess.call(["fremmina.sh"])
-    print("exit code:", r)
 
+    def usecall():
+        import subprocess
+        cmd = "nslookup"
+        domain = "www.qq.com"
+        print("$ %s %s" % (cmd, domain))
+        r = subprocess.call([cmd, domain])
+        s = subprocess.call(["fremmina.sh"])
+        print("exit code:", r)
+
+    def usePopen():
+        """
+        https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/001431927781401bb47ccf187b24c3b955157bb12c5882d000#0
+        当需要和子进程交互.
+        :return:
+        """
+        import subprocess
+        subprocess.Popen()
 
 if __name__ == '__main__':
     # import random
