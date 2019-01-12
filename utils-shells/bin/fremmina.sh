@@ -19,14 +19,14 @@ function stop(){
 
         if [ ! -z '${rdpPid}' ]; then
             local logtxt="PID:[${rdpPid}],rdpId:[${rdpId}]";
-            echo "#kill-15 -> ${logtxt}";
+#            echo "#kill-15 -> ${logtxt}";
             local txt=$(/bin/kill -15 ${rdpPid});
             if [[ $? == 1 ]]; then
             $(/bin/kill -9 ${rdpPid});
-            echo "kill-15 has fail ,try used kill-9 ,$?, detail:${logtxt}";
+#            echo "kill-15 has fail ,try used kill-9 ,$?, detail:${logtxt}";
             return $?;
             fi
-            echo ${txt};
+#            echo ${txt};
         fi
 	fi
 
@@ -35,8 +35,8 @@ function stop(){
 
 
 function start(){
-	
-    remmina -c $@ & 2>&1 > /dev/null;
+	nohup remmina -c $@ > /dev/null 2>&1 &
+#	TODO this has a problem ,when a error happend with remmina. this code can't return error code.
     return $?;
 }
 
@@ -49,7 +49,7 @@ case $1 in
         shift;
         rdpName=$1;
         stop ${rdpName};
-        $(start ~/.remmina/${rdpName}.remmina);
+        start ~/.remmina/${rdpName}.remmina;
    ;;
     "stop")
 	    shift;
@@ -61,6 +61,6 @@ case $1 in
     *)
         rdpName='sma'
         stop ${rdpName};
-        $(start ~/.remmina/${rdpName}.remmina);
+        start ~/.remmina/${rdpName}.remmina;
     ;;
 esac
