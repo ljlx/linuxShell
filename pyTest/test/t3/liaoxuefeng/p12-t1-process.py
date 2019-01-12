@@ -152,10 +152,7 @@ def useSubProcessWithModule():
     domain = "www.qq.com"
     print("$ %s %s" % (cmd, domain))
     r = subprocess.call([cmd, domain])
-    while True:
-        import time
-        time.sleep(1)
-        s = subprocess.call(["fremmina.sh"])
+    s = subprocess.call(["fremmina.sh"])
     print("exit code:", r)
 
 
