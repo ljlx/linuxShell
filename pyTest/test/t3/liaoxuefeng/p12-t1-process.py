@@ -148,7 +148,7 @@ def useSubProcessWithModule():
     :return:
     """
 
-    def usecall():
+    def _usecall():
         import subprocess
         cmd = "nslookup"
         domain = "www.qq.com"
@@ -157,19 +157,80 @@ def useSubProcessWithModule():
         s = subprocess.call(["fremmina.sh"])
         print("exit code:", r)
 
-    def usePopen():
+    def _usePopen():
         """
         https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/001431927781401bb47ccf187b24c3b955157bb12c5882d000#0
         当需要和子进程交互.
         :return:
         """
         import subprocess
-        subprocess.Popen()
+        import sys
+        # sys.__stdin__
+        # sys.__stdout__
+        # sys.__stderr__
+        p = subprocess.Popen(['fssh.sh', 'hk'], stdin=sys.__stdin__, stdout=sys.__stdout__, stderr=sys.__stderr__)
+        # output, err = p.communicate(b'set q=mx\nthesunboy.com\nexit\n')
+        output, err = p.communicate(b'hxadmin\n')
+        print(output.decode('utf-8'))
+        print('Exit code:', p.returncode)
 
+    _usecall()
+
+
+# 进程间通信
+# Process之间肯定是需要通信的，操作系统提供了很多机制来实现进程间的通信。Python的multiprocessing模块包装了底层的机制，提供了Queue、Pipes等多种方式来交换数据
+# 我们以Queue为例，在父进程中创建两个子进程，一个往Queue里写数据，一个从Queue里读数据
+def multiProcessCommunicate():
+    from multiprocessing import Queue, Process
+    import os, time, random
+    #     写数据进程执行的代码:
+    def _writeQueue(q: Queue):
+        print("writeProcess[%s] to write..." % os.getpid())
+        for value in ['a', 'b', 'c']:
+            print("put %s to Queue..." % value)
+            q.put(value)
+            sleept = random.random()
+            time.sleep(sleept)
+
+    # 读数据进程执行的代码
+    def _readQueeu(q: Queue):
+        print("readProcess[%s] to reading..." % os.getpid())
+        while True:
+            value = q.get(True)
+            print("get %s from queue." % value)
+
+    def _main():
+        """
+        父进程创建queue,并传给各个子进程
+        :return:
+        """
+        print("this main process[%s] has startd" % os.getpid())
+        q = Queue(maxsize=10)
+        pw = Process(name="writeP", target=_writeQueue, args=(q,))
+        pr = Process(name="readP", target=_readQueeu, args=(q,))
+        #         启动子进程pw,pr,进行读写:
+        pw.start()
+        pr.start()
+        pw.join()
+        # pr是死循环,无法等待其结束,只能强行终止
+        pr.terminate()
+
+    _main()
+
+
+# 小结:
+# 在Unix/Linux下，multiprocessing模块封装了fork()调用，使我们不需要关注fork()的细节。
+# 由于Windows没有fork调用，因此，multiprocessing需要“模拟”出fork的效果，
+# 父进程所有Python对象都必须通过pickle序列化再传到子进程去，
+# 所以，如果multiprocessing在Windows下调用失败了，要先考虑是不是pickle失败了。
+# 在Unix / Linux下，可以使用fork() 调用实现多进程。
+# 要实现跨平台的多进程，可以使用multiprocessing模块。
+# 进程间通信是通过Queue、Pipes等实现的。
 if __name__ == '__main__':
     # import random
     # createSubProcessByModule()
     # print(type(random.random))
     # print(random.randrange(1, 5, step=1))
     # createProcessWithPool()
-    useSubProcessWithModule()
+    # useSubProcessWithModule()
+    multiProcessCommunicate()
