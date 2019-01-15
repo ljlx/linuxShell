@@ -36,7 +36,77 @@ def loop():
     print('thread %s ended.' % threading.current_thread().name)
 
 
-print("main pid[%s], ppid[%s]" % (os.getpid(), os.getppid()))
-print('thread %s is running...' % threading.current_thread().name)
-t = threading.Thread(target=loop, name='LoopThread')
-t.start()
+def testThread():
+    print("main pid[%s], ppid[%s]" % (os.getpid(), os.getppid()))
+    print('thread %s is running...' % threading.current_thread().name)
+    t = threading.Thread(target=loop, name='LoopThread')
+    t.start()
+
+
+print(threading.current_thread().name)
+
+# 多线程和多进程最大的不同在于，多进程中，同一个变量，各自有一份拷贝存在于每个进程中，互不影响，
+# 而多线程中，所有变量都由所有线程共享，所以，任何一个变量都可以被任何一个线程修改，
+# 因此，线程之间共享数据最大的危险在于多个线程同时改一个变量，把内容给改乱了
+
+# def testSafeThread():
+#     """
+#     使用lock锁保证py线程安全, global,定义在函数内部,函数内部的内部函数, 使用会失败.name 'balance' is not defined
+#     :return:
+#     """
+#     balance = 0
+#
+#     def change(n: int):
+#         global balance
+#         balance += n
+#         balance -= n
+#
+#     def run(n):
+#         for i in range(20):
+#             change(i)
+#
+#     t1 = threading.Thread(target=run, args=(5,))
+#     t2 = threading.Thread(target=run, args=(8,))
+#     t1.start()
+#     t2.start()
+#     t1.join()
+#     t2.join()
+#     print(balance)
+# testSafeThread()
+
+balance = 0
+
+
+def change(n: int):
+    global balance
+    balance += n
+    # import time
+    # time.sleep(0.1)
+    balance -= n
+
+
+def run(n):
+    for i in range(2000):
+        if i % 200 == 0:
+            import random, time, threading
+            logf = []
+            logf.append(threading.current_thread().getName())
+            logf.append(i)
+            logf.append(balance)
+            logfTuple = tuple(logf)
+            tu = ("s", 1, 1)
+            print("currThread{},i:{}, balance:{}".format(threading.current_thread().getName()
+                                                         , i, balance))
+            time.sleep(random.randrange(1, 3))
+        change(n)
+
+
+def testSafeThread():
+    for i in range(1, 10):
+        t1 = threading.Thread(target=run, args=(9,))
+        t1.start()
+
+
+testSafeThread()
+
+print(balance)
