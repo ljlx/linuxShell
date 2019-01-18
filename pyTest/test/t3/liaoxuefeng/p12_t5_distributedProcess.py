@@ -88,5 +88,8 @@ def main_useThread():
     tprod.start()
     logging.info("main()==>启动生产/消费线程完毕.")
 
+if __name__ == '__main__':
+    main_useThread()
 
-main_useThread()
+
+
