@@ -9,7 +9,7 @@
 # 尾递归，避免栈溢出，但是大多数语言包括py都没有实现其优化
 # ---------------------------------------------------
 
-def fact(n:int):
+def fact(n: int):
     return fact_iter(n, 1)
 
 
@@ -19,5 +19,6 @@ def fact_iter(num, product):
     print("num:{},product:{}".format(num, product))
     return fact_iter(num - 1, num * product)
 
-inti=int(input("num:"))
+
+inti = int(input("num:"))
 print(fact(inti))
