@@ -116,3 +116,19 @@ print("1:", regex_comp_split_sdf.split(text_point_1))
 print("2:", re.split(regex_split, text_point_1))
 print("3:", re.split(regex_comp_split_sdf, text_point_1))
 print("4:", re.split(regex_comp_split_sdf2, text_point_1))
+
+# group,提取分组.
+# 分组
+#
+# 除了简单地判断是否匹配之外，正则表达式还有提取子串的强大功能。用()表示的就是要提取的分组（Group）。比如：
+#
+# ^(\d{3})-(\d{3,8})$分别定义了两个组，可以直接从匹配的字符串中提取出区号和本地号码
+
+regex_comp_group_tel = re.compile(r'^(\d{3})-(\d{3,8})$')
+testlist = ['010123123', '123-123123']
+for item in testlist:
+    matchResult = regex_comp_group_tel.match(item)
+    if matchResult:
+        group_1 = matchResult.groups()
+        group_2 = matchResult.groups("1")
+        print("item->(%s),group1:[%s],group2:[%s]", matchResult, )
