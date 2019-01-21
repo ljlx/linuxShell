@@ -53,15 +53,21 @@ else:
 
 test1 = "a b c   d"
 test2 = "a b c d"
-testd1 = "a,b,c,,d"
-testd2 = "a,b,c,d"
+testd1 = "a,b ;,c,,d"
+testd2 = "a,b,c  ,d"
 print("普通分割:", test1.split(" "))
 print("普通分割:", test2.split(" "))
 print("普通分割逗号:", testd1.split(","))
 print("普通分割逗号:", testd2.split(","))
 regex_space = re.compile(r'\s+')
-regex_space_d = re.compile(r',+')
+regex_space_d = re.compile(r'\s,+')
 print("正则分割:", regex_space.split(test1))
+print("正则分割:", regex_space.split(test2))
+print("正则逗号分割:", regex_space_d.split(testd1))
+print("正则逗号分割:", regex_space_d.split(testd2))
+
+test_html="<j1 class=adfa>asdf</h1>"
+
 # 非打印字符
 #
 # 非打印字符也可以是正则表达式的组成部分。下表列出了表示非打印字符的转义序列：
