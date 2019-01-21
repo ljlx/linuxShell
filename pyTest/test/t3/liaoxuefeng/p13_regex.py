@@ -97,3 +97,44 @@ test_html="<j1 class=adfa>asdf</h1>"
 # ^ 	匹配输入字符串的开始位置，除非在方括号表达式中使用，此时它表示不接受该字符集合。要匹配 ^ 字符本身，请使用 \^。
 # { 	标记限定符表达式的开始。要匹配 {，请使用 \{。
 # | 	指明两项之间的一个选择。要匹配 |，请使用 \|。
+#
+# 圆括号()是组，主要应用在限制多选结构的范围/分组/捕获文本/环视/特殊模式处理
+# 示例：
+# 1、(abc|bcd|cde)，表示这一段是abc、bcd、cde三者之一均可，顺序也必须一致
+# 2、(abc)?，表示这一组要么一起出现，要么不出现，出现则按此组内的顺序出现
+# 3、(?:abc)表示找到这样abc这样一组，但不记录，不保存到$变量中，否则可以通过$x取第几个括号所匹配到的项，比如：(aaa)(bbb)(ccc)(?:ddd)(eee)，可以用$1获取(aaa)匹配到的内容，而$3则获取到了(ccc)匹配到的内容，而$4则获取的是由(eee)匹配到的内容，因为前一对括号没有保存变量
+# 4、a(?=bbb) 顺序环视 表示a后面必须紧跟3个连续的b
+# 5、(?i:xxxx) 不区分大小写 (?s:.*) 跨行匹配.可以匹配回车符
+#
+# 方括号是单个匹配，字符集/排除字符集/命名字符集
+# 示例：
+# 1、[0-3]，表示找到这一个位置上的字符只能是0到3这四个数字，与(abc|bcd|cde)的作用比较类似，但圆括号可以匹配多个连续的字符，而一对方括号只能匹配单个字符
+# 2、[^0-3]，表示找到这一个位置上的字符只能是除了0到3之外的所有字符
+# 3、[:digit:] 0-9 [:alnum:] A-Za-z0-9
+
+text_point_1 = "a,b c,, ,;,d;e;f;;g  gg"
+text_point_2 = 'a,b;; c ,,, d'
+# 分隔符以','或'空格'或';'号分割字符串
+regex_split = r'[\s+\,\;]'
+regex_comp_split_sdf = re.compile(r'[\s\,\;]+')
+regex_comp_split_sdf2 = re.compile(r'(\s+|\,+|\;+)')
+print("1:", regex_comp_split_sdf.split(text_point_1))
+print("2:", re.split(regex_split, text_point_1))
+print("3:", re.split(regex_comp_split_sdf, text_point_1))
+print("4:", re.split(regex_comp_split_sdf2, text_point_1))
+
+# group,提取分组.
+# 分组
+#
+# 除了简单地判断是否匹配之外，正则表达式还有提取子串的强大功能。用()表示的就是要提取的分组（Group）。比如：
+#
+# ^(\d{3})-(\d{3,8})$分别定义了两个组，可以直接从匹配的字符串中提取出区号和本地号码
+
+regex_comp_group_tel = re.compile(r'^(\d{3})-(\d{3,8})$')
+testlist = ['010123123', '123-123123']
+for item in testlist:
+    matchResult = regex_comp_group_tel.match(item)
+    if matchResult:
+        group_1 = matchResult.groups()
+        group_2 = matchResult.groups("1")
+        print("item->(%s),group1:[%s],group2:[%s]", matchResult, )
