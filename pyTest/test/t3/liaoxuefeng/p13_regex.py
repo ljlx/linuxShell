@@ -116,19 +116,105 @@ print("1:", regex_comp_split_sdf.split(text_point_1))
 print("2:", re.split(regex_split, text_point_1))
 print("3:", re.split(regex_comp_split_sdf, text_point_1))
 print("4:", re.split(regex_comp_split_sdf2, text_point_1))
-
+# 正则表达式(括号)、[中括号]、{大括号}的区别
+# https://blog.csdn.net/pilifeng1/article/details/82389605
 # group,提取分组.
 # 分组
 #
 # 除了简单地判断是否匹配之外，正则表达式还有提取子串的强大功能。用()表示的就是要提取的分组（Group）。比如：
-#
-# ^(\d{3})-(\d{3,8})$分别定义了两个组，可以直接从匹配的字符串中提取出区号和本地号码
+# 圆括号()是组，主要应用在限制多选结构的范围/分组/捕获文本/环视/特殊模式处理
+# 示例：
+# 1、(abc|bcd|cde)，表示这一段是abc、bcd、cde三者之一均可，顺序也必须一致
+# 2、(abc)?，表示这一组要么一起出现，要么不出现，出现则按此组内的顺序出现
+# 3、(?:abc)表示找到这样abc这样一组，但不记录，不保存到$变量中，否则可以通过$x取第几个括号所匹配到的项，比如：(aaa)(bbb)(ccc)(?:ddd)(eee)，可以用$1获取(aaa)匹配到的内容，而$3则获取到了(ccc)匹配到的内容，而$4则获取的是由(eee)匹配到的内容，因为前一对括号没有保存变量
+# 4、a(?=bbb) 顺序环视 表示a后面必须紧跟3个连续的b
+# 5、(?i:xxxx) 不区分大小写 (?s:.*) 跨行匹配.可以匹配回车符
 
-regex_comp_group_tel = re.compile(r'^(\d{3})-(\d{3,8})$')
-testlist = ['010123123', '123-123123']
+# ^(\d{3})-(\d{3,8})$分别定义了两个组，可以直接从匹配的字符串中提取出区号和本地号码
+# {0,} 等价于 *
+# {1,} 等价于 +
+regex_comp_group_tel = re.compile(r'^(\d{3})-(\d+)?')
+regex_comp_group_tel = re.compile(r'^(\d{3})-(\d{1,})?')
+testlist = ['010123123', '123-123123', '123-']
 for item in testlist:
     matchResult = regex_comp_group_tel.match(item)
     if matchResult:
-        group_1 = matchResult.groups()
-        group_2 = matchResult.groups("1")
-        print("item->(%s),group1:[%s],group2:[%s]", matchResult, )
+        group_1 = matchResult.group(1)
+        group_1_2 = matchResult.group(2)
+        #  match.groups(default=None)
+        #
+        #     Return a tuple containing all the subgroups of the match, from 1 up to however many groups are in the pattern. The default argument is used for groups that did not participate in the match; it defaults to None.
+        group_2 = matchResult.groups(None)
+        group_3 = matchResult.groups("默认值")
+        print("groups-default:%s, value2-{%s}" % (group_2, group_3))
+        print("item->(%s),group1:[%s],group2:[%s]" % (item, group_1, group_1_2))
+    else:
+        print("该[%s]不满足匹配规则." % item)
+regexComp_group3 = re.compile(r"(\d+)\.?(\d+)?")
+match_group_3 = regexComp_group3.match("24")
+print(match_group_3.groups())
+
+
+# 贪婪匹配
+#
+# 最后需要特别指出的是，正则匹配默认是贪婪匹配，也就是匹配尽可能多的字符。举例如下，匹配出数字后面的0
+# (?!pattern)
+#
+# 正向否定预查(negative assert)，在任何不匹配pattern的字符串开始处匹配查找字符串。
+# 这是一个非获取匹配，也就是说，该匹配不需要获取供以后使用。
+# 例如"Windows(?!95|98|NT|2000)"能匹配"Windows3.1"中的"Windows"，
+# 但不能匹配"Windows2000"中的"Windows"。预查不消耗字符，
+# 也就是说，在一个匹配发生后，在最后一次匹配之后立即开始下一次匹配的搜索，
+# 而不是从包含预查的字符之后开始。
+def greedMatch():
+    # 目标
+    # 18649760000:true
+    # 18600000000:false
+    # 匹配规则:1xx-yyyy-zzzz, yyyy不能全为0
+    regexcomp = re.compile(r'^(1\d{2}?)(?!0000)(\d{8})')
+    test_text = ["", "1", "11", "11a",
+                 "111a", "111", "1111",
+                 "18649760000", "18600000000",
+                 "18610002222", "1861000333"]
+    for item in test_text:
+        matchResult2 = regexcomp.match(item)
+        if matchResult2:
+            tupleresu = matchResult2.groups()
+            print("匹配[%s],true,result:%s" % (item, tupleresu))
+        else:
+            print("匹配[%s],false" % item)
+
+
+def emailMatch(emailtext: str):
+    emailRe = re.compile(r'^([a-zA-Z]+)(\w|\-|\.)?([a-zA-Z]+)@(.+)')
+    return emailRe.match(emailtext)
+
+
+def testEmail():
+    testEmailList = []
+    testEmailList.append('someone@gmail.com')
+    testEmailList.append('bill.gates@microsoft.com')
+    testEmailList.append('.@microsoft.com')
+    testEmailList.append('a.@microsoft.com')
+    testEmailList.append('bob#example.com')
+    testEmailList.append('mr-bob@example.com')
+    for item in testEmailList:
+        emailMatchResu = emailMatch(item)
+        if emailMatchResu:
+
+            username = str(emailMatchResu.group(1)) \
+                       + str(emailMatchResu.group(2)) \
+                       + str(emailMatchResu.group(3))
+
+            print("邮箱: 用户名[%s],服务商[%s], 原始邮箱信息:[%s]" % (username
+                                                        , emailMatchResu.group(2)
+                                                        , item
+                                                        ))
+        else:
+            import pyTest.test.openSource.runoob.t3_logger as mylogger
+            logger = mylogger.getlogger("regex")
+            logger.warning("testEmail()==>该邮箱[%s]不合法,正则匹配失败!", item)
+
+
+testEmail()
+# greedMatch()
