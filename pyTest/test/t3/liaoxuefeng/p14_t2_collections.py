@@ -85,11 +85,86 @@ def testDeque():
 
 def getDefaultDict():
     from collections import defaultdict
-    defdict = defaultdict(default_factory=lambda: "defvalue")
-    # defdict=defaultdict(lambda :"defvalue")
+    # default_factory不是关键字参数.
+    # defdict = defaultdict(default_factory=lambda: "defvalue")
+    defdict = defaultdict(lambda: "defvalue")
     defdict['id'] = 123
     defdict['name'] = 'namessss'
-    print(defdict['names'])
+    print("字典所有值:", defdict)
+    print("不存在的key:", defdict['names'])
 
 
-getDefaultDict()
+def orderDict():
+    """
+    默认的dict是hash的,迭代key是不保证顺序的.使用OrderedDict可以保证key是顺序的
+    :return:
+    """
+    from collections import OrderedDict
+    dict1 = dict([('k1', 'v1'), ('k2', 'v2'), ('kk1', 'vv1'), ('kk2', 'vv2')])
+    print(dict1)
+    dict2 = OrderedDict(dict1)
+    dict3 = OrderedDict([('k1', 'v1'), ('k2', 'v2'), ('kk1', 'vv1'), ('kk2', 'vv2')])
+    print("排序字典(按照插入顺序):", dict3)
+    print("排序字典(由dict对象转化而来,顺序有问题):", dict2)
+    #     注意，OrderedDict的Key会按照插入的顺序排列，不是Key本身自然排序
+
+
+def chainDictMap():
+    """
+    ChainMap可以把一组dict串起来并组成一个逻辑上的dict。ChainMap本身也是一个dict，
+    但是查找的时候，会按照顺序在内部的dict依次查找。
+    什么时候使用ChainMap最合适？举个例子：应用程序往往都需要传入参数，参数可以通过命令行传入，
+    可以通过环境变量传入，还可以有默认参数。我们可以用ChainMap实现参数的优先级查找，
+    即先查命令行参数，如果没有传入，再查环境变量，如果没有，就使用默认参数
+    :return:
+    """
+    from collections import ChainMap
+    import os, argparse
+
+    defaultArg = {'user': 'hanxu', 'age': 20}
+    # 构造命令行参数
+    myargparse = argparse.ArgumentParser()
+    myargparse.add_argument('-u', '--user', help="描述信息-用户名")
+    myargparse.add_help
+    myargparse.add_argument('-A', '--age')
+    namespace = myargparse.parse_args()
+    varsDictName = vars(namespace)
+    print("vars(myargparse.parse_args()):", varsDictName)
+    command_line_args = {k: v for k, v in vars(namespace).items() if v}
+    print("命令参数:", command_line_args)
+    print(namespace.user)
+    #   组合成chainMap:
+    #    osenv=os.environ
+    comblined = ChainMap(command_line_args, defaultArg)
+    print("最终形成类似springBoot的参数机制:", comblined)
+    print("user:", comblined.get('user'))
+    print("age:", comblined.get('age'))
+
+
+def counter():
+    """
+    简单的计数器
+    :return:
+    """
+    from collections import Counter
+    mycounter = Counter()
+    for item in 'hello,world':
+        mycounter[item] += 1
+    # count大于等于2,
+    print(mycounter.most_common(2))
+    print("排序:", sorted(mycounter))
+    myitems = mycounter.items()
+    myelement = mycounter.elements()
+    sortitem = sorted(myitems)
+    sortelement = sorted(myelement)
+    print("".join(sorted(myitems)))
+
+    print("".join(myelement))
+
+    print("计数器:类型[%s] ,\n计数结果[%s]" % (type(mycounter), mycounter))
+
+
+# getDefaultDict()
+# orderDict()
+# chainDictMap()
+counter()
