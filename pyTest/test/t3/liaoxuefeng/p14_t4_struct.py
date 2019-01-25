@@ -69,8 +69,30 @@ def testStruct_pack():
     # 后面的参数个数要和处理指令一致
     t1 = struct.pack('>I', 10240099)
     print(t1)
+    # 根据>IH的说明，后面的bytes依次变为I：4字节无符号整数和H：2字节无符号整数
+    t2 = struct.unpack('>IH', b'\xf0\xf0\xf0\xf0\x80\x80')
+    print(t2)
+
 
 def testWindowBmp():
     s = b'\x42\x4d\x38\x8c\x0a\x00\x00\x00\x00\x00\x36\x00\x00\x00\x28\x00\x00\x00\x80\x02\x00\x00\x68\x01\x00\x00\x01\x00\x18\x00'
     print(s)
+    # BMP格式采用小端方式存储数据，文件头的结构按顺序如下：
+    #
+    # 两个字节：'BM'表示Windows位图，'BA'表示OS/2位图；
+    # 一个4字节整数：表示位图大小；
+    # 一个4字节整数：保留位，始终为0；
+    # 一个4字节整数：实际图像的偏移量；
+    # 一个4字节整数：Header的字节数；
+    # 一个4字节整数：图像宽度；
+    # 一个4字节整数：图像高度；
+    # 一个2字节整数：始终为1；
+    # 一个2字节整数：颜色数。
+    import struct
+    #     所以说用struct来按字节数量来解析字符,unpack方法要简单许多
+    bmpbyteObj = struct.unpack('<ccIIIIIIHH', s)
+    print("使用unpack解析出的类型为:%s,内容是:%s" % (type(bmpbyteObj), bmpbyteObj))
+    # 结果显示，b'B'、b'M'说明是Windows位图，位图大小为640x360，颜色数为24。
+    # TODO 改天尝试自己实现: 我想应该可以使用类似的方法来解析tcp包的数据,和http头的数据
 
+testWindowBmp()
