@@ -59,8 +59,28 @@ def shaCurrpy():
     sha1obj=hashlib.sha1()
     with open(os.getcwd()+"/p14_t5_hashlib.py") as currpyobj:
         currpytext=currpyobj.read()
-        sha1obj.update(currpytext)
+        sha1obj.update(currpytext.encode())
         print(sha1obj.hexdigest())
+
+
+def py_salt():
+    """
+    使用py标准库来替代自己实现加盐策略的摘要算法
+    :return:
+    """
+    import hmac
+    message = b'Hello, world!'
+    salt = b'secret'
+    h = hmac.new(salt, message, digestmod='MD5')
+    # 如果消息很长，可以多次调用h.update(msg)
+    h.hexdigest()
+
+
+# Python内置的hmac模块实现了标准的Hmac算法，
+# 它利用一个key对message计算“杂凑”后的hash，
+# 使用hmac算法比标准hash算法更安全，
+# 因为针对相同的message，不同的key会产生不同的hash。
+
 if __name__ == '__main__':
-    md5CurrPy()
+    # md5CurrPy()
     shaCurrpy()
