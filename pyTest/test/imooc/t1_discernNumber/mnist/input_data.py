@@ -17,6 +17,9 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+# https://repo.continuum.io/archive/Anaconda3-2018.12-Linux-x86_64.sh
+# 使用上面这个bash脚本来下载安装anaconda环境.
+
 # import gzip
 # import os
 # import tempfile
