@@ -70,7 +70,8 @@ person("hanxu", 22, **dict1)
 
 # 注意extend获得的dict是dict1的一份拷贝，对extend的改动不会影响到函数外的extend。
 
-# 使用命名关键字参数时，要特别注意，如果没有可变参数，就必须加一个*作为特殊分隔符。如果缺少*，Python解释器将无法识别位置参数和命名关键字参数：
+# 使用命名关键字参数时，要特别注意，如果没有可变参数，就必须加一个*作为特殊分隔符。
+# 如果缺少*，Python解释器将无法识别位置参数和命名关键字参数：
 def person1(name, age, *, addr, sex=1, ishappy="goodQuestion"):
     """
     命名关键字参数

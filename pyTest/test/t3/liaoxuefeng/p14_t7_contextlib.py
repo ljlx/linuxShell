@@ -109,7 +109,7 @@ class Testt2(object):
 
 
 @contextmanager
-def enterCreateQueue(size: int):
+def enterCreateQueue(size: int) -> str:
     logger.info("enterCreateQueue()==>创建队列,大小:%s", size)
     tinstance = Testt2(size)
     tinstance.initfile()
@@ -122,7 +122,6 @@ def enterCreateQueue(size: int):
 def testContextWith():
     with enterCreateQueue(10) as pyfile:
         logger.info("testContextWith()==>%s", pyfile)
-
 
 # testContextWith()
 
