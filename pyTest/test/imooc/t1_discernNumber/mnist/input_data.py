@@ -26,6 +26,5 @@ from __future__ import print_function
 # import numpy
 # from six.moves import urllib
 # from six.moves import xrange
-# import tensorr
-
+# import tensorflow
 print()
