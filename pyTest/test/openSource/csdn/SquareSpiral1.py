@@ -34,7 +34,7 @@ def test1():
 
 def test2():
     t = turtle.Pen()
-    t.speed(20)
+    t.speed(1000)
     for i in range(1000):  # range(100)[1:1000:1]:
         t.forward(100)
         # t.right(8)
@@ -44,12 +44,10 @@ def test2():
         t.left(91)
 
 
-2
-
-
 def test3():
     turtle1 = turtle.Pen()
-    turtle1.color("purple")
+
+    turtle1.color("red")
     turtle1.pensize(5)
     turtle1.goto(0, 0)
     turtle1.speed(10)
@@ -77,8 +75,30 @@ def test4():
     for i in range(300):
         if i > 3:
             turtle4.forward(50)
-            result=fn(i)
+            result = fn(i)
             turtle4.right(result)
 
-test4()
-print('end')
+
+# test4()
+# print('end')
+
+
+def test5():
+    turtle5 = turtle.Pen()
+    turtle5.color("purple")
+    turtle5.pensize(2)
+    turtle5.speed(10)
+    count = 0
+    last = 100
+    for i in range(100):
+        if count > 3:
+            last = last + 20
+            count = 0
+        count = count + 1
+        turtle5.forward(last)
+        turtle5.right(120)
+    input("as")
+
+# if __name__ == '__main__':
+#     test3()
+#     input("as")

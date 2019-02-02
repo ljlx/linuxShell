@@ -10,6 +10,17 @@
 ####################################################
 export PUB_SHELLS=/usr/linuxShell/
 
-export PATH=${PUB_SHELLS}/utils-shells/bin:$PATH
+shellUtilPath=${PUB_SHELLS}/utils-shells/bin
+pyUtilpath=${PUB_SHELLS}/utils-py/bin
+
+
+mpath=${PUB_SHELLS}/utils-shells/bin:$PATH
+mpath=${pyUtilpath}:$PATH
+
+export PATH=${mpath}
+
+
 
 export PUB_FACTION=${PUB_SHELLS}/developEnvironment/bin/aliasAndEnv/function
+
+

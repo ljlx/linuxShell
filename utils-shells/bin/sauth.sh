@@ -27,7 +27,7 @@ if [[ allargCount -gt 0 ]];then
     echo "allargCount:"$allargCount
 fi
 
-for sh_file in `find ./ -name "*.sh"`
+for sh_file in `find ./ \( -name "*.sh" -or -name "*.py" \) -type f`
     do
        isSh="false" 
          if [ ! -x $sh_file ]; then
