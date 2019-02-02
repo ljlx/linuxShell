@@ -15,7 +15,7 @@ pyUtilpath=${PUB_SHELLS}/utils-py/bin
 
 
 mpath=${PUB_SHELLS}/utils-shells/bin:$PATH
-mpath=${pyUtilpath}:$PATH
+mpath=${pyUtilpath}:$mpath
 
 export PATH=${mpath}
 
