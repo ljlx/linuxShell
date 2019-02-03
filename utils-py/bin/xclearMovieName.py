@@ -59,6 +59,8 @@ def initFilter():
     """
     filterDict['suffix'] = filter_suffix
     filterDict['rmbracket'] = filter_bracket
+    filterDict['rmpoint'] = filter_rmSpaceAndPoint
+
     # 1.手动加载过滤规则.
 
 
@@ -73,13 +75,33 @@ def filter_suffix(movieList):
     re_suffix = re.compile(r'.+.(avi|mkv|mp4|rmvb|gpg)$')
 
     def dofilter(movie):
-        matchResult = re_suffix.match(movie)
+        filename = os.path.basename(movie)
+        matchResult = re_suffix.match(filename)
         if matchResult:
             return True
         return False
 
     # 过滤链如果处理, 这里不使用list. 后续一并多个filter计算
     return list(filter(dofilter, movieList))
+
+
+def filter_rmSpaceAndPoint(movieList):
+    """
+    删除文件名的空格和小数点.
+    :param movieList:
+    :return:
+    """
+
+    def dofileter(movie):
+        filename = os.path.basename(movie)
+        dirname = os.path.dirname(movie)
+        if isinstance(filename, str):
+            if filename.startswith('.'):
+                filename = filename.replace('.', '', 1)
+            filename = filename.replace(" ", "")
+        return os.path.join(dirname, filename)
+
+    return list(map(dofileter, movieList))
 
 
 def filter_bracket(movielist: list):
@@ -105,20 +127,23 @@ def filter_bracket(movielist: list):
     re_bracket = re.compile(r'(\.?\[((\w+|\.+|\-+)+)\])')
 
     def reduce(movie: str):
-        originalName = movie
-        if "最后的武士" in movie:
-            print("")
-            pass
-        bracketResult = re_bracket.findall(movie)
+        filename = os.path.basename(movie)
+        pathname = os.path.dirname(movie)
+        # if "最后的武士" in movie:
+        #     print("")
+        #     pass
+        bracketResult = re_bracket.finditer(filename)
         if bracketResult:
             for item in bracketResult:
                 if isinstance(item, tuple):
                     for item2 in item:
-                        movie = movie.replace(item2, "")
+                        filename = filename.replace(item2, "")
                 elif isinstance(item, str):
-                    movie = movie.replace(item, "")
-            print("文件 %s ==> %s" % (originalName, movie))
-        return movie
+                    filename = filename.replace(item, "")
+                elif isinstance(item, re.Match):
+                    filename = filename.replace(item.group(0), "")
+            # print("文件 %s ==> %s" % (originalName, movie))
+        return os.path.join(pathname, filename)
 
     return list(map(reduce, movielist))
 
@@ -127,10 +152,24 @@ def init():
     initFilter()
 
 
+def fullPathDir(dirlist: list = [], pathdir: str = '.'):
+    curdirlist = os.listdir(pathdir)
+    for item in curdirlist:
+        parentdirs = os.path.join(pathdir, item)
+        if os.path.isdir(parentdirs):
+            fullPathDir(dirlist, parentdirs)
+        else:
+            dirlist.append(parentdirs)
+    return dirlist
+
+
 if __name__ == '__main__':
     init()
     curdir = getCurDir()
-    filelist = os.listdir(curdir)
-    filelist = filterChain(filelist)
+    dirlist = fullPathDir(pathdir=curdir)
+    curdir = os.path.curdir
+    # filelist =
+    filelist = filterChain(dirlist)
+
     for item in filelist:
         print(item)
