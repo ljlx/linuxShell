@@ -35,20 +35,33 @@ def initSearchDir():
     return pydir
 
 
-# 数据清洗链.
+# 数据过滤链.
 def filterChain(movieList):
     """
-    清洗,规则匹配的返回true
+    匹配需要清洗的链,规则匹配的返回true
     :return:
     """
     lastlist = movieList
     for keyname, filter in filterDict.items():
         lastlist = filter(lastlist)
-        print("使用过滤器[%s]进行数据清洗过滤." % (keyname))
+        # print("使用过滤器[%s]进行数据清洗过滤." % (keyname))
     return lastlist
 
 
+def handlerChain(movieList: list):
+    """
+
+    :param movieList:
+    :return:
+    """
+    lastresult = movieList
+    for name, handler in handlerDict.items():
+        lastresult = handler(lastresult)
+    return lastresult
+
+
 filterDict = {}
+handlerDict = {}
 
 
 def initFilter():
@@ -58,8 +71,8 @@ def initFilter():
     :return:
     """
     filterDict['suffix'] = filter_suffix
-    filterDict['rmbracket'] = filter_bracket
-    filterDict['rmpoint'] = filter_rmSpaceAndPoint
+    handlerDict['rmbracket'] = handler_bracket
+    handlerDict['rmpoint'] = handler_rmSpaceAndPoint
 
     # 1.手动加载过滤规则.
 
@@ -85,7 +98,7 @@ def filter_suffix(movieList):
     return list(filter(dofilter, movieList))
 
 
-def filter_rmSpaceAndPoint(movieList):
+def handler_rmSpaceAndPoint(movieList: list):
     """
     删除文件名的空格和小数点.
     :param movieList:
@@ -104,7 +117,7 @@ def filter_rmSpaceAndPoint(movieList):
     return list(map(dofileter, movieList))
 
 
-def filter_bracket(movielist: list):
+def handler_bracket(movielist: list):
     """
     移除电影天堂相关不需要的字符串.
     :param movielist:
@@ -126,7 +139,7 @@ def filter_bracket(movielist: list):
     # [xxxwww.dygod.com]fff[ss.1024ss].rmvb
     re_bracket = re.compile(r'(\.?\[((\w+|\.+|\-+)+)\])')
 
-    def reduce(movie: str):
+    def mapfun(movie: str):
         filename = os.path.basename(movie)
         pathname = os.path.dirname(movie)
         # if "最后的武士" in movie:
@@ -145,31 +158,83 @@ def filter_bracket(movielist: list):
             # print("文件 %s ==> %s" % (originalName, movie))
         return os.path.join(pathname, filename)
 
-    return list(map(reduce, movielist))
+    return list(map(mapfun, movielist))
 
 
 def init():
     initFilter()
 
 
-def fullPathDir(dirlist: list = [], pathdir: str = '.'):
+def fullPathDir(dirTree, pathdir: str = '.'):
     curdirlist = os.listdir(pathdir)
     for item in curdirlist:
         parentdirs = os.path.join(pathdir, item)
         if os.path.isdir(parentdirs):
-            fullPathDir(dirlist, parentdirs)
+            fullPathDir(dirTree, parentdirs)
         else:
-            dirlist.append(parentdirs)
-    return dirlist
+            dirTree.append(parentdirs)
+    return dirTree
+
+
+class fileTree(object):
+    def __init__(self, originalName, fileOrDir: bool = False):
+        """
+        构造文件系统树对象.
+        :param originalName: 名称
+        :param fileOrDir: true:文件, false:目录
+        """
+        self.originalName = originalName
+        self.changeName = originalName
+        # self.fileOrDir = fileOrDir
+        self.fileOrDir = os.path.isfile(originalName)
+        if fileOrDir:
+            filestatus = os.stat(originalName)
+            self.fileSize = filestatus.st_size
+        else:
+            self.subFileList = []
+            self.subDirTree = []
+
+    def addFile(self, filepath: str):
+        # test = os.lstat(filepath)
+        # fileattr = os.stat(filepath)
+        if self.fileOrDir:
+            raise BaseException('file obj no support addFile()')
+        # self.fileLength = fileattr.st_size
+        self.subFileList.append(fileTree(filepath, True))
+        return self
+
+    def addDir(self, fileDir):
+        filetreeobj = fileTree(fileDir, False)
+        self.subDirTree.append(filetreeobj)
+        return self
+
+    def searchFile(self):
+        """
+        递归搜索文件
+        :return:
+        """
+        pass
+
+
+def mainTest():
+    init()
+    curdir = getCurDir()
+    originalFileList = fullPathDir(pathdir=curdir)
+    curdir = os.path.curdir
+    # filelist =
+    filterlist = filterChain(originalFileList)
+    handlerResult = handlerChain(filterlist)
+    for item in handlerResult:
+        print(item)
+
+
+def test():
+    print("我是api测试")
+    print(__file__)
+    filetreeobj = fileTree(os.getcwd())
+    filetreeobj.addFile(__file__)
+    # filetreeobj.add
 
 
 if __name__ == '__main__':
-    init()
-    curdir = getCurDir()
-    dirlist = fullPathDir(pathdir=curdir)
-    curdir = os.path.curdir
-    # filelist =
-    filelist = filterChain(dirlist)
-
-    for item in filelist:
-        print(item)
+    test()

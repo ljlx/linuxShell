@@ -44,6 +44,7 @@ def md5CurrPy():
     :return:
     """
     curPyFile = os.getcwd() + "/p14_t5_hashlib.py"
+    # print(__file__)当前执行文件名.
     md5obj = hashlib.md5()
     # print(type(md5obj)))
     # TODO 如何有更简单简洁方便的方法,来让编译器知道md5obj的类型.
