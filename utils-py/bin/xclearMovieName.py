@@ -177,7 +177,7 @@ def fullPathDir(dirTree, pathdir: str = '.'):
 
 
 class fileTree(object):
-    def __init__(self, originalName, fileOrDir: bool = False):
+    def __init__(self, originalName):
         """
         构造文件系统树对象.
         :param originalName: 名称
@@ -186,34 +186,53 @@ class fileTree(object):
         self.originalName = originalName
         self.changeName = originalName
         # self.fileOrDir = fileOrDir
-        self.fileOrDir = os.path.isfile(originalName)
-        if fileOrDir:
+        self.isfile = os.path.isfile(originalName)
+        self.index = 0
+        self.isdir = os.path.isdir(originalName)
+        if self.isfile:
             filestatus = os.stat(originalName)
             self.fileSize = filestatus.st_size
-        else:
+        elif self.isdir:
             self.subFileList = []
             self.subDirTree = []
+            self.searchFile()
 
     def addFile(self, filepath: str):
         # test = os.lstat(filepath)
         # fileattr = os.stat(filepath)
-        if self.fileOrDir:
+        if self.isfile:
             raise BaseException('file obj no support addFile()')
-        # self.fileLength = fileattr.st_size
-        self.subFileList.append(fileTree(filepath, True))
-        return self
+        elif self.isdir:
+            # self.fileLength = fileattr.st_size
+            self.subFileList.append(fileTree(filepath))
+            return self
 
     def addDir(self, fileDir):
-        filetreeobj = fileTree(fileDir, False)
+        filetreeobj = fileTree(fileDir)
         self.subDirTree.append(filetreeobj)
         return self
 
     def searchFile(self):
         """
         递归搜索文件
+        :return:3333
+        """
+        if self.isdir:
+            pass
+        elif self.isfile:
+            raise BaseException('file obj not support this function.')
+        s=self.originalName
+
+    def _recursiveSearch(self,filepath=None):
+        """
+        递归方法->搜索目录及其文件.
         :return:
         """
-        pass
+        if filepath:
+            for item in os.listdir(filepath):
+                isfile=os.path.isfile(item)
+                isdir=os.path.isdir(item)
+
 
 
 def mainTest():
@@ -233,6 +252,7 @@ def test():
     print(__file__)
     filetreeobj = fileTree(os.getcwd())
     filetreeobj.addFile(__file__)
+    filetreeobj.addDir("/media/hanxu/Movie_And_Music/allMovie/rmvb")
     # filetreeobj.add
 
 
