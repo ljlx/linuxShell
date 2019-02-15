@@ -12,5 +12,7 @@ conda remove requests 卸载requets包
 conda remove -n learn --all // 删除learn环境及下属所有包
 conda update requests 更新requests包
 conda env list 列出当前所有虚拟环境.
+导出环境
 conda env export > environment.yaml  // 导出当前环境的包信息
+导入并创建环境
 conda env create -f environment.yaml  // 用配置文件创建新的虚拟环境
