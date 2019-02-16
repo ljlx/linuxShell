@@ -186,6 +186,10 @@ class fileTree(object):
         self.originalName = originalName
         self.changeName = originalName
         # self.fileOrDir = fileOrDir
+
+
+    def _parseInit(self):
+        originalName=self.originalName
         self.isfile = os.path.isfile(originalName)
         self.index = 0
         self.isdir = os.path.isdir(originalName)
@@ -197,19 +201,27 @@ class fileTree(object):
             self.subDirTree = []
             self.searchFile()
 
-    def addFile(self, filepath: str):
+    def addFile(self, filepath):
         # test = os.lstat(filepath)
         # fileattr = os.stat(filepath)
         if self.isfile:
             raise BaseException('file obj no support addFile()')
         elif self.isdir:
-            # self.fileLength = fileattr.st_size
-            self.subFileList.append(fileTree(filepath))
+            if isinstance(filepath,str):
+                # self.fileLength = fileattr.st_size
+                self.subFileList.append(fileTree(filepath))
+                pass
+            elif isinstance(filepath,fileTree):
+                self.subFileList.append(filepath)
+                pass
             return self
 
     def addDir(self, fileDir):
-        filetreeobj = fileTree(fileDir)
-        self.subDirTree.append(filetreeobj)
+        if isinstance(fileDir,str):
+            filetreeobj = fileTree(fileDir)
+            self.subDirTree.append(filetreeobj)
+        elif isinstance(fileDir,fileTree):
+            self.subDirTree.append(fileDir)
         return self
 
     def searchFile(self):
@@ -218,6 +230,7 @@ class fileTree(object):
         :return:3333
         """
         if self.isdir:
+            self._recursiveSearch(self.originalName)
             pass
         elif self.isfile:
             raise BaseException('file obj not support this function.')
@@ -230,8 +243,16 @@ class fileTree(object):
         """
         if filepath:
             for item in os.listdir(filepath):
-                isfile=os.path.isfile(item)
-                isdir=os.path.isdir(item)
+                itempath=os.path.join(filepath,item)
+                itemTree=fileTree(itempath)
+                # print(itemTree)
+                if itemTree.isdir:
+                    self.addDir(itemTree)
+                elif itemTree.isfile:
+                    self.addFile(itemTree)
+                # if itemTree and itemTree.isdir:
+                # isfile=os.path.isfile(item)
+                # isdir=os.path.isdir(item)
 
 
 
@@ -251,8 +272,22 @@ def test():
     print("我是api测试")
     print(__file__)
     filetreeobj = fileTree(os.getcwd())
-    filetreeobj.addFile(__file__)
+    # filetreeobj.addFile(__file__)
     filetreeobj.addDir("/media/hanxu/Movie_And_Music/allMovie/rmvb")
+    print(filetreeobj)
+    def json2obj(x):
+        print(x)
+        return x['originalName']
+        # pass
+    try:
+        import json
+        print(json.dumps(filetreeobj,default=lambda x:x.__dict__))
+        sss=json.loads(json.dumps(filetreeobj,default=lambda x:x.__dict__)
+                       ,object_hook=json2obj)
+        print("ss")
+    except BaseException as ex:
+        print(ex)
+
     # filetreeobj.add
 
 
