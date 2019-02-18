@@ -57,6 +57,7 @@ case ${server} in
 	sshRemote ${user}@t1.company.wan
 	    ;;
    t2)
+	echo "pkvOPfezonOiUT4W"
 	sshRemote hanxu@jumps.linkdood.cn
 
 	;;
