@@ -31,7 +31,7 @@ case ${server} in
         sshRemote hanxu@vpn.home
         ;;
     nas)
-        sshRemote root@10.193.1.2
+        sshRemote root@nas.lan
         ;;
     bj)
         sshRemote root@vpn.vpn
