@@ -11,7 +11,7 @@
 # ---------------------------------------------------
 
 import os
-
+from subprocess import Popen
 
 def listGitResp(curdir: str = "."):
     tardirlist = os.listdir(curdir)
@@ -28,10 +28,20 @@ def remoteAddUrl(repoName, remoteUrl):
     pass
 
 
+def pushToOrigin():
+    """
+    向远程仓库push
+    :return:
+    """
+    pass
+
 def tprintList(target: list):
     for item in target:
-        print(target)
-
+        realItem = os.path.join(os.getcwd(), item)
+        print(realItem)
+        # os.system("cd %s && ls"%(realItem))
+        os.system("cd %s && git push" % (realItem))
+        Popen()
 
 if __name__ == '__main__':
     tprintList(listGitResp())
