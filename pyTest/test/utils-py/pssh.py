@@ -12,6 +12,8 @@
 import json as xjson
 
 
+# 可以参考跳板机源码
+
 class sshConfig(object):
 
     def __init__(self):
