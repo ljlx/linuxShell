@@ -32,7 +32,7 @@ for sh_file in `find ./ \( -name "*.sh" -or -name "*.py" \) -type f`
        isSh="false" 
          if [ ! -x $sh_file ]; then
          #取不可执行的sh文件进行设置权限位,暂时先不管这个文件的原有权限什么情况.现在只把他设置成754
-         chmod 754 $sh_file; 
+         chmod 755 $sh_file;
          
          #result=$(($?==0?200:500))
         [ $? == 0 ] && result="成功" || result="失败"
