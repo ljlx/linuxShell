@@ -13,4 +13,7 @@ class DoubanItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
     # 这里定义每一个item的定义.
+    movieId=scrapy.Field()
+    movieName=scrapy.Field()
+    movieLink=scrapy.Field()
     pass
