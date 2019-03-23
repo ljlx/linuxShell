@@ -3,6 +3,7 @@ import scrapy
 
 from scrapy.http.response.html import HtmlResponse as xHtmlResposne
 from pyTest.test.imooc.t2_scrapy.douban.items import DoubanItem
+
 class DoubanSpiderSpider(scrapy.Spider):
     # 爬虫名,不能和项目名重复
     name = 'douban_spider'
@@ -47,7 +48,8 @@ class DoubanSpiderSpider(scrapy.Spider):
                 douban_item['movieLink'] = itemInfo.xpath("./div/a/@href").get()
                 picaddress=itempic.xpath("./a")
                 print(id,picaddress)
-                yield itemMovie
+                # 数据返回到了pipeliine(管道)中
+                yield douban_item
 
 
 # 豆瓣xpath:
