@@ -41,11 +41,14 @@ package main
 import (
 	test "fmt"
 	. "time"
+	_ "os"
 )
 func main() {
 	test.Print("test")
 	println("start...")
 	//time.Now()
 	println("",Now().String())
+	// 报错,方法无法使用,但是可以加载init函数.
+	//println(os.Args[1])
 }
 ```

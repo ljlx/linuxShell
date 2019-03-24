@@ -4,6 +4,7 @@ import (
 	test "fmt"
 	. "time"
 
+	"os"
 )
 
 func main() {
@@ -11,4 +12,5 @@ func main() {
 	println("start...")
 	//time.Now()
 	println("",Now().String())
+	println(os.Args[1])
 }
