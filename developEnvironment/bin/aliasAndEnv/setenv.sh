@@ -1,2 +1,2 @@
 #!/bin/bash
-. /usr/pubShells/developEnvironment/bin/aliasAndEnv/install.sh setenv
+. /usr/linuxShell/developEnvironment/bin/aliasAndEnv/install.sh setenv
