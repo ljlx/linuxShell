@@ -36,7 +36,8 @@ fi
 
 function setenv(){
 if [ -d ${envDir} ]; then
-    for item in `ls ${envDir}/*.sh` ; do
+    local item=""
+    for item in `ls ${envDir}/*.env.sh` ; do
     	    source ${item}
 	    code=$?
 	    echo ${code}

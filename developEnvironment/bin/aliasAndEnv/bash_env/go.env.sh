@@ -11,24 +11,36 @@
 
 GOHOME=/usr/lib/go
 
-GOROOT=${GOHOME}/bin
+GOROOT=${GOHOME}
 
 export GOHOME=${GOHOME}
 export GOROOT=${GOROOT}
 
-export PATH=${PATH}:${GOROOT}
-
+export PATH=${PATH}:${GOROOT}/bin
 
 targetList=(~/.GO/thirdPkg \
-~/.GO/target \
 /usr/lib/go \
+~/.GO/target \
+/tmp/GO/target \
 )
 
-targetPath="/tmp/target"
-for item in ${targetList[@]} ; do
-    targetPath=${targetPath}:${item}
-done
+function gopath() {
+    local targetPath=""
+    for itemPath in ${targetList[@]} ; do
+        if [[ -n ${targetPath} ]]; then
+            targetPath=${targetPath}:${itemPath}
+        else
+            targetPath=${itemPath}
+        fi
 
-#该环境变量,如果在有多个值时,在使用go get [位置信息] 命令时,下载的包会默认存在第一个目录.
-#e.g: go get github.com/hx940929/linuxShell/goTest/
-export GOPATH=${targetPath}
+    done
+
+    #该环境变量,如果在有多个值时,在使用go get [位置信息] 命令时,下载的包会默认存在第一个目录.
+    #e.g: go get github.com/hx940929/linuxShell/goTest/
+    export GOPATH=${targetPath}
+#    unset item
+    itemPath=asdf
+    return 0
+}
+
+gopath
