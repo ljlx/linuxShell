@@ -19,8 +19,9 @@ export GOROOT=${GOROOT}
 export PATH=${PATH}:${GOROOT}
 
 
-targetList=(/tmp/target \
-~/.Go_target \
+targetList=(~/.GO/thirdPkg \
+~/.GO/target \
+/usr/lib/go \
 )
 
 targetPath="/tmp/target"
@@ -28,4 +29,6 @@ for item in ${targetList[@]} ; do
     targetPath=${targetPath}:${item}
 done
 
+#该环境变量,如果在有多个值时,在使用go get [位置信息] 命令时,下载的包会默认存在第一个目录.
+#e.g: go get github.com/hx940929/linuxShell/goTest/
 export GOPATH=${targetPath}
