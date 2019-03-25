@@ -23,8 +23,8 @@ import (
 
 
 // 定义常量 const name type = value
-const usernameLen int = 5
-const username  string= "hanxu"
+const usernameLen = 5
+const username = "hanxu"
 // 也会自动根据后面的值类型确定
 const usernameLen1 = 5
 //定义变量,在函数外定义的变量就是全局变量.
@@ -60,6 +60,8 @@ func hello() {
 	who1 := "secendwho"
 	println(who1)
 	if len(os.Args) > 1 {
+		//切片语法和python相近.
+
 		who = strings.Join(os.Args[1:4], ",")
 		who1 = who
 	}
