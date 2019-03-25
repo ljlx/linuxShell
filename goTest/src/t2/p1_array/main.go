@@ -86,6 +86,8 @@ func parse(twoArrge [][]string) {
 			ii := stringofDigits[column]
 			// '0' 的(byte)uint8等于48
 			digit := ii - '0'
+			//ii是用户输入的数字列表中的其中一个数字.
+			//神奇,通过这种方式来确定用户输入的是否是0-9的数字,效率比正则要高多了,只是不易读.
 			if 0 <= digit && digit <= 9 {
 				nextline := twoArrge[digit][row]
 				line += nextline + " "
