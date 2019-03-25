@@ -16,10 +16,11 @@ GOROOT=${GOHOME}
 export GOHOME=${GOHOME}
 export GOROOT=${GOROOT}
 
-export PATH=${PATH}:${GOROOT}/bin
+firstPath=~/.GO/thirdPkg
 
-targetList=(~/.GO/thirdPkg \
-/usr/lib/go \
+export PATH=${PATH}:${GOROOT}/bin:${firstPath}/bin
+#/usr/lib/go \
+targetList=(${firstPath} \
 ~/.GO/target \
 /tmp/GO/target \
 )
