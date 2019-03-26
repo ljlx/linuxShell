@@ -1,5 +1,7 @@
 package main
-
+/**
+Go语言的struct结构体支持组合与委派，但不支持继承。
+ */
 type struct_test struct {
 	t1 int32
 	t2 int32

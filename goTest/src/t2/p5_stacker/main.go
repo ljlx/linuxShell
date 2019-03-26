@@ -1,9 +1,33 @@
 package p5_stacker
 
-import "t2/p5_stacker/stack"
+import (
+	"t2/p5_stacker/stack"
+	"fmt"
+)
 
 func main() {
-	var  ss stack.Stack
-	ss.Len()
-	//var haystack = stack.Stack
+	
+	var haystack stack.Stack
+
+	haystack.Push("hay")
+
+	haystack.Push(-15)
+
+	haystack.Push([]string{"pin", "clip", "needle"})
+
+	haystack.Push(81.52)
+
+	for {
+
+		item, err := haystack.Pop()
+
+		if err != nil {
+
+			break
+
+		}
+
+		fmt.Println(item)
+
+	}
 }
