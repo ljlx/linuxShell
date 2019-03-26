@@ -6,9 +6,11 @@ import (
 	"path/filepath"
 	"log"
 	"path"
+
 )
 
 func getarray() []string {
+
 	weekend := []string{
 		"friday",
 		"saturday",
@@ -73,6 +75,11 @@ func charCode() {
 	}
 }
 
+func haserror() {
+	ss := 9 / 0
+	println(ss)
+}
+
 func parse(twoArrge [][]string) {
 	if len(os.Args) == 1 {
 		fmt.Printf("usage: %s <whold-number> \n", filepath.Base(os.Args[0]))
@@ -100,6 +107,9 @@ func parse(twoArrge [][]string) {
 }
 
 func main() {
+	//result,err:=haserror()
+	//println(result,err)
+
 	charCode()
 	ss := getarray()
 	ss2 := getarray2(1)

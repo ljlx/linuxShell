@@ -1,4 +1,4 @@
-package main
+package mytest
 
 import (
 	test "fmt"
@@ -9,7 +9,7 @@ import (
 )
 
 //GCtype=uint8
-var inta int = 10
+var inta = 10
 var intb int8 = 10
 var uintb uint8 = 10
 var intc int16 = 10

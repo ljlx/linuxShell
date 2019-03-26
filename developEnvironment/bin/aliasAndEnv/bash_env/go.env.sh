@@ -21,6 +21,7 @@ firstPath=~/.GO/thirdPkg
 export PATH=${PATH}:${GOROOT}/bin:${firstPath}/bin
 #/usr/lib/go \
 targetList=(${firstPath} \
+/usr/linuxShell/goTest/ \
 ~/.GO/target \
 /tmp/GO/target \
 )
