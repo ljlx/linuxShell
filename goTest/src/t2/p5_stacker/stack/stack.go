@@ -46,8 +46,24 @@ func (sstack *Stack) Push(item ...interface{}) {
 /**
 	在其他语言中，接收器一般被称为(java)this或(python)self，使用这种称谓在Go语言中也没问题，但被认为是不太好的Go语言风格。
  */
-func (sstack Stack) Pop() (interface{}, error) {
-	return nil, nil
+func (sstack *Stack) Pop() (interface{}, error) {
+	//为了方便，我们在方法内不使用 *stack（stack变量实际所指向的栈）这样的语法，而是将其赋值给一个临时变量（theStack），然后在代码中使用该临时变量
+	thestack := *sstack
+	currLen := len(thestack)
+	index := 0
+	if currLen > 0 {
+		index = currLen - 1
+		item := thestack[index]
+		//也许java里面的delete,remove方法,原理上 就是通过缩减堆内集合的指针的范围实现的.
+		//[::]切片,和py一样.这里不知道有没有可能存在内存拷贝问题, 不过thestack是指针对象, 应该没问题.
+
+		//然后对原始栈（本身是一个切片）做一次切片操作（新的切片只是少了一个元素），并将切片后的新栈赋值给 stack 指针所指向的原始栈
+		//Go编译器会重用这个切片，仅仅将其长度减1，并保持其容量不变，而非真地将所有数据拷到另一个新的切片中。
+		*sstack = thestack[:index]
+		//索引范围的形式是first:end。如果first值像这个示例中一样被省略，则其默认值为0，而如果end值被省略，则其默认值为该切片的len()值
+		return item, nil
+	}
+	return nil, errors.New("this stack is empty.")
 }
 
 func (sstack Stack) Top() (interface{}, error) {
