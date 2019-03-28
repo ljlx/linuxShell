@@ -30,9 +30,8 @@ def ls():
     respstr = '\r\n'.join(dirlist)
     return respstr
 
-
-app.run(port=8081, debug=True)
-
-print(pwd())
+if __name__ == '__main__':
+    app.run(port=8081, debug=True)
+    print(pwd())
 
 

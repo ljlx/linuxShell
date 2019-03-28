@@ -15,6 +15,7 @@ import (
   os.File 类型实现了 io.ReadWriter 结构（而 io.ReadWriter 是io.Reader和io.Writer 接口的组合）
  */
 func getInOutFile() (*os.File, *os.File) {
+
 	return os.Stdin, os.Stdout
 }
 
@@ -80,8 +81,9 @@ func americanise(inFile io.Reader, outFile io.Writer) (err error) {
 
 	writer := bufio.NewWriter(outFile)
 
-	//TODO 还不太明白这个, 类似py的内部def?
+	//TO-DO 还不太明白这个, 类似py的内部def?
 	//defer 在americanise函数退出后执行.
+	//创建一个匿名的延迟函数，它会在americanise()函数返回并将控制权交给其调用者之前刷新writer的缓冲
 	defer func() {
 		println("函数hook start...")
 		if err == nil {
@@ -195,10 +197,92 @@ func String() string {
 	return "go-toString()..."
 }
 
+func testInterfaceReader(reader io.Reader) []byte {
+	b := []byte{9}
+
+	bufreader := bufio.NewReader(reader)
+	isloop := true
+	size := 0
+	//os.Create("") 源码->
+	//return OpenFile(name, O_RDWR|O_CREATE|O_TRUNC, 0666)
+	//twriter := nil
+	//bufwriter := func(b2 []byte) io.Writer {
+	//TODO 应该如何把这个if里面产生的twriter值向下传递到read块(if语句里的read代码块)中
+	//如何像java那样定义一个 io.writer buufwriterObj = null;
+	bufwriter := func() io.Writer {
+		if tmpfile, err := os.OpenFile("/tmp/hosts", os.O_CREATE|os.O_APPEND|os.O_RDWR, 0600); err == nil {
+			twriter := bufio.NewWriter(tmpfile)
+			twriter.WriteString("fuck 怎么连初始化变量,吧这个writer带出去都不懂/xk/wn/px \r\n")
+			//twriter.Write(b2)
+			twriter.Flush()
+			return twriter
+		}
+		return nil
+	}
+
+
+	for isloop {
+		//Read()方法从调用该方法的值中读取数据，并将其放到一个字节类型的切片(b)中
+		//它返回成功读到的字节数(linebyte)和一个错误值(err)
+		if linebyte, err := bufreader.Read(b); err == nil && linebyte != 0 {
+			//如果没有错误发生，则该错误值为nil
+			//如果没有错误发生但是已读到文件末尾，则返回 io.EOF。如果错误发生
+			println(b[0])
+			size += 1
+			//TODO 不太明白这个内部func的作用和使用方法
+			//我应该如何实现,在这里的read出来的字节,在写入上面创建的writer对象流中,(不使用函数签名和返回writer对象的方法.)
+			bufwriter().Write(b)
+
+		} else {
+			if err == io.EOF {
+				println("程序正常退出,io已经读到末尾,返回eof了.")
+			} else {
+				log.Fatalln("遇到了一个错误.", err)
+			}
+			isloop = false
+			println(size)
+		}
+	}
+	//TODO 如何将字节转化为字符串?
+	return b
+}
+
+func testwrite(writer io.Writer, b byte) {
+
+}
+
+func testreader(filename string) {
+	if fileinput, err := os.Open(filename); err == nil {
+		println(fileinput)
+		bufreader := bufio.NewReader(fileinput)
+		isloop := true
+		for isloop {
+			if linebyte, isPrefix, err2 := bufreader.ReadLine(); err2 == nil {
+				println(isPrefix)
+
+				println(linebyte)
+
+			} else {
+				isloop = false
+			}
+
+		}
+
+	}
+
+}
+
 func testIoReader() {
-	//	 如何调到另一个包的函数.
+	//TODO	 如何调到另一个包的函数.
+	if inputfile, err := os.Open("/etc/hosts"); err != nil {
+		log.Fatalln(err)
+	} else {
+		filebyte := testInterfaceReader(inputfile)
+		println(filebyte)
+	}
+	testreader("/etc/hosts")
 }
 
 func main() {
-	test1()
+	testIoReader()
 }

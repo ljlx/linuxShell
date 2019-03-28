@@ -3,12 +3,18 @@ package io
 import (
 	"os"
 	"bufio"
+	"io"
 )
 
 type testttt interface {
 	test() string
 }
 
+func testInterfaceReader(reader io.Reader) {
+	b := []byte{1024}
+	reader.Read(b)
+	return
+}
 
 func testreader(filename string) {
 	if fileinput, err := os.Open(filename); err != nil {
