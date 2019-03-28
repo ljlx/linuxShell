@@ -10,3 +10,19 @@
 output.txt
 __pycache__
 debug-*.json
+pkg/
+# wps and office
+~$*.docx
+~$*.doc
+~$*.xls
+~$*.xlsx
+~$*.ppt
+~$*.pptx
+.~lock*
+# wps office
+.ideaDataSources/
+dataSources/
+*.zip
+*.tar.gz
+*.tar
+
