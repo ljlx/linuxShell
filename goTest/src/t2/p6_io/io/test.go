@@ -5,6 +5,11 @@ import (
 	"bufio"
 )
 
+type testttt interface {
+	test() string
+}
+
+
 func testreader(filename string) {
 	if fileinput, err := os.Open(filename); err != nil {
 		println(fileinput)

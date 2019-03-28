@@ -196,7 +196,7 @@ func String() string {
 }
 
 func testIoReader() {
-
+	//	 如何调到另一个包的函数.
 }
 
 func main() {
