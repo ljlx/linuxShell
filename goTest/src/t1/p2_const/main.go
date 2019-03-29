@@ -11,6 +11,7 @@ package main
 import (
 	"fmt"
 	"strings"
+	"math"
 )
 
 // ----------start----------第一种常量----------start----------
@@ -93,11 +94,47 @@ func test1() {
 	//println(fmg)("flag ==> %s, %d", flag,flag1)
 	fmt.Printf("flag info==> %s, %s \n", flag, flag1)
 	fmt.Printf("flag value==> %d, %d \n", flag, flag1)
-	fmt.Printf("flag bin-value==> %b, %b ,%b \n", flag, flag1, '*')
+	fmt.Printf("flag bin-value==> %b, %b ,%b \n", flag, flag1, 'A')
 
 }
 
+//常量表达式的值在编译时计算，它们可能使用任何算术、布尔以及比较操作符
+const (
+	MaxInt8   = 1<<7 - 1
+	MinInt8   = -1 << 7
+	MaxInt16  = 1<<15 - 1
+	MinInt16  = -1 << 15
+	MaxInt32  = 1<<31 - 1
+	MinInt32  = -1 << 31
+	MaxInt64  = 1<<63 - 1
+	MinInt64  = -1 << 63
+	MaxUint8  = 1<<8 - 1
+	MaxUint16 = 1<<16 - 1
+	MaxUint32 = 1<<32 - 1
+	MaxUint64 = 1<<64 - 1
+
+	// /*
+	//   math包：
+	//    */
+	//   i := -100
+	//   fmt.Println(math.Abs(float64(i))) //绝对值
+	//   fmt.Println(math.Ceil(5.0)) //向上取整
+	//   fmt.Println(math.Floor(5.8)) //向下取整
+	//   fmt.Println(math.Mod(11, 3)) //取余数，同11%3
+	//   fmt.Println(math.Modf(5.26)) //取整数，取小数
+	//   fmt.Println(math.Pow(3, 2)) //x的y次方
+	//   fmt.Println(math.Pow10(4)) // 10的n次方
+	//   fmt.Println(math.Sqrt(8)) //开平方
+	//   fmt.Println(math.Cbrt(8)) //开立方
+	//   fmt.Println(math.Pi)
+
+)
+
 func main() {
+	area_circle := math.Pi * math.Pow(2, 2)
+	//TODO 查看值的类型,如何答应出type方法的值
+
+	println("计算圆的面积: ", area_circle)
 	println("start...")
 	test1()
 }
