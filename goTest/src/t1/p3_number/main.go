@@ -58,7 +58,7 @@ func Uint8FromInt(x int) (uint8, error) {
 
 }
 
-func main() {
+func testUchatNumber() {
 	var i = 800
 	var j int64 = 3
 
@@ -75,4 +75,42 @@ func main() {
 
 	fmt.Printf("有类型运算: int[%d], int32[%d], err-sum[%d], sum[%d] ,mochu[%d] \n", i, j, int8(i)+int8(j), int(i)+int(j), int(i)%int(j))
 	fmt.Printf("无类型数值运算: [%d], [%d] , sum[%d] \n", ii, jj, ii+jj)
+}
+
+/*
+Go语言也像C和Java一样不支持操作符重载，提供给big.Int和big.Rat类型的方法有它自己的名字，如Add()和Mul()。
+在大多数情况下，方法会修改它们的接收器（即调用它们的大整数），同时会返回该接收器来支持链式操作
+ */
+func testBigIntNumber() {
+
+	var defint int64 = 111111111111116
+	bigintt := big.NewInt(defint)
+	var defint2 = big.NewInt(defint - 2)
+	var defint3 = big.NewInt(defint - 3)
+
+	fmt.Printf("原始值: bigintt[%d] ,defint2[%d] ,defint3[%d] \n",bigintt,defint2,defint3)
+
+
+	bigint_result_sub := bigintt.Sub(defint2, defint3)
+	bigint_result_add := bigintt.Add(defint2, defint3)
+	fmt.Printf("big number: [%d]+[%d]=[%d] \n", defint2, defint3, bigint_result_add)
+	fmt.Printf("big number: [%d]-[%d]=[%d] \n", defint2, defint3, bigint_result_sub)
+	fmt.Printf("计算后值: bigintt[%d] ,defint2[%d] ,defint3[%d] \n",bigintt,defint2,defint3)
+	//### 问题1. >>  bigintt bigint_result_sub bigint_result_add的最终计算结果值是一样的,
+	//是因为每次返回的计算结果是bigintt值的一个指针引用.相当于返回bigintt自身(return this)
+	//作用是因为,计算结果方便用来链式计算处理.
+
+}
+
+/*
+使用Go语言内置的float64类型，我们可以很精确地计算包含大约15位小数的情况，这在大多数情况下足够了。
+但是，如果我们想要计算包含更多位小数，即数十个甚至上百个小数时，例如计算 π的时候，
+那么就没有内置的类型可以满足了。
+ */
+func testbigFloat()  {
+
+}
+
+func main() {
+	testBigIntNumber()
 }
