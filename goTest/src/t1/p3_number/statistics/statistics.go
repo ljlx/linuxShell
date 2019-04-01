@@ -17,11 +17,11 @@ import (
 	"sort"
 	"net/http"
 	"fmt"
-	"log"
-	"os"
 	"bytes"
 	"strings"
 	"strconv"
+	"os"
+	"log"
 )
 
 /*
@@ -124,6 +124,7 @@ func processParseRequest(request *http.Request) ([]float64, string, bool) {
 	slice, found := request.Form["numbers"]
 	if found && len(slice) > 0 {
 		sliceItem := slice[0]
+		//我们使用strings.Replace()函数（第三个参数指明要执行多少次替换，−1表示替换所有）
 		text := strings.Replace(sliceItem, ",", " ", -1)
 		for _, field := range strings.Fields(text) {
 			if x, err := strconv.ParseFloat(field, 64); err != nil {
@@ -176,6 +177,9 @@ func http_err_404(w http.ResponseWriter, r *http.Request) {
 
 // ----------end------------http handler----------end------------
 
+/*
+因为程序是一个Web应用，所以我们需要生成HTML。（Go语言的标准库提供了用于创建数据驱动文本和HTML的text/template和html/template包，但是我们这里的需求比较简单，所以我们选择自己手动写HTML。9.4.2节有一个简单的使用text/template包的例子。）
+ */
 func DoStatisTest() {
 	if currProcess, err := os.FindProcess(os.Getpid()); err == nil {
 		println("os.Getpid()", os.Getpid())
