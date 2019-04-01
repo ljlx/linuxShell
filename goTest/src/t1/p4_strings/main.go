@@ -23,7 +23,7 @@ func testForString() {
 
 func testForRange(strs ...string) {
 	for index, item := range strs {
-		println(index, item)
+		fmt.Println(index, item)
 
 	}
 }
@@ -32,24 +32,36 @@ func testString() {
 	//1	Unicode编码字符,是utf-8的一个super, utf-8是一个unicode的子集
 	//2 uhf-8编码,使用单字节(1符号位,7位)编码一个ascii的字符.
 	//3 所有的ascii字符,在go中可以使用切片[]操作访问具体的一个字节.
+	text0 := "hello"
 	text1 := "hel我lo"
 	//104 101 在ascii字码表上, 映射为 h和e, 验证了2和3.
-	println(text1[0], text1[1])
+	fmt.Println(text1[0], text1[1])
 	//108 230 136 145 108. 在ascii字码表上是 字母'l' , 说明230 136 145 代表utf8编码下的'我'
-	println(text1[2], text1[3], text1[4], text1[5], text1[6], text1[7])
+	fmt.Println(text1[2], text1[3], text1[4], text1[5], text1[6], text1[7])
 	//	-----------------------
 	text2 := "hello,world"
 	fmt.Printf("text[n]=%d,在字符串索引位置为n(utin8类型)处的{原始字节}. \n", text2[0])
 	fmt.Printf("text[n:m]=%s,从位置n到位置m取得的{字符串}. \n", text2[0:5])
 	fmt.Printf("text[:m]=%s,从索引位置0到位置m处取得的{字符串}. \n", text2[:len(text2)-1])
+	fmt.Printf("字符串[%s]的字节数[%d] \n", text0, len(text0))
+	fmt.Printf("字符串[%s]的字节数[%d] \n", text1, len(text1))
+	//	多出的3个字节,就是那个 '我' 汉字
+	char_a := 'a'
+	char_b := 'b'
+	char_c := 'c'
+
+	fmt.Printf("字符ASCII : a=%d , b=%d , c=%d \n", char_a, char_b, char_c)
+	fmt.Println("字符[a,b,c]的大小关系:", char_a < char_b, char_a < char_c, char_a < char_b)
+	fmt.Println("字符[a,b,c]的大小关系:", char_a == char_b, char_a < char_c, char_a > char_b)
+	fmt.Println("字符[a,b,c]的大小关系:", char_a-char_b, char_a+char_c, char_a*char_b)
 
 }
 
 func main() {
-	println("main start...")
+	fmt.Println("main start...")
 
 	testForRange("test1", "test2", "test34", "test5")
 	testString()
 
-	println("main end...")
+	fmt.Println("main end...")
 }
