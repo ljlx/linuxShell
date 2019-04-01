@@ -13,6 +13,8 @@
 
 package main
 
+import "fmt"
+
 func testForString() {
 	//	一个 Go语言字符串是一个任意字节的常量序列
 	//大部分情况下，一个字符串的字节使用UTF-8编码表示Unicode文本（详见上文中的“Unicode编码”一栏）。Unicode编码的使用意味着Go语言可以包含世界上任意语言的混合，代码页没有任何混乱与限制。
@@ -26,10 +28,28 @@ func testForRange(strs ...string) {
 	}
 }
 
+func testString() {
+	//1	Unicode编码字符,是utf-8的一个super, utf-8是一个unicode的子集
+	//2 uhf-8编码,使用单字节(1符号位,7位)编码一个ascii的字符.
+	//3 所有的ascii字符,在go中可以使用切片[]操作访问具体的一个字节.
+	text1 := "hel我lo"
+	//104 101 在ascii字码表上, 映射为 h和e, 验证了2和3.
+	println(text1[0], text1[1])
+	//108 230 136 145 108. 在ascii字码表上是 字母'l' , 说明230 136 145 代表utf8编码下的'我'
+	println(text1[2], text1[3], text1[4], text1[5], text1[6], text1[7])
+	//	-----------------------
+	text2 := "hello,world"
+	fmt.Printf("text[n]=%d,在字符串索引位置为n(utin8类型)处的{原始字节}. \n", text2[0])
+	fmt.Printf("text[n:m]=%s,从位置n到位置m取得的{字符串}. \n", text2[0:5])
+	fmt.Printf("text[:m]=%s,从索引位置0到位置m处取得的{字符串}. \n", text2[:len(text2)-1])
+
+}
+
 func main() {
 	println("main start...")
 
 	testForRange("test1", "test2", "test34", "test5")
+	testString()
 
 	println("main end...")
 }
