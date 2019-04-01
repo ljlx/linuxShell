@@ -17,6 +17,7 @@ import (
 	"math/big"
 	"fmt"
 	"math"
+	"t1/p3_number/statistics"
 )
 
 type bigint big.Int
@@ -58,7 +59,37 @@ func Uint8FromInt(x int) (uint8, error) {
 
 }
 
-func main() {
+/*
+1706年，约翰·梅钦（John Machin）发明了一个计算任意精度 π 值的公式（见图2-1），我们可以将该公式与Go标准库中的big.Int结合起来计算 π，以得到任意位数的值。在图2-1中给出了该公式以及它依赖的arccot()函数。（理解这里介绍的big.Int包的使用无需理解梅钦的公式。）我们实现的arccot()函数接受一个额外的参数来限制计算结果的精度，以防止超出所需的小数位数。
+ */
+func testPI(places int) *big.Int {
+
+	digits := big.NewInt(int64(places))
+
+	unity := big.NewInt(0)
+
+	ten := big.NewInt(10)
+
+	exponent := big.NewInt(0)
+
+	unity.Exp(ten, exponent.Add(digits, ten), nil)
+
+	pi := big.NewInt(4)
+	//TODO 没有这个函数arccot
+	//left := arccot(big.NewInt(5), unity)
+	//
+	//left.Mul(left, big.NewInt(4))
+	//
+	//right := arccot(big.NewInt(239), unity)
+	//
+	//left.Sub(left, right)
+	//
+	//pi.Mul(pi, left)
+	return pi.Div(pi, big.NewInt(0).Exp(ten, ten, nil))
+	//return nil
+}
+
+func test1() {
 	var i = 800
 	var j int64 = 3
 
@@ -75,4 +106,13 @@ func main() {
 
 	fmt.Printf("有类型运算: int[%d], int32[%d], err-sum[%d], sum[%d] ,mochu[%d] \n", i, j, int8(i)+int8(j), int(i)+int(j), int(i)%int(j))
 	fmt.Printf("无类型数值运算: [%d], [%d] , sum[%d] \n", ii, jj, ii+jj)
+
+}
+
+func testStatistics() {
+	statistics.DoStatisTest()
+}
+
+func main() {
+	testStatistics()
 }

@@ -1,0 +1,17 @@
+GET http://localhost:9001/
+
+###
+
+POST http://localhost:9001/
+Host: localhost:9001
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:57.0) Gecko/20100101 Firefox/57.0
+Accept: text/plain, */*
+Accept-Language: zh-CN,en-US;q=0.8,zh;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate
+Content-Type: application/json
+DNT: 1
+
+"numbers=100&test=true"
+
+#{"id":34}
+###
