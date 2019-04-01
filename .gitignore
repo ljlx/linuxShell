@@ -23,6 +23,5 @@ pkg/
 .ideaDataSources/
 dataSources/
 *.zip
-*.tar.gz
 *.tar
 
