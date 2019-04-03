@@ -41,7 +41,7 @@ public interface LibHello extends Library
 	 */
 	int Sum(int a, int b);
 	
-	GoString.ByReference HelloString(GoString.ByValue name);
+	String.ByReference HelloString(GoString.ByValue name);
 	
 	void HelloString2(GoString.ByValue name);
 }

@@ -17,7 +17,7 @@ func Sum(a int, b int) int {
 }
 
 //export HelloString
-func HelloString(str string) string {
+func HelloString(str string) *C.char {
 	//TODO 返回值还是有问题的.
 	//fmt.Println("ss")
 	var buffer bytes.Buffer
@@ -26,7 +26,8 @@ func HelloString(str string) string {
 	buffer.WriteString(str)
 	buffer.WriteString(",world")
 	result := buffer.String()
-	return result
+	cresult := C.CString(result)
+	return cresult
 }
 
 //export HelloString2

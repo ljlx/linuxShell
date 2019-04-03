@@ -34,11 +34,11 @@ public class MainTest
 		int sum = libHelloInstance.Sum(4, 5);
 		System.out.println(sum);
 		GoString.ByValue text = new GoString.ByValue("hanxuuu");
-		GoString hanxulala = libHelloInstance.HelloString(text);
+		String hanxulala = libHelloInstance.HelloString(text);
 		//
 		libHelloInstance.HelloString2(text);
-		//		System.out.println(hanxulala);
-		//		System.out.println(1);
+				System.out.println(hanxulala);
+				System.out.println(1);
 	}
 	
 }
