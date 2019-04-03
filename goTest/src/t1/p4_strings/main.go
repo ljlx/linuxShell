@@ -18,6 +18,7 @@ import (
 	"unicode/utf8"
 	"strconv"
 	"bytes"
+	"strings"
 )
 
 func testForString() {
@@ -116,7 +117,7 @@ func testChar2String() {
 	chars2str := string(chars)
 	fmt.Println(chars2str)
 	fmt.Println("###testChar2String-------------------------分隔符-----------------")
-	phrase := "hi,旭旭."
+	phrase := "hi,旭旭.hi"
 	fmt.Printf("序列号 rune码点 字符 字节信息\n")
 	for index, itemRune := range phrase {
 		//for...range循环在迭代时将UTF-8字节解码成Unicode码点（rune类型）
@@ -125,9 +126,16 @@ func testChar2String() {
 		charbyte := []byte(string(itemRune))
 		fmt.Printf("[%-2d], [%U],[%c],16进制[%X], [%d] \n", index, itemRune, itemRune, charbyte, charbyte)
 		//fmt.Printf("index[%-1d],rune码点[%U],可读字符[%c],字节[%X] \n", index, itemRune, itemRune, charbyte)
+
 	}
+	fmt.Println("###testChar2String-------------------------分隔符-----------------")
+	//TODO 这个index是相较于字节的位置.不是字符的位置.
+	hiIndex := strings.Index(phrase, "hi")
+	hiLatestIndex := strings.LastIndex(phrase, "hi")
+	fmt.Printf("字符串[%s] hi首次出现index[%d], 最后一次[%d] \n", phrase, hiIndex, hiLatestIndex)
 }
 func getNextValidString() (string, bool) {
+
 	return "", false
 }
 
