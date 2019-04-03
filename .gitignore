@@ -24,4 +24,11 @@ pkg/
 dataSources/
 *.zip
 *.tar
+# c,cpp,go库文件.
+*.so
+*.h
+*.dll
+*.lib
+*.s
+
 
