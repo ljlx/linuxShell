@@ -82,7 +82,7 @@ func testChar2String() {
 	//var allchar2 []string = nil
 	allchar_rune := []rune{'æ', 0xE6, 0346, 230, '\xE6', '\u00E6'}
 	for _, char := range allchar_rune {
-		fmt.Printf("[0x%X '%c']", char, char)
+		fmt.Printf("[0x%X '%c'] \n", char, char)
 		allchar += string(char)
 
 	}
@@ -115,6 +115,20 @@ func testChar2String() {
 	//	同时需要在解析过程中能查看前一个或后一个字符时会有用。相反的转换也同样简单，其语法为S:=string(chars)
 	chars2str := string(chars)
 	fmt.Println(chars2str)
+	fmt.Println("###testChar2String-------------------------分隔符-----------------")
+	phrase := "hi,旭旭."
+	fmt.Printf("序列号 rune码点 字符 字节信息\n")
+	for index, itemRune := range phrase {
+		//for...range循环在迭代时将UTF-8字节解码成Unicode码点（rune类型）
+		//为了得到一串字节码，我们将码点（rune 类型的字符）转换成字符串（它包含一个由一个或者多个 UTF-8 编码字节编码而成的字符）。然后，我们将该单字符的字符串转换成一个[]byte切片，以便获取其真实的字节码
+		//[]byte(string)转换非常快（O(1)）
+		charbyte := []byte(string(itemRune))
+		fmt.Printf("[%-2d], [%U],[%c],16进制[%X], [%d] \n", index, itemRune, itemRune, charbyte, charbyte)
+		//fmt.Printf("index[%-1d],rune码点[%U],可读字符[%c],字节[%X] \n", index, itemRune, itemRune, charbyte)
+	}
+}
+func getNextValidString() (string, bool) {
+	return "", false
 }
 
 func main() {

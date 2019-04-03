@@ -43,5 +43,6 @@ func HelloString2(str string) {
 }
 
 func main() {
+	//参考自https://studygolang.com/topics/6025/comment/17780
 	//fmt.Println(HelloString("hanxu"))
 }
