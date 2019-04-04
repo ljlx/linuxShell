@@ -19,6 +19,7 @@ import (
 	"strconv"
 	"bytes"
 	"strings"
+	"unicode"
 )
 
 func testForString() {
@@ -139,11 +140,65 @@ func getNextValidString() (string, bool) {
 	return "", false
 }
 
+//字符串切片
+func testStringSlice() {
+	textStr1 := "hi.旭gg.ff"
+	//
+	tbytePoint_first := strings.Index(textStr1, ".")
+	tbytePoint_latest := strings.LastIndex(textStr1, ".")
+	//把一个textstr转成int32类型的码点.下面两个变量本质是一样的.
+	chars_rune := []rune(textStr1)
+	//chars_int32 := []int32(textStr1)
+	for index, charitem := range chars_rune {
+		fmt.Printf("字符位置[%d]-字符[%c] \n", index, charitem)
+	}
+	//	该行的第一个和最后一个字,一个简单的方式是这样写代码
+	firstWord := textStr1[:tbytePoint_first]
+	//TODO 这个+1的地方可能是有问题的.因为这个索引的位置是字节.如果
+	latestWord := textStr1[tbytePoint_latest+1:]
+	fmt.Printf("通过码点切片来获取第一个单词[字节位置%d]-[%s],最后一个单词[字节位置%d]-[%s]", tbytePoint_first, firstWord, tbytePoint_latest+1, latestWord)
+	//		tbytePoint_first := strings.Index(textStr1, " ")//用空格是不对的.
+	//应该用unicode.IsSpace代替空格写法.或者 LastIndexFunc
+	//	tbytePoint_first := strings.IndexFunc(textStr1,unicode.IsSpace)
+	//
+	//	虽然这个实例可以用于处理空格以及所有 7 位的ASCII 字符，但是却不适于处理任意的Unicode空白字符如U+2028（行分隔符）或者U+2029（段落分隔符）
+	//ttt, firstWord_str := utf8.DecodeRuneInString(firstWord)
+	//println(firstWord_str,ttt)
+}
+
+func testStringSlice2() {
+	//下面这个例子在以任意空白符分隔字的情况下都可以找出其第一个字和最后一个字。
+
+	line := " år　tørt\u2028vær"
+
+	i := strings.IndexFunc(line, unicode.IsSpace) // i == 3
+
+	firstWord := line[:i]
+
+	j := strings.LastIndexFunc(line, unicode.IsSpace) // j == 9
+	//这个DecodeRuneInString函数的意义在,以utf8编码找出当前切片 以j索引起点的字节位置的字符,到这个字符,末尾字节的一个长度
+	//比如说 '旭'这个字符有3个字节230 151 173
+	//'h旭i' 的字节编码是 104 230 151 173 105
+	//_, char_xu_size := utf8.DecodeRuneInString("h旭i"[1:])
+	//_, char_xu_size := utf8.DecodeRuneInString("旭")
+	//println(char_xu_size) == 3
+	//代表这个这个字符的字节长度是3.所以在使用字节切片的时候,要考虑计算这个字节长度问题.
+	//详细参考书中的k3.4
+	_, size := utf8.DecodeRuneInString(line[j:]) // size == 3
+
+	lastWord := line[j+size:] // j + size == 12
+
+	fmt.Println(firstWord, lastWord) // 打印：rå vær
+
+}
+
 func main() {
 	fmt.Println("main start...")
 
 	testForRange("test1", "test2", "test34", "test5")
 	testString()
 	testChar2String()
+	testStringSlice()
+	testStringSlice2()
 	fmt.Println("main end...")
 }
