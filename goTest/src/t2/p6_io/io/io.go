@@ -11,8 +11,8 @@ type testttt interface {
 }
 
 func testInterfaceReader(reader io.Reader) {
-	b := []byte{1024}
-	reader.Read(b)
+	//b := []byte{1024}
+	//reader.Read(b)
 	return
 }
 
@@ -30,4 +30,12 @@ func testreader(filename string) {
 
 	}
 
+}
+
+func GetInputText() string {
+	bufinreader := bufio.NewReader(os.Stdin)
+	if bytes, _, err := bufinreader.ReadLine(); err == nil {
+		return string(bytes)
+	}
+	return ""
 }
