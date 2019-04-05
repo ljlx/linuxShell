@@ -18,7 +18,7 @@ import (
 	"os"
 	"bufio"
 	"log"
-	hxio "t2/p6_io/io"
+	"strings"
 )
 
 /**
@@ -57,12 +57,34 @@ func C1() {
 
 func C2() {
 	fmt.Println("请输入:")
-	if inputtext := hxio.GetInputText(); inputtext != "" {
+	//inputtext := hxio.GetInputText()
+	inputtext := "100,A"
+	if inputtext != "" {
 		//runestr := []rune(inputtext)
 		fmt.Println("用户输入内容:", inputtext)
 
-		marks := 0
-		grade := ""
+		argsArray := strings.Split(inputtext, ",")
+		fmt.Printf("使用SplitAfter函数分隔,但是保留分隔符. %v", strings.SplitAfter(inputtext, ","))
+		hellofilds := strings.Fields("hello")
+		fmt.Println(hellofilds)
+		//匿名函数也叫闭包
+		helloTextArray := strings.FieldsFunc("hello,world hanxu;this is my.", func(r rune) bool {
+			//fmt.Println(r)
+			//执行了或运算
+			//whatisit:=',' | ';' | ' '
+			//fmt.Println(whatisit)
+			switch r {
+			case ',' , ';' , ' ':
+				//fmt.Println("true")
+				return true
+			}
+			return false
+		})
+		fmt.Printf("使用一个函数(使用多个分隔符)分隔字符串:%v \n", helloTextArray)
+		//argsArray[0]
+		marks := 1
+		grade := string(argsArray[1])
+
 		switch marks {
 		case 90:
 			grade = "A"
