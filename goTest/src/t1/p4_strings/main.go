@@ -20,6 +20,7 @@ import (
 	"bytes"
 	"strings"
 	"unicode"
+	strconv2 "t1/p4_strings/strconv"
 )
 
 func testForString() {
@@ -200,5 +201,6 @@ func main() {
 	testChar2String()
 	testStringSlice()
 	testStringSlice2()
+	strconv2.Teststrconv()
 	fmt.Println("main end...")
 }

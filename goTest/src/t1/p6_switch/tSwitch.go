@@ -21,6 +21,7 @@ import (
 	"strings"
 	"strconv"
 	hxio "t2/p6_io/io"
+	hxstr "t1/p4_strings/strconv"
 )
 
 /**
@@ -85,6 +86,10 @@ func C2() {
 		fmt.Printf("使用一个函数(使用多个分隔符)分隔字符串:%v \n", helloTextArray)
 		//argsArray[0]
 		//将字符串按照10进制,8位大小解析.即一个字节大小.
+		//base 是一个进制单位(2-36)
+		//bitsize 是指其结果必须满足的比位数,
+		//对于int而言(8,16,32,64,0)
+		//对于float64而言(32,64)
 		marks, _ := strconv.ParseInt(argsArray[0], 10, 8)
 		grade := string(argsArray[1])
 
@@ -131,4 +136,7 @@ func main() {
 
 	method = C2
 	method()
+
+	fmt.Println("")
+	hxstr.Teststrconv()
 }
