@@ -83,16 +83,26 @@ func case3() {
 
 func case4() {
 	//	strconv.Atoi() （ASCII 转换成 int）
-	asciiChars := "abc1234!@#$?AABBCC"
+	//asciiChars := "abc1234!@#$?AABBCC"//error
+	asciiChars := "12484283459"
 	//TODO 有没有办法在一个参数里面,直接使用多个返回值的方法
+	//就是将字符串形式表示的十进制数转换成一个整形值，唯一不同的是Atoi()返回int型而ParseInt()返回int64类型
+	//此外，浮点数转换还能处理包含数学标记或者指数符号的字符串，例如＂984＂、＂424.019＂、＂3.916e-12＂等。
+	//总之,strconv包里的parse,和atoi方法等,是用于将一个标准的字符串类型的数字,解析为对应的数字类型.(和java的integer.parse("123"))
+	//主要是用作类型转化用的
 	atoichars, _ := strconv.Atoi(asciiChars)
 	fmt.Printf("strconv.Atoi,字符串[%s]转int :[%d] ",
 		asciiChars, atoichars)
+	//函数strconv.Itoa()（函数名是“Integer to ASCII”的缩写）
+	//atoi => ascii ->to interger
+	//将int型的整数转换成以十进制表示的字符串。
+	// 而函数 strconv.FormatInt()则可以将其转换成任意进制形式的字符串
+	// （进制参数一定要指定，必须在2～36这个范围内）。
 	for _, item := range asciiChars {
 		chartext := string(item)
 		atoichars, _ := strconv.Atoi(chartext)
-		fmt.Printf("strconv.Atoi,字符串[%s]转int :[%d] \n ",
-			asciiChars, atoichars)
+		fmt.Printf("strconv.Atoi,字符串[%c]转int :[%d] \n ",
+			item, atoichars)
 	}
 }
 
