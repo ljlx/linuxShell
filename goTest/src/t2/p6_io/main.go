@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"strings"
 	"io/ioutil"
+	io2 "t2/p6_io/io"
 )
 
 /**
@@ -330,5 +331,8 @@ func testIoReader() {
 }
 
 func main() {
-	testIoReader()
+	//testIoReader()
+
+	io2.DodeleteTest()
 }
+

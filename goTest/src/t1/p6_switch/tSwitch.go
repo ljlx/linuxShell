@@ -19,6 +19,8 @@ import (
 	"bufio"
 	"log"
 	"strings"
+	"strconv"
+	hxio "t2/p6_io/io"
 )
 
 /**
@@ -57,8 +59,8 @@ func C1() {
 
 func C2() {
 	fmt.Println("请输入:")
-	//inputtext := hxio.GetInputText()
-	inputtext := "100,A"
+	inputtext := hxio.GetInputText()
+	//inputtext := "100,A"
 	if inputtext != "" {
 		//runestr := []rune(inputtext)
 		fmt.Println("用户输入内容:", inputtext)
@@ -74,7 +76,7 @@ func C2() {
 			//whatisit:=',' | ';' | ' '
 			//fmt.Println(whatisit)
 			switch r {
-			case ',' , ';' , ' ':
+			case ',', ';', ' ':
 				//fmt.Println("true")
 				return true
 			}
@@ -82,7 +84,8 @@ func C2() {
 		})
 		fmt.Printf("使用一个函数(使用多个分隔符)分隔字符串:%v \n", helloTextArray)
 		//argsArray[0]
-		marks := 1
+		//将字符串按照10进制,8位大小解析.即一个字节大小.
+		marks, _ := strconv.ParseInt(argsArray[0], 10, 8)
 		grade := string(argsArray[1])
 
 		switch marks {
