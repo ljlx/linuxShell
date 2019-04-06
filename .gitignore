@@ -7,6 +7,10 @@
 *.exe
 *.tar.gz
 .tmp/
+nohup.out
+*.log
+*.logs
+logs/
 output.txt
 __pycache__
 debug-*.json
@@ -31,4 +35,6 @@ dataSources/
 *.lib
 *.s
 
+#cpp or c error file.
+core
 
