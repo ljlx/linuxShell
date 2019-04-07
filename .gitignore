@@ -37,4 +37,5 @@ dataSources/
 
 #cpp or c error file.
 core
+*.a
 

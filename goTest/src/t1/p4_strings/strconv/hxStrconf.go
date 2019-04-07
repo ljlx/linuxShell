@@ -1,7 +1,7 @@
 /*
 -*- coding: utf-8 -*-
 --------------------------------------------------
- File Name: main.go
+ File Name: hxStrconf.go
  Author: hanxu
  AuthorSite: http://www.thesunboy.com/
  GitSource: https://github.com/thesunboy-com/linuxShell
