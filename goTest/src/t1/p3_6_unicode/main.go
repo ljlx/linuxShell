@@ -14,8 +14,8 @@
 package main
 
 import (
-	"t1/p36_unicode/xUtf8"
-	"t1/p36_unicode/xUnicode"
+	"t1/p3_6_unicode/xUtf8"
+	"t1/p3_6_unicode/xUnicode"
 )
 
 func main() {
