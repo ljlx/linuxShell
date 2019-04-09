@@ -133,9 +133,24 @@ func case3_resizeRect(rectInstance *rectangle, x, y int) *rectangle {
 	return rectInstance
 }
 
+func case4() {
+	fmt.Println("func case4() {")
+	a := 10
+	point_b := &a
+	point_b1 := &a
+	*point_b += 1
+	case4_a(&a)
+	case4_a(point_b)
+	fmt.Printf("%v,%v,%v,%v", a, point_b, &point_b, &point_b1)
+}
+func case4_a(intpoint *int) {
+	*intpoint = *intpoint + 1
+}
+
 func TestMain() {
 	TestCase1()
 	case2()
 
 	case3()
+	case4()
 }

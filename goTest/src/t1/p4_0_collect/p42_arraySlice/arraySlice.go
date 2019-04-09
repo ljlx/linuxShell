@@ -173,11 +173,14 @@ func case2_slice_struct() {
 	fmt.Printf("%v \n", hanxu.String())
 	fmt.Printf("%v \n", hanxu.String())
 	//
+	//这里创建了一个包含指向SliceStudent指针(*SliceStudent)的切片([]*SliceStudent).
+	//然后立即使用了3个*SliceStudent(name= oldhanxu,jchen,qzpen) 来将其初始化
+	//相当于 这里是实现了 指针(*SliceStudent)的切片,之所以可以这样做是因为 Go语言足够灵活能够识别出来一个[]*SliceStudent需要的是指向SliceStudent的指针
 	//stuslice:=[]SliceStudent{//
 	stuslice := []*SliceStudent{ //
-		{name: "oldhanxu", age: 33, height: 99, indexNums: 2},  //
-		{name: "jchen", age: 22, height: 90, indexNums: 3},     //
-		{name: "quzhipen", age: 14, height: 100, indexNums: 4}, //
+		{name: "oldhanxu", age: 33, height: 99, indexNums: 2}, //
+		{name: "jchen", age: 22, height: 90, indexNums: 3},    //
+		{name: "qzpen", age: 14, height: 100, indexNums: 4},   //
 	}
 	fmt.Printf("\n 2019年info:\n %v \n", stuslice)
 	for _, item := range stuslice {
@@ -192,11 +195,29 @@ func case2_slice_struct() {
 	fmt.Printf("\n 2019年info(验证是否修改成功.):\n %v \n", stuslice)
 }
 
+//创建指针切片的简化版,创建指针切片的多种方式.
+func case2_slice_struct_simple() {
+	//1.
+	stuslice := [10]*SliceStudent{
+		{"testt", 11, 99, 1},
+		{name: "test", age: 123, height: 333, indexNums: 2},
+	}
+	//在4.1节中，我们使用&Type{}来创建一个该类型的新值，并立即得到了一个指向它的指针）
+	fmt.Printf("方式一: %v", stuslice)
+	//2.
+	stuslice[3] = &SliceStudent{"", 1, 2, 3}
+	//
+	//inttest:=[2]int{1,2}
+	teststu := [1]SliceStudent{{"fff", 11, 22, 33}}
+	fmt.Printf("%v", teststu)
+
+}
+
 //TODO 以我目前的认知, 这种方式暂时无法传递指针切片对象进去,后续在细细研究
 //除非外部创建这个切片的时候,就要指明是指针类型切片.
 func case2_slice_struct_change(stuslice []*SliceStudent) {
 	for _, item := range stuslice {
-		item.name += "point"
+		item.name += ".point"
 	}
 }
 
