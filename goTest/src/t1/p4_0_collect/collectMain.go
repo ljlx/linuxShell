@@ -16,9 +16,11 @@ package main
 import (
 	"t1/p4_0_collect/point"
 	"fmt"
+	"t1/p4_0_collect/p42_arraySlice"
 )
 
 func main() {
 	point.TestMain()
+	arraySlice.Main()
 	fmt.Println("test finish.now exit")
 }
