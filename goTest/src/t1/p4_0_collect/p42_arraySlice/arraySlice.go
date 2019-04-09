@@ -129,23 +129,84 @@ func case2_slice_forRange() {
 	fmt.Printf("修改后的切片: %v \n", intslice)
 }
 
-func case2_slice_struct() {
-	//切片demo用student
-	type SliceStudent struct {
-		//姓名
-		name string
-		//年龄
-		age int
-		//身高
-		height float32
-		//编号
-		indexNums int
-	}
-
+// ----------start----------结构体定义----------start----------
+//切片demo用student
+type SliceStudent struct {
+	//姓名
+	name string
+	//年龄
+	age int
+	//身高
+	height float32
+	//编号
+	indexNums int
 }
+
+//func (student SliceStudent) String() string {
+func (student *SliceStudent) String() string {
+	//	java.tostring()
+	// (student SliceStudent) 相当于将这个函数绑定在这个结构体上,作为(java)方法.
+	//此处这个student值对象,相当于java的this,python的self
+	strtext := ""
+	//
+	strbuilder := strings.Builder{}
+	strbuilder.WriteString(fmt.Sprintf("name=%v ,", student.name))
+	strbuilder.WriteString(fmt.Sprintf("age=%v ,", student.age))
+	strbuilder.WriteString(fmt.Sprintf("height=%v ,", student.height))
+	strbuilder.WriteString(fmt.Sprintf("indexNums=%v ", student.indexNums))
+	//
+	strtext = strbuilder.String()
+	//student.name+="旭旭."
+	student.height += 100
+	return strtext
+}
+
+// ----------end------------结构体定义----------end------------
+
+
+func case2_slice_struct() {
+	hanxu := SliceStudent{}
+	hanxu.name = "hanxu"
+	hanxu.age = 22
+	hanxu.height = 122
+	hanxu.indexNums = 1
+	fmt.Printf("%v \n", hanxu.String())
+	fmt.Printf("%v \n", hanxu.String())
+	//
+	//stuslice:=[]SliceStudent{//
+	stuslice := []*SliceStudent{ //
+		{name: "oldhanxu", age: 33, height: 99, indexNums: 2},  //
+		{name: "jchen", age: 22, height: 90, indexNums: 3},     //
+		{name: "quzhipen", age: 14, height: 100, indexNums: 4}, //
+	}
+	fmt.Printf("\n 2019年info:\n %v \n", stuslice)
+	for _, item := range stuslice {
+		item.age += 10
+		//	Q1: 这里用item.age 是否更改了stuslice列表对象里的元素,还是 item拷贝对象的一个值.
+		//结论:不可以更改,因为item是拷贝的副本对象.
+		//如果想要在for...range里修改item的值, 需要在创建stuslice时,使用指针的方式创建值,比如:
+		//stuslice:=[]*SliceStudent{}
+	}
+	fmt.Printf("\n 2019年info(验证是否修改成功.):\n %v \n", stuslice)
+	case2_slice_struct_change(stuslice)
+	fmt.Printf("\n 2019年info(验证是否修改成功.):\n %v \n", stuslice)
+}
+
+//TODO 以我目前的认知, 这种方式暂时无法传递指针切片对象进去,后续在细细研究
+//除非外部创建这个切片的时候,就要指明是指针类型切片.
+func case2_slice_struct_change(stuslice []*SliceStudent) {
+	for _, item := range stuslice {
+		item.name += "point"
+	}
+}
+
 
 func Main() {
 	case1_array()
 	case2_slice()
 	case2_slice_forRange()
+	case2_slice_struct()
+	//ospagesize:=os.Getpid()
+	//syspagesize:=	syscall.Getpid()
+	//fmt.Printf("%v,%v \n",ospagesize,syspagesize)
 }
