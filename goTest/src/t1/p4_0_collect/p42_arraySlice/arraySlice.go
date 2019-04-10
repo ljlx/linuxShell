@@ -345,6 +345,11 @@ func case4_slice_sort() {
 	searindex := sort.SearchInts(intslice, 5) // 查找5 在排序好的列表里的索引位置
 	fmt.Printf("查找,[%d]在切片[%v]中的索引位置:%v \n", 5, intslice, searindex)
 	// -------custom sort---------
+	
+}
+
+// ----------start----------search----------start----------
+func case4_slice_search() {
 	// 	sort.Sort()函数能够对任意类型进行排序，只要其类型提供了sort.Interface接口中定义的方法，即只要这些类型根据相应的签名实现了Len()、Less()和Swap()等方法。
 	cusSortString := AliasSortString{"c", ",", "b", "a", "."}
 	fmt.Printf("自定义排序string,原始数据:%v \n", cusSortString)
@@ -364,8 +369,23 @@ func case4_slice_sort() {
 		fmt.Printf("查找过程:%d \n", i)
 		return testBinSearch[i] >= wantFind
 	})
-	fmt.Printf("二分查找法结果:%v\n", searchResu)
+	
+	searchFunc := func(i int) bool {
+		fmt.Printf("查找过程:%d \n", i)
+		return testBinSearch[i] >= wantFind
+	}
+	searchResu = sort.Search(len(testBinSearch), searchFunc)
+	// sort.Search()函数返回一个int型的值。只有当该值小于切片的长度并且在该索引位置的元素与目标元素相匹配时，我们才能够确定找到了需要找的元素
+	if searchResu < len(testBinSearch) && testBinSearch[searchResu] == wantFind {
+		// strings.EqualFold("s","s")
+		fmt.Printf("查找成功,二分查找法结果:%v\n", searchResu)
+	} else {
+		fmt.Printf("查找失败,二分查找法结果:%v\n", searchResu)
+	}
+	
 }
+
+// ----------end------------search----------end------------
 
 func Main() {
 	case1_array()
@@ -375,6 +395,7 @@ func Main() {
 	case3_slice_append()
 	case3_slice_appendEnd()
 	case4_slice_sort()
+	case4_slice_search()
 	// ospagesize:=os.Getpid()
 	// syspagesize:=	syscall.Getpid()
 	// fmt.Printf("%v,%v \n",ospagesize,syspagesize)
