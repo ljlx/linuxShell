@@ -19,6 +19,7 @@ import (
 	"strings"
 	
 	"t1/p4_0_collect/point"
+	"sort"
 )
 
 func case1_array() {
@@ -266,6 +267,7 @@ func case3_slice_appendEnd() {
 	s = insertStringSliceCopy(s, s_end, len(s)) // 在末尾的位置插入切片.
 	fmt.Printf("修改后最终结果:%v \n", s)
 }
+
 func insertStringSliceCopy(original []string, s_insert []string, index int) []string {
 	// 以后数据的sum
 	initlen := len(original) + len(s_insert)
@@ -294,6 +296,77 @@ func insertStringSliceCopy(original []string, s_insert []string, index int) []st
 	return newslice
 }
 
+// ----------start----------自定义排序类型----------start----------
+type AliasSortString []string
+
+// 取长度
+func (slice AliasSortString) Len() int {
+	return len(slice)
+}
+
+// 比较
+func (slice AliasSortString) Less(i, j int) bool {
+	strItem := slice[i]
+	strItem = strings.ToLower(strItem)
+	strItemNext := slice[j]
+	strItemNext = strings.ToLower(strItemNext)
+	// 通过自定义less方法来实现降序升序
+	return strItem > strItemNext
+}
+
+// 交换
+func (slice AliasSortString) Swap(i, j int) {
+	slice[i], slice[j] = slice[j], slice[i]
+}
+
+// ----------end------------自定义排序类型----------end------------
+
+func case4_slice_sort() {
+	strslice := []string{"f", "w", "X", "A", "a", "b", "B", "j", "o", "a", "c"}
+	intslice := []int{23, 5, 6, 126, 5, 3, 44, 32, 12, 7, 1, 0}
+	original_intslice_issort := sort.IntsAreSorted(intslice)
+	original_strslice_issort := sort.StringsAreSorted(strslice)
+	if ! original_intslice_issort {
+		fmt.Printf("int切片未排序,开始排序...%v \n", intslice)
+		// 需要先排序好才行.
+		// searindex := sort.SearchInts(intslice, 23) // 查找5 在未排序好的列表里的索引位置
+		// fmt.Printf("查找,[%d]在切片[%v]中的索引位置:%v \n", 5, intslice, searindex)
+		sort.Ints(intslice)
+		original_intslice_issort = sort.IntsAreSorted(intslice)
+	}
+	if ! original_strslice_issort {
+		fmt.Printf("str切片未排序,开始排序...%v \n", intslice)
+		sort.Strings(strslice)
+		// 字符串的排序完全是字节排序，这点我们在前面章节中已讨论过（参见3.2节）。这也意味着字符串的排序是区分大小写的
+		original_strslice_issort = sort.StringsAreSorted(strslice)
+	}
+	fmt.Printf("排序后的切片:%v \n %v \n", strslice, intslice)
+	// --------search------
+	searindex := sort.SearchInts(intslice, 5) // 查找5 在排序好的列表里的索引位置
+	fmt.Printf("查找,[%d]在切片[%v]中的索引位置:%v \n", 5, intslice, searindex)
+	// -------custom sort---------
+	// 	sort.Sort()函数能够对任意类型进行排序，只要其类型提供了sort.Interface接口中定义的方法，即只要这些类型根据相应的签名实现了Len()、Less()和Swap()等方法。
+	cusSortString := AliasSortString{"c", ",", "b", "a", "."}
+	fmt.Printf("自定义排序string,原始数据:%v \n", cusSortString)
+	sort.Sort(cusSortString)
+	fmt.Printf("自定义排序string,排序后:%v \n", cusSortString)
+	// 二分查找法,
+	// Go提供了一个使用二分搜索算法的sort.Search()方法：每次只需比较log2n个元素（其中n为切片中的元素总数）。从这个角度看，一个含1 000 000个元素的切片线性搜索平均需要500 000次比较，最坏时需要1 000 000次比较。而二分搜索即便是在最坏的情况下最多也只需要20次比较
+	testBinSearch := []int{5, 3, 2, 6, 73, 2, 34, 5, 232, 34, 63, 2, 154, 6}
+	// 需要先排序下
+	sort.Ints(testBinSearch)
+	wantFind := 34
+	fmt.Printf("排序后的int切片[%v],需要找[%d]的index,长度[%d]\n", testBinSearch, wantFind, len(testBinSearch))
+	// sort.Search()函数接受两个参数：所处理的切片的长度和一个将目标元素与有序切片的元素相比较的函数，如果该有序切片是升序排序的则使用 >= 操作符，如果逆序排序则使用 <=操作符
+	// 该函数必须是一个闭包，即它必须创建于该切片的作用域内。
+	// 因为它必须将切片当成是其自身状态的一部分。
+	searchResu := sort.Search(len(testBinSearch), func(i int) bool {
+		fmt.Printf("查找过程:%d \n", i)
+		return testBinSearch[i] >= wantFind
+	})
+	fmt.Printf("二分查找法结果:%v\n", searchResu)
+}
+
 func Main() {
 	case1_array()
 	case2_slice()
@@ -301,6 +374,7 @@ func Main() {
 	case2_slice_struct()
 	case3_slice_append()
 	case3_slice_appendEnd()
+	case4_slice_sort()
 	// ospagesize:=os.Getpid()
 	// syspagesize:=	syscall.Getpid()
 	// fmt.Printf("%v,%v \n",ospagesize,syspagesize)
