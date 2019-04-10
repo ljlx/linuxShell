@@ -377,6 +377,7 @@ func case4_slice_search() {
 	searchResu = sort.Search(len(testBinSearch), searchFunc)
 	// sort.Search()函数返回一个int型的值。只有当该值小于切片的长度并且在该索引位置的元素与目标元素相匹配时，我们才能够确定找到了需要找的元素
 	if searchResu < len(testBinSearch) && testBinSearch[searchResu] == wantFind {
+		// 不区分大小写的比较字符串.
 		// strings.EqualFold("s","s")
 		fmt.Printf("查找成功,二分查找法结果:%v\n", searchResu)
 	} else {
