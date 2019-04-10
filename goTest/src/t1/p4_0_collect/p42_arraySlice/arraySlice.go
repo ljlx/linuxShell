@@ -224,6 +224,7 @@ func case2_slice_struct_change(stuslice []*SliceStudent) {
 		item.name += ".point"
 	}
 }
+
 // 内置的append()函数接受一个切片和一个或者更多个值，返回一个（可能为新的）切片，其中包含原始切片的内容并将给定的值作为其后续项。如果原始切片的容量足够容纳新的元素（即其长度加上新元素数量的和不超过切片的容量），append()函数将新的元素放入原始切片末尾的空位置，切片的长度随着元素的添加而增长。如果原始切片没有足够的容量，那么append()函数会隐式地创建一个新的切片，并将其原始切片的项复制进去，再在该切片的末尾加上新的项，然后将新的切片返回，因此需要将append()的返回值赋值给原始切片变量。
 func case3_slice_append() {
 	fmt.Printf("func case3_slice_append() start\n")
@@ -234,10 +235,63 @@ func case3_slice_append() {
 	s1 = append(s1, 6, 7, 8, 9) // append单独添加元素列表
 	s2 = append(s2, 66, 77, 88, 99)
 	s3 = append(s3, s1[:3]...) // append一个切片,需要在末尾添加...来保证切片的扁平化追加内部元素,而不是把一个切片当作一个元素追加.
+	// 如果原始切片没有足够的容量，那么append()函数会隐式地创建一个新的切片，并将其原始切片的项复制进去，再在该切片的末尾加上新的项，然后将新的切片返回，因此需要将append()的返回值赋值给原始切片变量
 	s3 = append(s3, s2[3:]...)
 	fmt.Printf(" s1:%v,\n s2:%v, \n s3:%v\n", s1, s2, s3)
 	fmt.Printf("func case3_slice_append() end\n")
 	// TODO 	考虑到切片是将一个隐藏的数组的, 这里需要确定的是 通过append追加后,是以数组内容拷贝的形式追加进来的? 还是通过引用模式? 可以通过使用&取址符查看.
+	
+}
+
+// 有时我们不仅想往切片的末尾插入项，也想往切片的前面或者中间插入项。
+func case3_slice_appendEnd() {
+	// 现在的需求是,需要在这个切片的前面插入abc,在该切片的末尾插入hijk, how?
+	s := []string{"d", "e", "f"}
+	s_insert := []string{"a", "b", "c"}
+	s_middle0 := []string{"h", "i", "j", "k"}
+	s_middle := []string{"l", "m", "n"}
+	s_end := []string{"x", "y", "z"}
+	// result:=s
+	fmt.Printf("原始切片:%v \n", s)
+	fmt.Printf("待插入orappend的切片: %v \n", s_insert)
+	fmt.Printf("待插入orappend的切片: %v \n", s_middle0)
+	fmt.Printf("待插入orappend的切片: %v \n", s_middle)
+	fmt.Printf("待插入orappend的切片: %v \n", s_end)
+	s = insertStringSliceCopy(s, s_insert, 0) // 在0的位置插入切片.
+	fmt.Printf("1.改过后的切片:%v \n", s)
+	s = insertStringSliceCopy(s, s_middle0, 6) // 在中间指定的位置插入切片.
+	fmt.Printf("2.改过后的切片:%v \n", s)
+	s = insertStringSliceCopy(s, s_middle, len(s)) // 在中间指定的位置插入切片.
+	fmt.Printf("3.改过后的切片:%v \n", s)
+	s = insertStringSliceCopy(s, s_end, len(s)) // 在末尾的位置插入切片.
+	fmt.Printf("修改后最终结果:%v \n", s)
+}
+func insertStringSliceCopy(original []string, s_insert []string, index int) []string {
+	// 以后数据的sum
+	initlen := len(original) + len(s_insert)
+	// 猜测未来可能需要考虑的扩容大小,比如java的list和map的扩容处理.
+	// TODO float 涉及到四舍五入转型
+	// initcap:=int(initlen*1.35)
+	radiocap := 1                      // need >=1
+	initcap := int(initlen * radiocap) // cap等于倍率的len大小
+	newslice := make([]string, initlen, initcap)
+	// 拷贝切片.返回实际拷贝的内容len,理论上是<=(len(original)+len(s_insert))
+	// returns the number of elements copied
+	// 待操作的数据项b:{4 5}
+	// original:
+	// 1 2 3  6 7 8 9
+	// {  a  }{   c   }
+	//
+	// 在插入的位置,拷贝切片插入点之前的数据列表A
+	atIndex := copy(newslice, original[:index])          // 将数据列表项a切割出来插入到newslice中.返回len(newslice)
+	atIndex = copy(newslice[atIndex:], s_insert)         // 相当于是mm在newslice末尾进行append要插入的内容, 将要插入追加的内容b,拼到a的末尾.
+	atIndex = copy(newslice[atIndex:], original[index:]) // 将c部拼在ab的末尾.
+	//
+	// copy(newslice, original[:index])          // 将数据列表项a切割出来插入到newslice中.返回len(newslice)
+	// newslice = append(newslice, s_insert...)
+	// newslice = append(newslice, original[index:]...)// 将原来被拆分的切片的尾端追加到末尾
+	
+	return newslice
 }
 
 func Main() {
@@ -246,6 +300,7 @@ func Main() {
 	case2_slice_forRange()
 	case2_slice_struct()
 	case3_slice_append()
+	case3_slice_appendEnd()
 	// ospagesize:=os.Getpid()
 	// syspagesize:=	syscall.Getpid()
 	// fmt.Printf("%v,%v \n",ospagesize,syspagesize)

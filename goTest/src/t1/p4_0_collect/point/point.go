@@ -150,7 +150,6 @@ func case4_a(intpoint *int) {
 func TestMain() {
 	TestCase1()
 	case2()
-
 	case3()
 	case4()
 }
