@@ -1,28 +1,18 @@
 /*
 -*- coding: utf-8 -*-
 --------------------------------------------------
- File Name: main.go
+ File Name: tMap.go
  Author: hanxu
  AuthorSite: http://www.thesunboy.com/
  GitSource: https://github.com/thesunboy-com/linuxShell
- Created Time: 2019-4-8-下午2:04
+ Created Time: 2019-4-10-下午5:46
 ---------------------说明--------------------------
-
+ map映射学习
 ---------------------------------------------------
 */
 
-package main
+package tMap
 
-import (
-	"t1/p4_0_collect/point"
-	"fmt"
-	"t1/p4_0_collect/p42_arraySlice"
-	"t1/p4_0_collect/p43_map"
-)
+func Main() {
 
-func main() {
-	point.TestMain()
-	arraySlice.Main()
-	tMap.Main()
-	fmt.Println("test finish.now exit")
 }
