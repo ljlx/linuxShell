@@ -13,3 +13,28 @@
 | 3 | 工具py脚本| python | utils-py| 
 | 4 | py学习 | python | pyTest|
 | 5 | go学习 | goland | goTest|
+
+
+
+#### 当前Github项目情况
+
+|平台|内容|状态|
+|:---:|:---:|:---:|
+|GitHub|[Star](https://github.com/thesunboy-com/linuxShell/star)|![ss](https://img.shields.io/github/stars/thesunboy-com/linuxShell.svg?label=Star&logo=github)|
+|GitHub|
+
+
+#### release版本列表
+|版本号|发布时间|下载次数|下载地址|
+|:----:|:----:|:----:|:----:|
+|v1.0 |2019-01-01|![](http://img.shields.io/pypi/dm/PyHamcrest.svg?style=flat)|-|
+
+
+
+```
+
+.. |GitHub stars| image:: https://img.shields.io/github/stars/hamcrest/PyHamcrest.svg?label=Star&logo=github
+    :alt: GitHub stars
+    :target: https://github.com/hamcrest/PyHamcrest/stargazers/
+
+```
