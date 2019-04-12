@@ -16,25 +16,23 @@
 
 
 
-#### 当前Github项目情况
+#### 当前项目进展情况
 
 |平台|内容|状态|
 |:---:|:---:|:---:|
-|GitHub|[Star](https://github.com/thesunboy-com/linuxShell/star)|![ss](https://img.shields.io/github/stars/thesunboy-com/linuxShell.svg?label=Star&logo=github)|
-|GitHub|
+|GitHub|[开发伙伴](https://github.com/thesunboy-com/linuxShell/graphs/contributors/)|![](https://img.shields.io/github/contributors/thesunboy-com/linuxShell.svg?logo=github)|
+|GitHub|Star|![ss](https://img.shields.io/github/stars/thesunboy-com/linuxShell.svg?label=Star&logo=github)|
+|GitHub|总行数|![](https://tokei.rs/b1/github/thesunboy-com/linuxShell)|
+|GitHub|[issues](https://github.com/thesunboy-com/linuxShell/issues/)|![ss](https://img.shields.io/github/issues/thesunboy-com/linuxShell.svg?logo=github)|
+|GitHub|[issues-closed](https://github.com/thesunboy-com/linuxShell/issues?q=is%3Aissue+is%3Aclosed)|![ss](https://img.shields.io/github/issues-closed/thesunboy-com/linuxShell.svg?logo=github)|
+|GitHub|[pull-request](https://github.com/thesunboy-com/linuxShell/pulls)|![ss](https://img.shields.io/github/issues-pr/thesunboy-com/linuxShell.svg?logo=github)|
+|GitHub|[forks](https://github.com/thesunboy-com/linuxShell/network/members)|![ss](https://img.shields.io/github/forks/thesunboy-com/linuxShell.svg?label=Fork&logo=github)|
+  
 
 
+        
+        
 #### release版本列表
 |版本号|发布时间|下载次数|下载地址|
 |:----:|:----:|:----:|:----:|
 |v1.0 |2019-01-01|![](http://img.shields.io/pypi/dm/PyHamcrest.svg?style=flat)|-|
-
-
-
-```
-
-.. |GitHub stars| image:: https://img.shields.io/github/stars/hamcrest/PyHamcrest.svg?label=Star&logo=github
-    :alt: GitHub stars
-    :target: https://github.com/hamcrest/PyHamcrest/stargazers/
-
-```
