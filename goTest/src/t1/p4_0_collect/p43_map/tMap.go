@@ -31,19 +31,61 @@ func case1_create() {
 	// 2. make(map[KeyType]ValueType)
 	// 3. map[KeyType]ValueType{}
 	// 4. map[KeyType]ValueType{key1: value1, key2: value2,..., keyN: valueN}
-	//
+	// 1.
 	tmap1 := make(map[string][]byte, 2)
 	tmap1[tbyte_str] = tbyte
 	tmap1[tbyte_str2] = tbyte2
 	tmap1["test"] = []byte{123, 123, 123}
 	fmt.Printf("map数据集合:%v \n", tmap1)
+	fmt.Printf("取出字节字符串(215, 218), %v \n", tmap1[string(tbyte2)])
+	// 由于map的key不能用切片,但是通过某些办法可以绕过.这里使用字节切片的时候,转换成字符串,然后存进map,虽然看起来随意的字节切片转换为字符串是错误乱码的,但是map依然能按照字符串实际的字节信息来正确取出对应的value
 	//
 	tmap2 := make(map[string]string)
 	tmap2["author"] = "hanxu"
 	tmap2["github"] = "github.com/thesunboy-com"
 	fmt.Printf("map2数据集合:%v \n", tmap2)
+	// 2.
+	// 对于一些比较小的映射，我们没必要考虑是否要指定它们的初始容量，但如果这个映射比较大，指定恰当的容量可以提高性能。通常如果你知道它的容量的话最好就指定它，即使是近似的也好
+	testmap := make(map[string]int)
+	testmap["test1"] = 123
+	testmap["pi"] = 314
+	delete(testmap, "pi")
+	fmt.Printf("map: %v \n")
+	// 3.& 4
+	emptymap := map[string]string{}
+	emptymap["initemptymap"] = "lalala"
+	initmap := map[string]string{"initkey": "initvalue", "initkey2": "initvalue2"}
+	fmt.Printf("init map: %v \n", initmap)
+	
+}
+
+type foodmush struct {
+	id    int
+	money float32
+	name  string
+}
+
+func (foodself foodmush) String() string {
+	return fmt.Sprintf("name:[%v],money:[%v]", foodself.name, foodself.money)
+}
+
+func mapPoint() {
+	foodMoney := make(map[string]float32)
+	foodMoney["apple"] = 3.14
+	foodMoney["oranage"] = 6.34
+	
+	foodmap := make(map[foodmush]string)
+	foodmap[foodmush{1, 2.35, "大米"}] = "大米v"
+	mianfenFood := foodmush{2, 6.7, "面粉"}
+	foodmap[mianfenFood] = "面粉"
+	mianfenFood.name = "面粉名字修改."
+	fmt.Printf("没有使用指针的map[foodmuch],内存地址:%p %v \n", foodmap, foodmap)
+	
+	// TODO 为什么map的key要使用指针来着
+	
 }
 
 func Main() {
 	case1_create()
+	mapPoint()
 }
