@@ -69,23 +69,33 @@ func (foodself foodmush) String() string {
 	return fmt.Sprintf("name:[%v],money:[%v]", foodself.name, foodself.money)
 }
 
-func mapPoint() {
+func mapPoint() map[string]float32 {
 	foodMoney := make(map[string]float32)
 	foodMoney["apple"] = 3.14
 	foodMoney["oranage"] = 6.34
-	
-	foodmap := make(map[foodmush]string)
-	foodmap[foodmush{1, 2.35, "大米"}] = "大米v"
+	foodMoney["apple"] = 3.141592653
+	foodmap := make(map[*foodmush]string)
+	foodmap[&foodmush{1, 2.35, "大米"}] = "大米v"
 	mianfenFood := foodmush{2, 6.7, "面粉"}
-	foodmap[mianfenFood] = "面粉"
+	foodmap[&mianfenFood] = "面粉"
 	mianfenFood.name = "面粉名字修改."
 	fmt.Printf("没有使用指针的map[foodmuch],内存地址:%p %v \n", foodmap, foodmap)
 	
-	// TODO 为什么map的key要使用指针来着
-	
+	return foodMoney
+}
+
+func mapSearch() {
+	foodmap := mapPoint()
+	if apple, found := foodmap["apple"]; found {
+		fmt.Printf("apple->%v \n", apple)
+	} else {
+		// TODO Errorf 无法在控制台输出 why?
+		fmt.Printf("apple not found:%2f \n", apple)
+	}
 }
 
 func Main() {
 	case1_create()
-	mapPoint()
+	// mapPoint()
+	mapSearch()
 }
