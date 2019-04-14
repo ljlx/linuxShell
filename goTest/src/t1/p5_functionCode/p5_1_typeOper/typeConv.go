@@ -63,18 +63,72 @@ func case1_typeConv() {
 	fmt.Printf("%v \n", strings.Repeat("-", 80))
 }
 
+type Student struct {
+	name   string
+	age    int
+	chenji float32
+}
+
+func (stu Student) String() string {
+	builder := strings.Builder{}
+	builder.WriteString(fmt.Sprintf("name=[%v],", stu.name))
+	builder.WriteString(fmt.Sprintf("age=[%v],", stu.age))
+	builder.WriteString(fmt.Sprintf("chenji=[%v],", stu.chenji))
+	return builder.String()
+}
+
+func (stu Student) myname() string {
+	builder := strings.Builder{}
+	builder.WriteString("myname:")
+	builder.WriteString(stu.name)
+	return builder.String()
+}
+
 /*
   一种类型的方法集是一个可以被该类型的值调用的所有方法的集合。如果该类型没有方法，则该集合为空。Go语言的interface{}类型用于表示空接口，即一个方法集为空集的类型的值。由于每一种类型都有一个方法集包含空的集合（无论它包含多少方法），一个interface{}的值可以用于表示任意Go类型的值。
  */
 func case2_assert() {
-	xint := int(123456)
-	xfloat := float32(3.141592653)
-	xfloat64 := float64(3.14159265300012389579823748)
-	xint64 := int64(2423414352)
-	xstr := "hello"
+	// ----------start----------数据项定义----------start----------
+	// stuhanxu := Student{"hanxu", 22}
+	var xint interface{} = 99
+	var a_stuUnknow interface{} = Student{"unknowhanxu", 33, 1.22}
+	// ----------end------------数据项定义----------end------------
+	// 类型断言
+	// 在处理从外部源接收到的数据、想创建一个通用函数及在进行面向对象编程时，我们会需要使用interface{}类型（或自定义接口类型）。为了访问底层值，有一种方法是使用下面中提到的一种语法来进行类型断言：
+	// resultOfType, boolean := expression.(Type) // 安全类型断言
+	// resultOfType := expression.(Type) // 非安全类型断言，失败时panic()
+	//
+	// 成功的安全类型断言将返回目标类型的值和标识成功的true。如果安全类型断言失败（即表达式的类型与声明的类型不兼容），将返回目标类型的零值和false。非安全类型断言要么返回一个目标类型的值，要么调用内置的panic()函数抛出一个异常。如果异常没有被恢复，那么该函数会导致程序终止。（异常的抛出和恢复的内容将在后面阐述，参见5.5节。）
+	a_stu_hanxu := a_stuUnknow.(Student)
+	a_int := xint.(int)
+	fmt.Printf("不安全断言(正确情况),结果:%v \t %v \n", a_int, a_stu_hanxu.myname())
+	// ---------------------
+	// panic: interface conversion: interface {} is p5_1_typeOper.Student, not int
+	// TODO 如何捕获异常? 5.5节介绍
+	// a_stu_hanxu_err := a_stuUnknow.(int)
+	// a_int_err := xint.(float64)
+	// fmt.Printf("不安全的断言(错误情况),error:%v ,%v", a_int_err, a_stu_hanxu_err)
+	// ------------------------
+	// 安全断言
+	// TODO 影子变量问题?
+	if a_stu_hanxu_err, ok := a_stuUnknow.(Student); ok {
+		fmt.Printf("安全断言(正确情况),%v \n", a_stu_hanxu_err)
+	}
+	
+	if a_stu_hanxu_err, ok := a_stuUnknow.(int); !ok {
+		// 返回了对象结构体的0值
+		fmt.Printf("安全情况(错误情况),that is not right type:%v \n", a_stu_hanxu_err)
+	}
+	
+	if a_int_err, ok := xint.(Student); !ok {
+		// 返回了对象结构体的0值
+		fmt.Printf("安全断言(错误情况),that is not right type:%v \n", a_int_err)
+	}
+	// 做类型断言的时候将结果赋值给与原始变量同名的变量是很常见的事情，即使用影子变量。同时，只有在我们希望表达式是某种特定类型的值时才使用类型断言。（如果目标类型可以是许多类型之一，我们可以使用类型开关，参见5.2.2.2节。）
 	
 }
 
 func Main() {
 	case1_typeConv()
+	case2_assert()
 }
