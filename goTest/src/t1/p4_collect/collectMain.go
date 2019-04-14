@@ -14,10 +14,10 @@
 package main
 
 import (
-	"t1/p4_0_collect/point"
+	"t1/p4_collect/point"
 	"fmt"
-	"t1/p4_0_collect/p42_arraySlice"
-	"t1/p4_0_collect/p43_map"
+	"t1/p4_collect/p42_arraySlice"
+	"t1/p4_collect/p43_map"
 )
 
 func main() {

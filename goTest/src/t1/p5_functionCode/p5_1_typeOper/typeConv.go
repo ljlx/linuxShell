@@ -64,23 +64,26 @@ func case1_typeConv() {
 }
 
 type Student struct {
-	name   string
-	age    int
-	chenji float32
+	/*
+		mingzi,大些是对非同包名暴露
+	 */
+	Name  string
+	Age   int
+	Grade float32
 }
 
 func (stu Student) String() string {
 	builder := strings.Builder{}
-	builder.WriteString(fmt.Sprintf("name=[%v],", stu.name))
-	builder.WriteString(fmt.Sprintf("age=[%v],", stu.age))
-	builder.WriteString(fmt.Sprintf("chenji=[%v],", stu.chenji))
+	builder.WriteString(fmt.Sprintf("Name=[%v],", stu.Name))
+	builder.WriteString(fmt.Sprintf("Age=[%v],", stu.Age))
+	builder.WriteString(fmt.Sprintf("chenji=[%v],", stu.Grade))
 	return builder.String()
 }
 
 func (stu Student) myname() string {
 	builder := strings.Builder{}
 	builder.WriteString("myname:")
-	builder.WriteString(stu.name)
+	builder.WriteString(stu.Name)
 	return builder.String()
 }
 

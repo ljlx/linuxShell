@@ -11,7 +11,7 @@
 ---------------------------------------------------
 */
 
-package main
+package p5_2_switch
 
 import (
 	"fmt"
@@ -20,8 +20,8 @@ import (
 	"log"
 	"strings"
 	"strconv"
+	strconv2 "t1/p3_0_strings/strconv"
 	hxio "t2/p6_io/io"
-	hxstr "t1/p4_strings/strconv"
 )
 
 /**
@@ -138,5 +138,5 @@ func main() {
 	method()
 
 	fmt.Println("")
-	hxstr.Teststrconv()
+	strconv2.Teststrconv()
 }
