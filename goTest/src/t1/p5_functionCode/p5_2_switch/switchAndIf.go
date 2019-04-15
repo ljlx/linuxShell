@@ -16,6 +16,11 @@ import (
 	"fmt"
 	
 	"t1/p5_functionCode/p5_1_typeOper"
+	"os"
+	"bufio"
+	"strings"
+	"io"
+	"encoding/json"
 )
 
 /*
@@ -93,10 +98,72 @@ func case2_type(items ...interface{}) {
 			fmt.Printf("param #%d is my p5_1_typeOper.Student\n", i)
 		default:
 			fmt.Printf("param #%d  's  type is unknow\n", i)
-			
 		}
 		
 	}
+}
+
+/*
+类型测试的一个常用案例是处理外部数据。例如，如果我们解析JSON格式的数据，我们必须将数据转换成相对应的Go语言数据类型。这可以通过使用Go语言的json.Unmarshal()函数来实现。如果我们向该函数传入一个指向结构体的指针，该结构体又与该JSON数据相匹配，那么该函数就会将JSON数据中对应的数据项填充到结构体的每一个字段。但是如果我们事先并不知道JSON数据的结构，那么就不能给json.Unmarshal()函数传入一个结构体。这种情况下，我们可以给该函数传入一个指向interface{}的指针，这样json.Unmarshal()函数就会将其设置成引用一个map[string]interface{}类型值，其键为JSON字段的名字，而值为对应的保存为interface{}的值。
+*/
+func testjson() (err error) {
+	jsonfilepath := "/home/hanxu/document/project/code/personal/develop/linuxShell/pyTest/test/utils-py/debug.json"
+	jsonText := ""
+	// ----------start----------read-json----------start----------
+	if jsonfile, err := os.OpenFile(jsonfilepath, os.O_RDONLY, os.ModePerm); err == nil {
+		bufreader := bufio.NewReader(jsonfile)
+		strbuilder := strings.Builder{}
+		for {
+			bline, _, err := bufreader.ReadLine()
+			goon := true
+			switch err {
+			case io.EOF:
+				goon = false
+				break
+			case nil:
+			default:
+				return err
+			}
+			if !goon {
+				break
+			}
+			strbuilder.Write(bline)
+		}
+		jsonText = strbuilder.String()
+		fmt.Printf("jsonfile:%v", jsonText)
+	}
+	// ----------end------------read-json----------end------------
+	var object interface{}
+	jsonbyte := []byte(jsonText)
+	if err := json.Unmarshal(jsonbyte, &object); err != nil {
+		fmt.Printf("解析json -> interface{} error:%v \n", err)
+	} else {
+		// 解析json,使用map+slice
+		fmt.Printf("解析json -> interface{} ,result :%v \n", object)
+		// 固定返回结构,不需要使用安全类型断言
+		// if jsonobject, ok := object.(map[string]interface{}); ok {
+		jsonobject := object.(map[string]interface{})
+		serverName := jsonobject["name"]
+		serverPort := jsonobject["port"]
+		serverAddTime := jsonobject["addTime"]
+		serverKeepAlive := jsonobject["keepAlive"]
+		serverOption := jsonobject["sshOption"]
+		fmt.Printf("serverName=%v,serverPort =%v,serverAddTime =%v,serverKeepAlive =%v,serverOption =%v \n", serverName, serverPort, serverAddTime, serverKeepAlive, serverOption)
+		// }
+		// 使用自定义格式化输出
+		formatstr := testjson_format(&jsonobject)
+		
+	}
+	
+	return err
+}
+
+func testjson_format(jsonobject *map[string]interface{}) (output string) {
+	strbuilder := strings.Builder{}
+	//
+	//
+	output = strbuilder.String()
+	return output
 }
 
 func Main() {
@@ -104,5 +171,5 @@ func Main() {
 	fmt.Printf("beging \n")
 	case1_expression()
 	case2_type(5, -17.9, "ZIP", nil, true, complex(1, 1), p5_1_typeOper.Student{Name: "asdf", Age: 11, Grade: 121})
-	
+	testjson()
 }

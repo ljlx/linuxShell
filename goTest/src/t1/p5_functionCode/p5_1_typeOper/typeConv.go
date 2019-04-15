@@ -91,6 +91,7 @@ func (stu Student) myname() string {
   一种类型的方法集是一个可以被该类型的值调用的所有方法的集合。如果该类型没有方法，则该集合为空。Go语言的interface{}类型用于表示空接口，即一个方法集为空集的类型的值。由于每一种类型都有一个方法集包含空的集合（无论它包含多少方法），一个interface{}的值可以用于表示任意Go类型的值。
  */
 func case2_assert() {
+	// 感觉像java强制类型转换.
 	// ----------start----------数据项定义----------start----------
 	// stuhanxu := Student{"hanxu", 22}
 	var xint interface{} = 99
