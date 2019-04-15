@@ -152,7 +152,7 @@ func testjson() (err error) {
 		// }
 		// 使用自定义格式化输出
 		formatstr := testjson_format(&jsonobject)
-		
+		fmt.Printf("(非结构体)自定义格式化输出:%v \n", formatstr)
 	}
 	
 	return err
@@ -160,10 +160,58 @@ func testjson() (err error) {
 
 func testjson_format(jsonobject *map[string]interface{}) (output string) {
 	strbuilder := strings.Builder{}
+	
 	//
+	strbuilder.WriteString("{")
+	for key, value := range *jsonobject {
+		switch value.(type) {
+		case bool:
+			fmt.Sprintf(",%q:%t", key, value)
+		case int, int8, int16, int32:
+			// fmt.Fprintf(&strbuilder,)
+			v := fmt.Sprintf(",%q:%d", key, value)
+			strbuilder.WriteString(v)
+		case float32, float64:
+			v := fmt.Sprintf(",%q:%f", key, value)
+			strbuilder.WriteString(v)
+		case string:
+			v := fmt.Sprintf(",%q:%s", key, value)
+			strbuilder.WriteString(v)
+		case nil:
+			v := fmt.Sprintf(",%q: null", key)
+			strbuilder.WriteString(v)
+		case []interface{}:
+			// 使用影子变量.
+			fmt.Printf("影子变量内存地址测试(原始):%p,%v\n", &value, value)
+			value := value.([]interface{})
+			fmt.Printf("影子变量内存地址测试(影子):%p,%v\n", &value, value)
+			strbuilder.WriteString("[")
+			testjson_format_recursive(&strbuilder, value)
+			strbuilder.WriteString("]")
+		}
+	}
 	//
 	output = strbuilder.String()
 	return output
+}
+
+// func testjson_format_recursive(writer *io.Writer) {
+// 	io.Writer
+// TODO 面向接口编程怎么玩?
+// }
+
+// 	TODO 递归
+func testjson_format_recursive(builder *strings.Builder, jsondata []interface{}) {
+	// builder.WriteString("")
+	for _, item := range jsondata {
+		// item是一个map[string]interface{}
+		// 类型断言&& 影子变量item
+		if item, ok := item.(string); ok {
+			text := fmt.Sprintf(", %q", item)
+			builder.WriteString(text)
+		}
+	}
+	
 }
 
 func Main() {
