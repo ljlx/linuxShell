@@ -39,29 +39,50 @@ func case1_channel() {
 	// 通道默认是双向的,但如果需要我们可以使得它们是单向的。例如，为了以编译器强制的方式更好地表达我们的语义。在第7章中我们将看到如何创建单向的通道，然后在任何适当的时候都使用单向通道。
 	counterA := case1_channel_make(0, 5)
 	counterB := case1_channel_make(0, 78)
+	fmt.Printf("通道创建完毕...\n")
 	for i := 0; i < 5; i++ {
 		// 	通道中接收一个数据
 		a := <-counterA
 		// 第一种接收方式将获取的数据保存到一个变量里，第二种接收方式将接收的值直接以参数的形式传递给一个函数。
-		fmt.Printf("从通道中获取一个数字: a <- conterA ,a=%d", a)
-		fmt.Printf("(A→%d, B→%d)", a, <-counterB)
+		fmt.Printf("从通道中获取一个数字: a <- conterA ,a=%d \n", a)
+		fmt.Printf("(A→%d, B→%d) \n", a, <-counterB)
 	}
+	
+	// ----------start----------test----------start----------
+	// TODO 为什么这段go协程没有执行?
+	binloop := make(chan int, 2)
+	go func() {
+		fmt.Printf("dead line loop")
+		for {
+			binloop <- 1
+			fmt.Printf("%d", <-binloop)
+			
+		}
+	}()
+	fmt.Printf("lalala")
+	// ----------end------------test----------end------------
 }
 
 func case1_channel_make(bufsize, start int) (chan int) {
 	// xIntchan := make(chan int, bufsize)
 	xIntchanNext := make(chan int)
-	go func(i int) {
+	go func(start int) {
 		for {
-			xIntchanNext <- i
-			i++
+			// 如果xIntchanNext通道里的内容没有被消费掉,在循环中再次push会阻塞住.
+			// 应该和队列差不多,不过通道是双向队列.语言层面上的.
+			fmt.Printf("goroutine语句执行[%d]...\n", start)
+			xIntchanNext <- start
+			start++
 		}
 	}(start)
 	return xIntchanNext
 }
 
 func Main() {
+	fmt.Printf("通道和goroutine测试...start...\n")
 	// 	goroutine使用以下的go语句创建：
 	// go function(arguments)
 	// go func(parameters) { block } (arguments)
+	case1_channel()
+	fmt.Printf("通道和goroutine测试...end...\n")
 }
