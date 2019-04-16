@@ -16,10 +16,11 @@ package main
 import (
 	"t1/p5_functionCode/p5_1_typeOper"
 	"t1/p5_functionCode/p5_2_switch"
+	"t1/p5_functionCode/p5_5_concurrent"
 )
 
 func main() {
-	
 	p5_1_typeOper.Main()
 	p5_2_switch.Main()
+	p5_5_concurrent.Main()
 }
