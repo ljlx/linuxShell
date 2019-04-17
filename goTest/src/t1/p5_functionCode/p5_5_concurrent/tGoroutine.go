@@ -14,6 +14,9 @@ package p5_5_concurrent
 
 import (
 	"fmt"
+	"os"
+	"bufio"
+	"time"
 )
 
 /*
@@ -52,6 +55,10 @@ func case1_channel() {
 	// TODO 为什么这段go协程没有执行?
 	binloop := make(chan int, 2)
 	go func() {
+		filesss, _ := os.OpenFile("/tmp/tttt", os.O_CREATE, 0777)
+		sss := bufio.NewWriter(filesss)
+		sss.WriteString("asdf")
+		sss.Flush()
 		fmt.Printf("dead line loop")
 		for {
 			binloop <- 1
@@ -59,6 +66,7 @@ func case1_channel() {
 			
 		}
 	}()
+	time.Sleep(time.Second * 5)
 	fmt.Printf("lalala")
 	// ----------end------------test----------end------------
 }
@@ -78,11 +86,31 @@ func case1_channel_make(bufsize, start int) (chan int) {
 	return xIntchanNext
 }
 
+func case2_channel_select() {
+	// 	有些情况下我们可能有多个goroutine并发执行，每一个goroutine都有其自身通道。我们可以使用select语句来监控它们的通信。
+	// Go语言的select语句语法如下[7]：
+	// select {
+	// case sendOrReceive1: block1
+	// ...
+	// case sendOrReceiveN: blockN
+	// default: blockD
+	// }
+	// channelList := [5]chan bool{}
+	channelList := make([]*chan bool, 5)
+	for index, item := range channelList {
+		fmt.Printf("%v,%v \n", index, item)
+		itemchan := make(chan bool)
+		item = &itemchan
+	}
+	fmt.Printf("%v \n", channelList)
+}
+
 func Main() {
 	fmt.Printf("通道和goroutine测试...start...\n")
 	// 	goroutine使用以下的go语句创建：
 	// go function(arguments)
 	// go func(parameters) { block } (arguments)
-	case1_channel()
+	// case1_channel()
+	case2_channel_select()
 	fmt.Printf("通道和goroutine测试...end...\n")
 }
