@@ -122,6 +122,7 @@ func case2_channel_select() {
 	// ----------end------------协程----------end------------
 	
 	fmt.Printf("%v \n", channelList)
+	// 其中的select语句等待通道发送数据，由于我们没有提供一个default语句，该select语句会阻塞。一旦有一个或者更多个通道准备好了发送数据，那么程序会以伪随机的形式选择一个case语句来执行。由于该select语句在一个普通for循环内部，它会执行固定数量的次数。
 	for index := 0; index < 25; index++ {
 		// 使用select语法,select语句在多个可操作的通道中随机选择一个进行操作,操作完后进入下次for循环.
 		// 如果有default语句,将不会阻塞,即使不存在一个可操作的通道.
