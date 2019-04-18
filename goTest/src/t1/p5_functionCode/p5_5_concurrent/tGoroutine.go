@@ -14,6 +14,10 @@ package p5_5_concurrent
 
 import (
 	"fmt"
+	"os"
+	"bufio"
+	"time"
+	"math/rand"
 )
 
 /*
@@ -52,6 +56,10 @@ func case1_channel() {
 	// TODO 为什么这段go协程没有执行?
 	binloop := make(chan int, 2)
 	go func() {
+		filesss, _ := os.OpenFile("/tmp/tttt", os.O_CREATE, 0777)
+		sss := bufio.NewWriter(filesss)
+		sss.WriteString("asdf")
+		sss.Flush()
 		fmt.Printf("dead line loop")
 		for {
 			binloop <- 1
@@ -59,6 +67,7 @@ func case1_channel() {
 			
 		}
 	}()
+	time.Sleep(time.Second * 5)
 	fmt.Printf("lalala")
 	// ----------end------------test----------end------------
 }
@@ -78,11 +87,69 @@ func case1_channel_make(bufsize, start int) (chan int) {
 	return xIntchanNext
 }
 
+func case2_channel_select() {
+	// 	有些情况下我们可能有多个goroutine并发执行，每一个goroutine都有其自身通道。我们可以使用select语句来监控它们的通信。
+	// Go语言的select语句语法如下[7]：
+	// select {
+	// case sendOrReceive1: block1
+	// ...
+	// case sendOrReceiveN: blockN
+	// default: blockD
+	// }
+	// channelList := [5]chan bool{}
+	channelList := make([]*chan bool, 5)
+	for index, item := range channelList {
+		fmt.Printf("index:[%v],item:[%v] \n", index, item)
+		itemchan := make(chan bool)
+		// item = &itemchan
+		fmt.Printf("chan 指针 %p, 对象:%v \n", itemchan, itemchan)
+		channelList[index] = &itemchan
+	}
+	
+	// ----------start----------协程----------start----------
+	go func() {
+		for {
+			sleepTime := rand.Intn(500)
+			time.Sleep(time.Millisecond * time.Duration(sleepTime))
+			// 5以内的整形随机数
+			randomint := rand.Intn(5)
+			// 随机选择一个通道塞入数据.
+			chanitem := channelList[randomint]
+			*chanitem <- true
+		}
+		
+	}()
+	// ----------end------------协程----------end------------
+	
+	fmt.Printf("%v \n", channelList)
+	// 其中的select语句等待通道发送数据，由于我们没有提供一个default语句，该select语句会阻塞。一旦有一个或者更多个通道准备好了发送数据，那么程序会以伪随机的形式选择一个case语句来执行。由于该select语句在一个普通for循环内部，它会执行固定数量的次数。
+	for index := 0; index < 25; index++ {
+		// 使用select语法,select语句在多个可操作的通道中随机选择一个进行操作,操作完后进入下次for循环.
+		// 如果有default语句,将不会阻塞,即使不存在一个可操作的通道.
+		// 如果没有default语句,且没有可用的通道,将会阻塞
+		select {
+		case x := <-*channelList[0]:
+			fmt.Printf("0 - %v \n", x)
+		case x := <-*channelList[1]:
+			fmt.Printf("1 - %v \n", x)
+		case x := <-*channelList[2]:
+			fmt.Printf("2 - %v \n", x)
+		case x := <-*channelList[3]:
+			fmt.Printf("3 - %v \n", x)
+		case x := <-*channelList[4]:
+			fmt.Printf("4 - %v \n", x)
+			// default:
+			// 	fmt.Printf("defult")
+		}
+	}
+}
+
 func Main() {
 	fmt.Printf("通道和goroutine测试...start...\n")
 	// 	goroutine使用以下的go语句创建：
 	// go function(arguments)
 	// go func(parameters) { block } (arguments)
-	case1_channel()
+	// case1_channel()
+	case2_channel_select()
 	fmt.Printf("通道和goroutine测试...end...\n")
 }
