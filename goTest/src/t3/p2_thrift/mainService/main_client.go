@@ -1,41 +1,23 @@
 /*
 --------------------------------------------------
- File Name: Main.go
+ File Name: main_client.go
  Author: hanxu
  AuthorSite: http://www.thesunboy.com/
  GitSource: https://github.com/thesunboy-com/linuxShell
- Created Time: 2019-4-18-下午6:04
+ Created Time: 2019-4-18-下午9:36
 ---------------------说明--------------------------
- go-thrift 测试http://thrift.apache.org/tutorial/go
+
 ---------------------------------------------------
 */
 
-package main
-
-/*
-  4  * Licensed to the Apache Software Foundation (ASF) under one
-  5  * or more contributor license agreements. See the NOTICE file
-  6  * distributed with this work for additional information
-  7  * regarding copyright ownership. The ASF licenses this file
-  8  * to you under the Apache License, Version 2.0 (the
-  9  * "License"); you may not use this file except in compliance
- 10  * with the License. You may obtain a copy of the License at
- 11  *
- 12  *   http://www.apache.org/licenses/LICENSE-2.0
- 13  *
- 14  * Unless required by applicable law or agreed to in writing,
- 15  * software distributed under the License is distributed on an
- 16  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- 17  * KIND, either express or implied. See the License for the
- 18  * specific language governing permissions and limitations
- 19  * under the License.
- 20  */
+package mainService
 
 import (
 	"context"
 	"crypto/tls"
 	"fmt"
-	"tutorial"
+	
+	"t3/p2_thrift/go_thrift/gen-go/tutorial"
 	
 	"github.com/apache/thrift/lib/go/thrift"
 )
@@ -51,21 +33,6 @@ func handleClient(client *tutorial.CalculatorClient) (err error) {
 	sum, _ := client.Add(defaultCtx, 1, 1)
 	fmt.Print("1+1=", sum, "\n")
 	work := tutorial.NewWork()
-	work.Op = tutorial.Operation_DIVIDE
-	work.Num1 = 1
-	work.Num2 = 0
-	quotient, err := client.Calculate(defaultCtx, 1, work)
-	if err != nil {
-		switch v := err.(type) {
-		case *tutorial.InvalidOperation:
-			fmt.Println("Invalid operation:", v)
-		default:
-			fmt.Println("Error during operation:", err)
-		}
-		return err
-	} else {
-		fmt.Println("Whoa we can divide by 0 with new value:", quotient)
-	}
 	work.Op = tutorial.Operation_SUBTRACT
 	work.Num1 = 15
 	work.Num2 = 10
@@ -88,10 +55,27 @@ func handleClient(client *tutorial.CalculatorClient) (err error) {
 	} else {
 		fmt.Println("Check log:", log.Value)
 	}
+	
+	work.Op = tutorial.Operation_DIVIDE
+	work.Num1 = 1
+	work.Num2 = 0
+	quotient, err := client.Calculate(defaultCtx, 1, work)
+	if err != nil {
+		switch v := err.(type) {
+		case *tutorial.InvalidOperation:
+			fmt.Println("Invalid operation:", v)
+		default:
+			fmt.Println("Error during operation:", err)
+		}
+		return err
+	} else {
+		fmt.Println("Whoa we can divide by 0 with new value:", quotient)
+	}
+	
 	return err
 }
 
-func runClient(transportFactory thrift.TTransportFactory, protocolFactory thrift.TProtocolFactory, addr string, secure bool) error {
+func RunClient(transportFactory thrift.TTransportFactory, protocolFactory thrift.TProtocolFactory, addr string, secure bool) error {
 	var transport thrift.TTransport
 	var err error
 	if secure {
@@ -115,5 +99,8 @@ func runClient(transportFactory thrift.TTransportFactory, protocolFactory thrift
 	}
 	iprot := protocolFactory.GetProtocol(transport)
 	oprot := protocolFactory.GetProtocol(transport)
-	return handleClient(tutorial.NewCalculatorClient(thrift.NewTStandardClient(iprot, oprot)))
+	TClient := thrift.NewTStandardClient(iprot, oprot)
+	MyCalculatorClient := tutorial.NewCalculatorClient(TClient)
+	
+	return handleClient(MyCalculatorClient)
 }

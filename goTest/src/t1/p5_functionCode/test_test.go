@@ -1,27 +1,21 @@
 /*
--*- coding: utf-8 -*-
 --------------------------------------------------
- File Name: main.go
+ File Name: test_test.go
  Author: hanxu
  AuthorSite: http://www.thesunboy.com/
  GitSource: https://github.com/thesunboy-com/linuxShell
- Created Time: 2019-4-14-下午1:03
+ Created Time: 2019-4-18-下午10:01
 ---------------------说明--------------------------
- main
+
 ---------------------------------------------------
 */
 
 package main
 
 import (
-	"t1/p5_functionCode/p5_1_typeOper"
-	"t1/p5_functionCode/p5_2_switch"
-	"t1/p5_functionCode/p5_5_concurrent"
+	"fmt"
 )
 
-func main() {
-	testtt()
-	p5_1_typeOper.Main()
-	p5_2_switch.Main()
-	p5_5_concurrent.Main()
+func testtt() {
+	fmt.Printf("testttt...")
 }
