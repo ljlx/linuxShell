@@ -10,7 +10,7 @@
 ---------------------------------------------------
 */
 
-package p5_5_concurrent
+package p5_4_concurrent
 
 import (
 	"fmt"
