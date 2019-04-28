@@ -17,11 +17,13 @@ import (
 	"t1/p5_functionCode/p5_1_typeOper"
 	"t1/p5_functionCode/p5_2_switch"
 	"t1/p5_functionCode/p5_5_concurrent"
+	"t1/p5_functionCode/p5_6_func"
 )
 
 func main() {
-	testtt()
+	// testtt()
 	p5_1_typeOper.Main()
 	p5_2_switch.Main()
 	p5_5_concurrent.Main()
+	tInit.Main()
 }

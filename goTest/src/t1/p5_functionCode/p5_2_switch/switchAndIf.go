@@ -135,6 +135,7 @@ func testjson() (err error) {
 	// ----------end------------read-json----------end------------
 	var object interface{}
 	jsonbyte := []byte(jsonText)
+	
 	if err := json.Unmarshal(jsonbyte, &object); err != nil {
 		fmt.Printf("解析json -> interface{} error:%v \n", err)
 	} else {
