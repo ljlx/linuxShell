@@ -19,7 +19,7 @@ import (
 
 func init() {
 	curversion := runtime.Version()
-	fmt.Printf("包[%s],init函数初始化,version:%s", "tInit", curversion)
+	fmt.Printf("包[%s],init函数初始化,go-version:%s \n", "tInit ", curversion)
 }
 
 func multParams(args ...string) {

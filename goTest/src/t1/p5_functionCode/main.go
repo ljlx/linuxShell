@@ -19,7 +19,8 @@ import (
 	// "t1/p5_functionCode/p5_5_concurrent"
 	// "t1/p5_functionCode/p5_6_func"
 	
-	"t1/p5_functionCode/p5_57_deferPanic"
+	// "t1/p5_functionCode/p5_57_deferPanic"
+	"t1/p5_functionCode/p5_6_func"
 )
 
 func main() {
@@ -27,8 +28,8 @@ func main() {
 	// p5_1_typeOper.Main()
 	// p5_2_switch.Main()
 	// p5_4_concurrent.Main()
-	deferPanic.Main_defer()
-	deferPanic.MainPanic()
-	deferPanic.Main_http_panic()
+	// deferPanic.Main_defer()
+	// deferPanic.MainPanic()
+	// deferPanic.Main_http_panic()
 	tInit.Main()
 }
