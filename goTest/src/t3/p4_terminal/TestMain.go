@@ -19,5 +19,8 @@ import (
 
 func main() {
 	fmt.Printf("start... \n")
+	fmt.Printf("jaowiejfw \n")
+	fmt.Printf("jaowiejfw \n")
+	fmt.Printf("jaowiejfw \n")
 	t1_session.Main()
 }

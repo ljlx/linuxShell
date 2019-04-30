@@ -188,7 +188,7 @@ func runSsh() {
 	// fmt.Printf("%d, %s\n", ret, stdErr.String())
 }
 
-func (cli *Cli) RunTerminal(shell string, stdout, stderr io.Writer) (err error) {
+func (cli *Cli) RunTerminal(shell string, stdin io.Reader, stdout, stderr io.Writer) (err error) {
 	var (
 		session                         *ssh.Session
 		oldstate                        *terminal.State
@@ -214,12 +214,12 @@ func (cli *Cli) RunTerminal(shell string, stdout, stderr io.Writer) (err error) 
 		// TODO 这些操作是什么意思? 需要系统了解terminal这个玩意儿.
 		defer terminal.Restore(fd, oldstate)
 		//
-		session.Stdin = os.Stdin
+		session.Stdin = stdin
 		session.Stdout = stdout
 		session.Stderr = stderr
 		//
 		if terminal_width, terminal_height, err = terminal.GetSize(fd); err == nil {
-			fmt.Printf("terminal_width:{%v}, terminal_height:{%v} \n", terminal_width, terminal_height)
+			fmt.Printf("terminal_width:{%v}, terminal_height:{%v} \r\n", terminal_width, terminal_height)
 		}
 		// set up terminal modes
 		terminal_modes := ssh.TerminalModes{
@@ -227,13 +227,70 @@ func (cli *Cli) RunTerminal(shell string, stdout, stderr io.Writer) (err error) 
 			ssh.TTY_OP_ISPEED: 14400, // input speed = 14.4kbaud
 			ssh.TTY_OP_OSPEED: 14400, // input speed = 14.4kbaud
 		}
-		if err = session.RequestPty("", terminal_height, terminal_width, terminal_modes); err != nil {
+		termStr := "xterm-256color"
+		fmt.Printf("jaowiejfw \r\n")
+		fmt.Printf("jaowiejfw \n")
+		fmt.Printf("jaowiejfw \r\n")
+		fmt.Printf("is ready to requestPty. term:[%v], height:[%v],width:[%v],modes:[%v] \n", termStr, terminal_height, terminal_width, terminal_modes)
+		if err = session.RequestPty(termStr, terminal_height, terminal_width, terminal_modes); err != nil {
+			log.Fatalf("session.requestPty has error.%v", err)
 			return err
 		}
+		// fmt.Printf("cmd: ls / . output:[%v] \r\n", cli.exec(session, "ls /"))
+		// fmt.Printf("cmd: pwd . output:[%v] \r\n", cli.exec(session, "pwd"))
+		
+		fmt.Printf("is ready to run shell: [%v] \n", shell)
 		session.Run(shell)
 	}
 	
 	return err
+}
+
+func (cli *Cli) exec(session *ssh.Session, command string) string {
+	var (
+		msg []byte
+		err error
+	)
+	// TODO 几种执行命令方式的不同之处?
+	// msg, err = session.CombinedOutput(command)
+	msg, err = session.Output(command)
+	//
+	if err != nil {
+		fmt.Printf("err message:%v \r\n", err)
+		return ""
+	} else {
+		return string(msg)
+	}
+}
+
+type StdProxy struct {
+	reader io.Reader
+	writer io.Writer
+}
+
+func (proxy *StdProxy) Read(p []byte) (n int, err error) {
+	pReader := proxy.reader
+	
+	n, err = pReader.Read(p)
+	// return 0, nil
+	return n, err
+}
+
+func (proxy *StdProxy) Write(p []byte) (n int, err error) {
+	pWriter := proxy.writer
+	n, err = pWriter.Write(p)
+	
+	return n, err
+}
+
+func proxyReader(targetReader io.Reader) io.Reader {
+	proxy := &StdProxy{reader: targetReader}
+	return proxy
+}
+
+func proxyWriter(targetWriter io.Writer) io.Writer {
+	proxy := &StdProxy{writer: targetWriter}
+	return proxy
 }
 
 func Main() {
@@ -242,7 +299,9 @@ func Main() {
 	// respText, _ := cli.Execu("ifconfig")
 	// fmt.Printf("执行命令:%v", respText)
 	// sss:=&os.Stdout
-	error := cli.RunTerminal("htop", os.Stdout, os.Stderr)
+	// shell := "ssh lijie@192.168.0.31"
+	shell := "htop"
+	error := cli.RunTerminal(shell, proxyReader(os.Stdin), proxyWriter(os.Stdout), proxyWriter(os.Stderr))
 	// fmt.Fprintf(os.Stderr,"",error)
 	if error != nil {
 		log.Fatalf("发生了错误:%v \n", error)
