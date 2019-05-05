@@ -37,6 +37,7 @@ import (
 	
 	"strings"
 	"path/filepath"
+	// "net/http"
 )
 
 type Cli struct {
@@ -236,6 +237,7 @@ func (cli *Cli) RunTerminal(shell string, stdin io.Reader, stdout, stderr io.Wri
 		fmt.Printf("jaowiejfw \n")
 		fmt.Printf("jaowiejfw \r\n")
 		fmt.Printf("is ready to requestPty. term:[%v], height:[%v],width:[%v],modes:[%v] \n", termStr, terminal_height, terminal_width, terminal_modes)
+		
 		if err = session.RequestPty(termStr, terminal_height, terminal_width, terminal_modes); err != nil {
 			log.Fatalf("session.requestPty has error.%v", err)
 			return err
@@ -358,10 +360,12 @@ func proxyWriter(nameTag string, targetWriter io.Writer) *StdProxy {
 	return nil
 }
 
-func Main() {
-	// runSsh()
+/*
+ 使用终端发送命令,和交互式shell使用, 代理ssh并保存日志
+ */
+func testCase1() {
 	shells := os.Args[1:]
-	cli := New("127.0.0.1", 22, "hanxu", "jjj")
+	cli := New("192.168.0.51", 22, "hanxu", "jjj")
 	// respText, _ := cli.Execu("ifconfig")
 	// fmt.Printf("执行命令:%v", respText)
 	// sss:=&os.Stdout
@@ -381,4 +385,102 @@ func Main() {
 	if error != nil {
 		log.Fatalf("发生了错误:%v \n", error)
 	}
+	
+}
+
+/*
+ssh登陆方式-密码认证
+ */
+func AuthPasswd(conn ssh.ConnMetadata, password []byte) (*ssh.Permissions, error) {
+	// Should use constant-time compare (or better, salt+hash) in
+	// a production setting.
+	// 这里可以实现用户登陆机制.这里传的密码是明文的吧应该.
+	// TODO 如何在代码上用标准库的api直接获取当前系统应该使用是什么换行符.而不用自己判断系统类型来拼接换行符.
+	fmt.Printf("用户登陆:sessionId:[%v],reqIp:[%v],username:[%v],passwd:[%v],clientVersion:[%v] \n", conn.SessionID(), conn.RemoteAddr(), conn.User(), string(password), conn.ClientVersion())
+	// user: hx, passwd: hhh
+	if strings.EqualFold(conn.User(), "hx") && strings.EqualFold(string(password), "hhh") {
+		return nil, nil
+	} else {
+		return nil, fmt.Errorf("passwd rejected for user [%v] \n", conn.User())
+	}
+	
+}
+
+/*
+ssh登陆方式-公私钥对配置方式.
+ */
+func AuthPublicKey(conn ssh.ConnMetadata, pubkey ssh.PublicKey) (*ssh.Permissions, error) {
+	pubkeyText := string(pubkey.Marshal())
+	fmt.Printf("用户登陆-公钥方式:类型[%v],公钥内容:[%v] \n", pubkey.Type(), pubkeyText)
+	//
+	
+	//
+	
+	switch pubkey.Type() {
+	case "ss":
+		return nil, nil
+	default:
+	
+	}
+	
+	return nil, nil
+}
+
+func AuthLogger(conn ssh.ConnMetadata, method string, err error) {
+	
+}
+
+func BannerHello(conn ssh.ConnMetadata) string {
+	return "hello."
+}
+
+/*
+测试
+ */
+func testCase2() {
+	cli := New("192.168.0.51", 22, "hanxu", "jjj")
+	cli.connect()
+	server, err := cli.sshclient.Listen("tcp", "0.0.0.0:1234")
+	if err == nil {
+		
+		// // Serve HTTP with your SSH server acting as a reverse proxy.
+		// http.Serve(l, http.HandlerFunc(func(resp http.ResponseWriter, req *http.Request) {
+		//    fmt.Fprintf(resp, "Hello world!\n")
+		// }))
+		// http.Serve(server, http.HandlerFunc(func(resp http.ResponseWriter, req *http.Request) {
+		// 	fmt.Fprintf(resp, "hello.world \n")
+		// }))
+		//
+		if netconn, err := server.Accept(); err == nil {
+			// Remove to disable password auth,如果没配置对应的callback,相当于禁用对应的认证方式.
+			serverConfig := &ssh.ServerConfig{
+				// 注册各种回调函数
+				PasswordCallback:  AuthPasswd,
+				PublicKeyCallback: AuthPublicKey,
+				AuthLogCallback:   AuthLogger,
+				BannerCallback:    BannerHello,
+				//
+				MaxAuthTries: 2,
+			}
+			
+			// serverConn, channelHandler, chanReq
+			if serverConn, channelHandler, chanReq, err := ssh.NewServerConn(netconn, serverConfig); err != nil {
+				log.Fatalf("建立服务监听失败..%v", err)
+			} else {
+				
+			}
+			// if ees, ok := netconn.(net.Conn); ok {
+			// 	ssh.NewServerConn(ees, nil)
+			// }
+			
+		}
+		
+	}
+	
+}
+
+func Main() {
+	// runSsh()
+	// testCase1()
+	testCase2()
 }
