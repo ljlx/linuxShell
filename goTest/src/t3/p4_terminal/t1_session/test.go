@@ -33,6 +33,10 @@ import (
 	"time"
 	"io"
 	"golang.org/x/crypto/ssh/terminal"
+	"reflect"
+	
+	"strings"
+	"path/filepath"
 )
 
 type Cli struct {
@@ -239,7 +243,7 @@ func (cli *Cli) RunTerminal(shell string, stdin io.Reader, stdout, stderr io.Wri
 		// fmt.Printf("cmd: ls / . output:[%v] \r\n", cli.exec(session, "ls /"))
 		// fmt.Printf("cmd: pwd . output:[%v] \r\n", cli.exec(session, "pwd"))
 		
-		fmt.Printf("is ready to run shell: [%v] \n", shell)
+		fmt.Printf("is ready to run shell: [%v] \r\n", shell)
 		session.Run(shell)
 	}
 	
@@ -264,44 +268,115 @@ func (cli *Cli) exec(session *ssh.Session, command string) string {
 }
 
 type StdProxy struct {
-	reader io.Reader
-	writer io.Writer
+	nametag string
+	reader  io.Reader
+	writer  io.Writer
+	logfile *os.File
+}
+
+func (proxy *StdProxy) InfoStr() string {
+	var target interface{}
+	if proxy.reader != nil {
+		target = proxy.reader
+	} else if proxy.writer != nil {
+		target = proxy.writer
+	}
+	return fmt.Sprintf("name:[%v],target:[%v],targetType:[%v]", proxy.nametag, target, reflect.TypeOf(target))
 }
 
 func (proxy *StdProxy) Read(p []byte) (n int, err error) {
 	pReader := proxy.reader
-	
+	// fmt.Printf("read before %v \n",p)
 	n, err = pReader.Read(p)
 	// return 0, nil
+	if n > 0 {
+		readtext := p[:n]
+		proxy.logfile.Write(readtext)
+		// fmt.Printf("read after %v \n", readtext)
+	}
+	
 	return n, err
 }
 
 func (proxy *StdProxy) Write(p []byte) (n int, err error) {
 	pWriter := proxy.writer
 	n, err = pWriter.Write(p)
-	
+	if err == nil && n > 0 {
+		currOutput := p[:n]
+		// outputStr := string(currOutput)
+		proxy.logfile.Write(currOutput)
+		// proxy.logfile.WriteString(outputStr)
+	} else {
+		fmt.Printf("没有读取到数据,或者是有错误.number:[%v] err:[%v]", n, err)
+	}
 	return n, err
 }
 
-func proxyReader(targetReader io.Reader) io.Reader {
-	proxy := &StdProxy{reader: targetReader}
-	return proxy
+func proxyReader(nameTag string, targetReader io.Reader) io.Reader {
+	
+	// TODO 如何从哪个包里取一个常量来表示当前文件系统,使用那一种回车换行符
+	//
+	fmt.Printf("开始创建日志文件.")
+	logfile, err := getLogPath("input.log")
+	if err == nil {
+		fmt.Printf("创建日志文件成功")
+		proxy := &StdProxy{nametag: nameTag, reader: targetReader}
+		fmt.Printf("proxy:[%v],targetInfo:[%v] \n", proxy, proxy.InfoStr())
+		logfile.WriteString("begin: \n")
+		proxy.logfile = logfile
+		return proxy
+	} else {
+		fmt.Printf("创建日志文件失败:%v", err)
+	}
+	return nil
+	
 }
 
-func proxyWriter(targetWriter io.Writer) io.Writer {
-	proxy := &StdProxy{writer: targetWriter}
-	return proxy
+func getLogPath(logname string) (file *os.File, err error) {
+	// 	/tmp/ioproxy
+	filepathstr := os.TempDir()
+	filepathstr = filepath.Join(filepathstr, "ioproxy")
+	os.MkdirAll(filepathstr, 0700)
+	filepathstr = filepath.Join(filepathstr, logname)
+	return os.OpenFile(filepathstr, os.O_CREATE|os.O_APPEND|os.O_RDWR, 0700)
+}
+
+func proxyWriter(nameTag string, targetWriter io.Writer) *StdProxy {
+	fmt.Printf("开始创建日志文件.")
+	
+	logfile, err := getLogPath("output.log")
+	if err == nil {
+		fmt.Printf("创建日志文件成功")
+		proxy := &StdProxy{writer: targetWriter, nametag: nameTag}
+		fmt.Printf("proxy:[%v],targetInfo:[%v] \n", proxy, proxy.InfoStr())
+		logfile.WriteString("begin: \n")
+		proxy.logfile = logfile
+		return proxy
+	} else {
+		fmt.Printf("创建日志文件失败:%v", err)
+	}
+	return nil
 }
 
 func Main() {
 	// runSsh()
+	shells := os.Args[1:]
 	cli := New("127.0.0.1", 22, "hanxu", "jjj")
 	// respText, _ := cli.Execu("ifconfig")
 	// fmt.Printf("执行命令:%v", respText)
 	// sss:=&os.Stdout
 	// shell := "ssh lijie@192.168.0.31"
-	shell := "htop"
-	error := cli.RunTerminal(shell, proxyReader(os.Stdin), proxyWriter(os.Stdout), proxyWriter(os.Stderr))
+	shell := strings.Join(shells, " ")
+	fmt.Printf("执行命令:%v \n", shells)
+	pReaderIn := proxyReader("osInput", os.Stdin)
+	pWriterOut := proxyWriter("osOutput", os.Stdout)
+	pWriterErr := proxyWriter("osError", os.Stderr)
+	defer pWriterOut.logfile.Close()
+	defer pWriterErr.logfile.Close()
+	//
+	
+	//
+	error := cli.RunTerminal(shell, pReaderIn, pWriterOut, pWriterErr)
 	// fmt.Fprintf(os.Stderr,"",error)
 	if error != nil {
 		log.Fatalf("发生了错误:%v \n", error)
