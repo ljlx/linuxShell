@@ -17,5 +17,6 @@ import (
 )
 
 func main() {
-	wakeonlanLib.Main()
+	wakeonlanLib.GithubMain()
+	// wakeonlanLib.Main()
 }

@@ -92,7 +92,7 @@ func usage() {
 	fmt.Println("usage: wol [-p password] macaddr")
 }
 
-func main() {
+func GithubMain() {
 	flag.Parse()
 	
 	if flag.NArg() < 1 {
