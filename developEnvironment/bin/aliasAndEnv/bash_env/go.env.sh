@@ -22,6 +22,7 @@ export PATH=${PATH}:${GOROOT}/bin:${firstPath}/bin
 #/usr/lib/go \
 targetList=(${firstPath} \
 /usr/linuxShell/goTest/ \
+/usr/linuxShell/utils-go/ \
 ~/.GO/target \
 /tmp/GO/target \
 )
