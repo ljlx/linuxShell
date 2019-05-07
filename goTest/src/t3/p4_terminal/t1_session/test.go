@@ -429,6 +429,7 @@ func obtainAuthPasswdCallback() (func(conn ssh.ConnMetadata, password []byte) (*
 func obtainAuthContext() (authCtx *AuthContext, err error) {
 	ctx := new(AuthContext)
 	// 受信任的客户公钥授权keys,允许这些用户登陆服务器
+	// currUser:=TODO
 	authkeysFilePath := "~/.ssh/authorized_keys"
 	authkeysBytes, err := ioutil.ReadFile(authkeysFilePath)
 	if err != nil {
