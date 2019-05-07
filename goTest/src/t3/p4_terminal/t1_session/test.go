@@ -510,20 +510,7 @@ func BannerHello(conn ssh.ConnMetadata) string {
 	return "hello."
 }
 
-/*
-测试
- */
-func testCase2() (err error) {
-	var (
-		authctx *AuthContext
-		server  net.Listener
-	)
-	// ----------start----------设置sshServerConfig----------start----------
-	authctx, err = obtainAuthContext()
-	if err != nil {
-		log.Fatalf("解析authcontext失败..%v", err)
-	}
-	
+func obtainServerConfig(authctx *AuthContext) *ssh.ServerConfig {
 	serverConfig := &ssh.ServerConfig{
 		// 注册各种回调函数
 		// Remove to disable password auth,如果没配置对应的callback,相当于禁用对应的认证方式.
@@ -534,6 +521,24 @@ func testCase2() (err error) {
 		//
 		MaxAuthTries: 2,
 	}
+	return serverConfig
+}
+
+/*
+测试
+ */
+func testCase2() (err error) {
+	var (
+		authctx *AuthContext
+		server  net.Listener
+	)
+	loggerInfo := log.New(os.Stdout, "info", log.LstdFlags)
+	// ----------start----------设置sshServerConfig----------start----------
+	authctx, err = obtainAuthContext()
+	if err != nil {
+		log.Fatalf("解析authcontext失败..%v", err)
+	}
+	serverConfig := obtainServerConfig(authctx)
 	serverConfig.AddHostKey(authctx.privateKeysSigner)
 	// Once a ServerConfig has been configured, connections can be accepted.
 	// ----------end------------设置sshServerConfig----------end------------
@@ -564,16 +569,77 @@ func testCase2() (err error) {
 	// Before use, a handshake must be performed on the incoming
 	// net.Conn.
 	// 进行握手,与客户端建立ssh连接
-	serverConn, channelHandler, chanReq, err := ssh.NewServerConn(netconn, serverConfig)
+	serverConn, channelNew, chanReq, err := ssh.NewServerConn(netconn, serverConfig)
 	
 	if err != nil {
 		log.Fatal("failed to handshake: ", err)
 	}
 	
-	log.Printf("")
-	log.Printf("logged in with key %s", serverConn.Permissions.Extensions["pubkey-fp"])
+	loggerInfo.Printf("客户端请求:ip[%v],clientVer:[%v],sessionId:[%v],user:[%v]", serverConn.RemoteAddr(), serverConn.ClientVersion(), serverConn.SessionID(), serverConn.User())
+	//
+	loggerInfo.Printf("logged in with permissions %v", serverConn.Permissions.Extensions)
+	//
+	// The incoming Request channel must be serviced.为什么是请求的通道作为一个异步服务对象?
+	go ssh.DiscardRequests(chanReq)
 	
-	return nil
+	// Server the incoming Channel channel.
+	//
+	
+	for channelItem := range channelNew {
+		// Channels have a type, depending on the application level
+		// protocol intended. In the case of a shell, the type is
+		// "session" and ServerShell may be used to present a simple
+		// terminal interface.
+		if false == strings.EqualFold(channelItem.ChannelType(), "session") {
+			// 通道类型不是session的拒绝掉,在这个用例中是一个shell, 类型是"session"
+			channelItem.Reject(ssh.UnknownChannelType, "hx:UnknownChannelType:不是有效的shell通道类型,it is not a valid channelType,is support: (session)")
+			continue
+		}
+		var (
+			channel  ssh.Channel
+			requests <-chan *ssh.Request
+		)
+		channel, requests, err = channelItem.Accept()
+		if err != nil {
+			log.Fatalf("Could not accept channel:%v", err)
+		}
+		// Sessions have out-of-band requests such as "shell",
+		// "pty-req" and "env".  Here we handle only the
+		// "shell" request.
+		go func(in <-chan *ssh.Request) {
+			// item := <-in
+			for reqShell := range in {
+				var payload []byte
+				wantreply := reqShell.WantReply
+				if wantreply {
+					reqShell.Reply(strings.EqualFold(reqShell.Type, "shell"), payload)
+				} else {
+					loggerInfo.Printf("客户端不需要reply,WantReply:false")
+				}
+			}
+		}(requests)
+		// 哈哈 这应该就是平常看到的别人实现的交互式终端了.越来越接近底层终端了.
+		// bash环境的PS1变量,应该就是在这个提示符(prompt) > 这里下手的.
+		//
+		term := terminal.NewTerminal(channel, ">")
+		go func() {
+			defer channel.Close()
+			for {
+				line, err := term.ReadLine()
+				if err != nil {
+					break
+				}
+				loggerInfo.Printf("哈哈哈,服务器输出了用户在终端输入的内容:%v \n", line)
+				// 还可以设置自动完成的回调信息
+				// term.AutoCompleteCallback
+				var bufresp []byte
+				bufresp = []byte(fmt.Sprintf("iam a resp:%v \n", line))
+				term.Write(bufresp)
+			}
+		}()
+	}
+	
+	return err
 }
 
 func Main() {
