@@ -40,9 +40,14 @@
 
 * Linux 下编译 Mac 和 Windows 64位可执行程序
 ```
+
 CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build main.go
-CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build main.go
+32位架构 Windows
 CGO_ENABLED=0 GOOS=windows GOARCH=386 go build main.go
+64位架构 Windows
+CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build main.go
+ARM架构 linux
+CGO_ENABLED=0 GOOS=linux GOARCH=arm go build main.go
 ```
 * Windows 下编译 Mac 和 Linux 64位可执行程序
 ```

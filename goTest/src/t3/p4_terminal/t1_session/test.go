@@ -40,6 +40,7 @@ import (
 	// "net/http"
 	"io/ioutil"
 	"crypto/md5"
+	"os/user"
 )
 
 type Cli struct {
@@ -404,7 +405,18 @@ type AuthContext struct {
 	privateKeysSigner ssh.Signer
 }
 
+func NewAuthContext() *AuthContext {
+	authcontext := new(AuthContext)
+	authcontext.authPublicKeysMap = make(map[string]*PublicKeyResult)
+	return authcontext
+}
+
 // ----------end------------结构体----------end------------
+
+var (
+	loggerInfo  = log.New(os.Stdout, "info", log.LstdFlags)
+	loggerError = log.New(os.Stderr, "error", log.LstdFlags)
+)
 
 /*
 ssh登陆方式-密码认证
@@ -418,57 +430,12 @@ func obtainAuthPasswdCallback() (func(conn ssh.ConnMetadata, password []byte) (*
 		// TODO 如何在代码上用标准库的api直接获取当前系统应该使用是什么换行符.而不用自己判断系统类型来拼接换行符.
 		fmt.Printf("用户passwd登陆:sessionId:[%v],reqIp:[%v],username:[%v],passwd:[%v],clientVersion:[%v] \n", conn.SessionID(), conn.RemoteAddr(), conn.User(), string(password), conn.ClientVersion())
 		// user: hx, passwd: hhh
-		if strings.EqualFold(conn.User(), "hx") && strings.EqualFold(string(password), "hhh") {
+		if strings.EqualFold(conn.User(), "hx") && strings.EqualFold(string(password), "hx") {
 			return nil, nil
 		} else {
 			return nil, fmt.Errorf("passwd rejected for user [%v] \n", conn.User())
 		}
 	}
-}
-
-func obtainAuthContext() (authCtx *AuthContext, err error) {
-	ctx := new(AuthContext)
-	// 受信任的客户公钥授权keys,允许这些用户登陆服务器
-	authkeysFilePath := "~/.ssh/authorized_keys"
-	authkeysBytes, err := ioutil.ReadFile(authkeysFilePath)
-	if err != nil {
-		log.Fatalf("failed to read file [%v],err:%v \n", authkeysFilePath, err)
-	}
-	// (out PublicKey, comment string, options []string, rest []byte, err error)
-	fmt.Printf("成功获取到授权文件[%v],大小[%v] md5[%v] ,开始进行解析...\n", authkeysFilePath, len(authkeysBytes), md5.Sum(authkeysBytes))
-	for len(authkeysBytes) > 0 {
-		sshpublicKey, sshComment, sshOptions, restNext, err := ssh.ParseAuthorizedKey(authkeysBytes)
-		if err != nil {
-			log.Fatalf("ParseAuthorizedKey has been err,%v", err)
-		}
-		// 通过阅读源码的方式看到,rest实际上是authkeysBytes剩下的数据,
-		authkeysBytes = restNext
-		pubKeyResu := new(PublicKeyResult)
-		pubKeyResu.success = true
-		pubKeyResu.comment = sshComment
-		pubKeyResu.sshPublicKey = &sshpublicKey
-		pubKeyResu.sshOptions = &sshOptions
-		ctx.authPublicKeysMap[string(sshpublicKey.Marshal())] = pubKeyResu
-		fmt.Printf("解析成功sshpubKey:[%v] \n", sshpublicKey.Marshal())
-	}
-	fmt.Printf("解析受信任的客户公钥授权文件完成[%v]\n", authkeysFilePath)
-	// 解析服务器私钥,每一个ssh服务器都需要一个公私钥对.
-	// ssh服务器和客户机在建立连接的时候 会交换各自的公钥.通信时,会使用对方的公钥进行加密,用自己的私钥来进行解密交换信息.
-	//
-	sshServerRsaPrivateKeyFilePath := "/etc/ssh/ssh_host_rsa_key"
-	
-	if privateKeys, err := ioutil.ReadFile(sshServerRsaPrivateKeyFilePath); err != nil {
-		log.Fatalf("无法访问服务器私钥文件:%v \n,err:%v", sshServerRsaPrivateKeyFilePath, err)
-	} else {
-		// ssh.ParsePrivateKey()
-		// ssh.ParsePrivateKeyWithPassphrase()
-		ctx.privateKeysSigner, err = ssh.ParsePrivateKey(privateKeys)
-		if err != nil {
-			log.Fatalf("解析服务器私钥文件失败:%v")
-		}
-	}
-	
-	return ctx, err
 }
 
 /*
@@ -477,15 +444,19 @@ ssh登陆方式-公私钥对配置方式.
 func obtainAuthPublicKeyCallback(ctx *AuthContext) (func(conn ssh.ConnMetadata, pubkey ssh.PublicKey) (*ssh.Permissions, error)) {
 	
 	return func(conn ssh.ConnMetadata, pubkey ssh.PublicKey) (*ssh.Permissions, error) {
-		pubkeyText := string(pubkey.Marshal())
+		sshpublicKey, sshComment, _, _, err := ssh.ParseAuthorizedKey(pubkey.Marshal())
+		if err != nil {
+			loggerError.Printf("pubkey登陆错误信息:%v,v", sshpublicKey, err)
+		}
+		pubkeyText := string(sshComment)
 		// fmt.Printf("用户登陆-公钥方式:类型[%v],公钥内容:[%v] \n", pubkey.Type(), pubkeyText)
-		fmt.Printf("用户publicKey登陆:sessionId:[%v],reqIp:[%v],username:[%v],pubKeyType:[%v],pubkey:[%v],clientVersion:[%v] \n", conn.SessionID(), conn.RemoteAddr(), conn.User(), pubkey.Type(), pubkeyText, conn.ClientVersion())
+		fmt.Printf("用户publicKey登陆:sessionId:[%v],reqIp:[%v],username:[%v],pubKeyType:[%v],pubkey:[%v],clientVersion:[%v] \n", string(conn.SessionID()), conn.RemoteAddr(), conn.User(), pubkey.Type(), pubkeyText, string(conn.ClientVersion()))
 		//
 		switch pubkey.Type() {
 		case "test":
 			return nil, nil
-		default:
-			pubkeyResu := ctx.authPublicKeysMap[pubkeyText]
+		case "ssh-rsa":
+			pubkeyResu := ctx.authPublicKeysMap[fmt.Sprintf("%x", md5.Sum(pubkey.Marshal()))]
 			
 			if pubkeyResu != nil && pubkeyResu.success {
 				sshperm := new(ssh.Permissions)
@@ -502,28 +473,73 @@ func obtainAuthPublicKeyCallback(ctx *AuthContext) (func(conn ssh.ConnMetadata, 
 	
 }
 
+func obtainAuthContext() (authCtx *AuthContext, err error) {
+	ctx := NewAuthContext()
+	// 受信任的客户公钥授权keys,允许这些用户登陆服务器
+	// currUser:=TODO
+	curruser, err := user.Current()
+	fmt.Printf("获取当前用户:%v \n", curruser)
+	dir_ssh := filepath.Join(curruser.HomeDir, ".ssh")
+	authkeysFilePath := filepath.Join(dir_ssh, "authorized_keys")
+	authkeysBytes, err := ioutil.ReadFile(authkeysFilePath)
+	if err != nil {
+		loggerError.Fatalf("failed to read file [%v],err:%v \n", authkeysFilePath, err)
+	}
+	// (out PublicKey, comment string, options []string, rest []byte, err error)
+	fmt.Printf("成功获取到授权文件[%v],大小[%v] md5[%x] ,开始进行解析...\n", authkeysFilePath, len(authkeysBytes), md5.Sum(authkeysBytes))
+	for len(authkeysBytes) > 0 {
+		sshpublicKey, sshComment, sshOptions, restNext, err := ssh.ParseAuthorizedKey(authkeysBytes)
+		if err != nil {
+			if strings.ContainsAny(string(authkeysBytes), "no & key & found") {
+				break
+			}
+			loggerError.Fatalf("ParseAuthorizedKey has been err,%v", err)
+		}
+		// 通过阅读源码的方式看到,rest实际上是authkeysBytes剩下的数据,
+		authkeysBytes = restNext
+		pubKeyResu := new(PublicKeyResult)
+		pubKeyResu.success = true
+		pubKeyResu.comment = sshComment
+		pubKeyResu.sshPublicKey = &sshpublicKey
+		pubKeyResu.sshOptions = &sshOptions
+		
+		pubkeyMapkey := fmt.Sprintf("%x", md5.Sum(sshpublicKey.Marshal()))
+		ctx.authPublicKeysMap[string(pubkeyMapkey)] = pubKeyResu
+		fmt.Printf("解析成功sshpubKey:[%v],md5-Marshal:[%v] \n", sshComment, pubkeyMapkey)
+	}
+	loggerInfo.Printf("解析受信任的客户公钥授权文件完成[%v]\n", authkeysFilePath)
+	// 解析服务器私钥,每一个ssh服务器都需要一个公私钥对.
+	// ssh服务器和客户机在建立连接的时候 会交换各自的公钥.通信时,会使用对方的公钥进行加密,用自己的私钥来进行解密交换信息.
+	//
+	// TODO 无法使用系统自带的etc目录下的, 需要研究下 如何通过这个库来自动生成ssh公私钥对.
+	// sshServerRsaPrivateKeyFilePath := filepath.Join(string(filepath.Separator),"etc", "ssh", "ssh_host_rsa_key")
+	sshServerRsaPrivateKeyFilePath := filepath.Join(dir_ssh, "proxyServer", "proxy_rsa_key.pri")
+	if privateKeys, err := ioutil.ReadFile(sshServerRsaPrivateKeyFilePath); err != nil {
+		loggerError.Fatalf("无法访问服务器私钥文件:%v \n,err:%v", sshServerRsaPrivateKeyFilePath, err)
+	} else {
+		// ssh.ParsePrivateKey()
+		// ssh.ParsePrivateKeyWithPassphrase()
+		ctx.privateKeysSigner, err = ssh.ParsePrivateKey(privateKeys)
+		if err != nil {
+			loggerError.Fatalf("解析服务器私钥文件失败:%v")
+		}
+	}
+	
+	return ctx, err
+}
+
 func AuthLogger(conn ssh.ConnMetadata, method string, err error) {
 	
+	fmt.Printf("AuthLogger...")
 }
 
 func BannerHello(conn ssh.ConnMetadata) string {
+	
+	fmt.Printf("BannerHello...")
 	return "hello."
 }
 
-/*
-测试
- */
-func testCase2() (err error) {
-	var (
-		authctx *AuthContext
-		server  net.Listener
-	)
-	// ----------start----------设置sshServerConfig----------start----------
-	authctx, err = obtainAuthContext()
-	if err != nil {
-		log.Fatalf("解析authcontext失败..%v", err)
-	}
-	
+func obtainServerConfig(authctx *AuthContext) *ssh.ServerConfig {
 	serverConfig := &ssh.ServerConfig{
 		// 注册各种回调函数
 		// Remove to disable password auth,如果没配置对应的callback,相当于禁用对应的认证方式.
@@ -534,19 +550,41 @@ func testCase2() (err error) {
 		//
 		MaxAuthTries: 2,
 	}
+	return serverConfig
+}
+
+/*
+测试
+ */
+func testCase2_ssh_server() (err error) {
+	var (
+		authctx *AuthContext
+		server  net.Listener
+	)
+	
+	// ----------start----------设置sshServerConfig----------start----------
+	authctx, err = obtainAuthContext()
+	if err != nil {
+		loggerError.Fatalf("解析authcontext失败..%v", err)
+	}
+	serverConfig := obtainServerConfig(authctx)
 	serverConfig.AddHostKey(authctx.privateKeysSigner)
 	// Once a ServerConfig has been configured, connections can be accepted.
 	// ----------end------------设置sshServerConfig----------end------------
 	
-	// ----------start----------准备sshClient----------start----------
-	cli := New("192.168.0.51", 22, "hanxu", "jjj")
-	cli.connect()
 	serverListenProtocol := "tcp"
-	serverListenHost := "0.0.0.0:1234"
+	serverListenIp := "0.0.0.0"
+	serverListenPort := "1234"
+	serverListenHost := serverListenIp + ":" + serverListenPort
 	//
-	server, err = cli.sshclient.Listen(serverListenProtocol, serverListenHost)
+	// server, err = cli.sshclient.Listen(serverListenProtocol, serverListenHost)
+	
+	server, err = net.ListenTCP("tcp4", &net.TCPAddr{IP: net.IPv4(0, 0, 0, 0), Port: 1234})
+	
 	if err != nil {
-		log.Fatalf("开启sshServer监听失败:[%v],err:%v", serverListenHost, err)
+		loggerError.Fatalf("开启sshServer监听失败:[%v],err:%v", serverListenHost, err)
+	} else {
+		loggerInfo.Printf("开启sshServer成功... 监听: %v://%v \n", serverListenProtocol, serverListenHost)
 	}
 	// // Serve HTTP with your SSH server acting as a reverse proxy.
 	// http.Serve(l, http.HandlerFunc(func(resp http.ResponseWriter, req *http.Request) {
@@ -556,28 +594,111 @@ func testCase2() (err error) {
 	// 	fmt.Fprintf(resp, "hello.world \n")
 	// }))
 	//
-	// ----------end------------准备sshClient----------end------------
-	netconn, err := server.Accept()
-	if err != nil {
-		log.Fatal("failed to accept incoming connection: ", err)
+	// ----------start----------loop-service----------start----------
+	for {
+		netconn, err := server.Accept()
+		if err != nil {
+			loggerError.Printf("failed to accept incoming connection: ", err)
+			continue
+		} else {
+			loggerInfo.Printf("accept conn with client...")
+		}
+		defer func() {
+			exception := recover()
+			loggerError.Printf("发生了错误:%v", exception)
+		}()
+		err = testCase2_ssh_server_handrequest(&netconn, serverConfig)
+		
 	}
+	// ----------end------------loop-service----------end------------
+	
+	return err
+}
+
+func testCase2_ssh_server_handrequest(netconn *net.Conn, serverConfig *ssh.ServerConfig) (err error) {
 	// Before use, a handshake must be performed on the incoming
 	// net.Conn.
 	// 进行握手,与客户端建立ssh连接
-	serverConn, channelHandler, chanReq, err := ssh.NewServerConn(netconn, serverConfig)
+	serverConn, channelNew, chanReq, err := ssh.NewServerConn(*netconn, serverConfig)
 	
 	if err != nil {
-		log.Fatal("failed to handshake: ", err)
+		loggerError.Printf("failed to handshake: ", err)
+		return err
 	}
 	
-	log.Printf("")
-	log.Printf("logged in with key %s", serverConn.Permissions.Extensions["pubkey-fp"])
+	loggerInfo.Printf("客户端请求:ip[%v],clientVer:[%v],sessionId:[%v],user:[%v]", serverConn.RemoteAddr(), serverConn.ClientVersion(), serverConn.SessionID(), serverConn.User())
+	//
+	loggerInfo.Printf("logged in with permissions %v", serverConn.Permissions.Extensions)
+	//
+	// The incoming Request channel must be serviced.为什么是请求的通道作为一个异步服务对象?
+	go ssh.DiscardRequests(chanReq)
 	
+	// Server the incoming Channel channel.
+	//
+	for channelItem := range channelNew {
+		// Channels have a type, depending on the application level
+		// protocol intended. In the case of a shell, the type is
+		// "session" and ServerShell may be used to present a simple
+		// terminal interface.
+		if false == strings.EqualFold(channelItem.ChannelType(), "session") {
+			// 通道类型不是session的拒绝掉,在这个用例中是一个shell, 类型是"session"
+			channelItem.Reject(ssh.UnknownChannelType, "hx:UnknownChannelType:不是有效的shell通道类型,it is not a valid channelType,is support: (session)")
+			continue
+		}
+		var (
+			channel  ssh.Channel
+			requests <-chan *ssh.Request
+		)
+		channel, requests, err = channelItem.Accept()
+		if err != nil {
+			loggerError.Printf("Could not accept channel:%v", err)
+		}
+		// Sessions have out-of-band requests such as "shell",
+		// "pty-req" and "env".  Here we handle only the
+		// "shell" request.
+		go func(in <-chan *ssh.Request) {
+			// item := <-in
+			for reqShell := range in {
+				// var payload []byte
+				// wantreply := reqShell.WantReply
+				// if wantreply {
+				loggerInfo.Printf("reqshell:%v", reqShell)
+				// isok := strings.EqualFold(reqShell.Type, "shell")
+				// reqShell.Reply(isok, payload)
+				reqShell.Reply(true, nil)
+				// } else {
+				// 	loggerInfo.Printf("客户端不需要reply,WantReply:false")
+				// }
+			}
+		}(requests)
+		// 哈哈 这应该就是平常看到的别人实现的交互式终端了.越来越接近底层终端了.
+		// bash环境的PS1变量,应该就是在这个提示符(prompt) > 这里下手的.
+		//
+		term := terminal.NewTerminal(channel, ">")
+		term.Write([]byte("testterminal,hello,terminal,你好. \n"))
+		go func(cliTerminal *terminal.Terminal) {
+			defer channel.Close()
+			loggerInfo.Printf("进入这里了..")
+			for {
+				line, err := cliTerminal.ReadLine()
+				if err != nil {
+					loggerInfo.Printf("又退出了..")
+					break
+				}
+				loggerInfo.Printf("哈哈哈,服务器输出了用户在终端输入的内容:%v \n", line)
+				// 还可以设置自动完成的回调信息
+				// term.AutoCompleteCallback
+				var bufresp []byte
+				bufresp = []byte(fmt.Sprintf("iam a resp:%v \n", line))
+				cliTerminal.Write(bufresp)
+			}
+		}(term)
+	}
 	return nil
 }
 
 func Main() {
 	// runSsh()
 	// testCase1()
-	testCase2()
+	testCase2_ssh_server()
 }
