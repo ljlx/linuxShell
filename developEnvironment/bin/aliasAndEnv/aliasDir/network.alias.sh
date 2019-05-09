@@ -12,7 +12,7 @@
 alias nmap='nmap -A -T4'
 #alias ssh='ssh -p 1113 -i ~/.ssh/localhost.pri '
 #alias scp='scp -P 1113 -i ~/.ssh/localhost.pri '
-alias ssh='ssh -i ~/.ssh/localhost.pri '
-alias scp='scp -i ~/.ssh/localhost.pri '
+alias assh='ssh -i ~/.ssh/localhost.pri '
+alias ascp='scp -i ~/.ssh/localhost.pri '
 #a归档模式,v-verbose详细输出,h-human-readable
 alias rsync='rsync -avh --rsh=ssh'
