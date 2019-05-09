@@ -31,6 +31,7 @@ var (
 
 /*
  关于linux操作GPIO的说明,参考 https://blog.csdn.net/lu_embedded/article/details/53061901
+实例来自 https://www.jianshu.com/p/fe932a1ecceb
  */
 func Main() {
 	os.Args = append(os.Args, "2")
