@@ -13,11 +13,12 @@
 package main
 
 import (
-	"t3/p5_raspberrypi/t1_led/c1_case_led"
+	// "t3/p5_raspberrypi/t1_led/c1_case_led"
 	
+	"t3/p5_raspberrypi/t1_led/c2_case_color_Led"
 )
 
 func main() {
-	c1_case_led.Main()
-	
+	// c1_case_led.Main()
+	c2_case_color_Led.Case2Main()
 }
