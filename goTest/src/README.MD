@@ -62,6 +62,14 @@ SET GOARCH=amd64
 go build main.go
 ```
 
+#### ARM 了解
+> ARM是微处理器行业的一家知名企业，arm处理器以体积小和高性能的优势在嵌入式设备中广泛使用，几乎所有手机都是使用它的。
+  
+  armv6, armv7, armv7s, arm64 是ARM CPU的不同指令集，原则上是向下兼容的。如iPhone4S CPU支持armv7, 但它同时兼容armv6，只是使用armv6指令可能无法充分发挥它的特性。同理iPhone5 CPU支持armv7s，它虽然也兼容armv7，但是却无法进行相关的优化。
+  
+   
+  
+
 
 #### Go环境变量
 > 执行`go env` 可以查看本地go环境变量
@@ -124,3 +132,8 @@ ELF 文件分为如下：
     如果想要ELF二进制程序变小的方法，还可以使用 linux 的strip，以及 UPX 来压缩 ELF 文件。
     推荐一本书《程序员的自我修养-链接、装载与库》链接
 
+
+### Go 调试
+
+#### 远程调试.
+可以使用 ```github.com/go-delve/delve/cmd/dlv ``` 包进行远程调试, 不过目前还不支持32位系统和arm架构. (但是我在issue中看到有人为其新建了分支实现了该问题,但是没测试.)
