@@ -133,6 +133,17 @@ func (led *Led_rgb) Flash(index int, count int) (err error) {
 	return nil
 }
 
+/*
+我的灯,长亮time秒
+ */
+func (led *Led_rgb) light(index int, timex time.Duration) (err error) {
+	ledx := led.getRGB()[index]
+	err = ledx.Out(gpio.High)
+	time.Sleep(time.Second * timex)
+	err = ledx.Out(gpio.Low)
+	return err
+}
+
 func exitSignal(ledrgb *Led_rgb) {
 	// 按照系统api定义接收系统退出信号队列.
 	c := make(chan os.Signal)
@@ -229,18 +240,20 @@ func test3() {
 	//
 	loginfo.Printf("test3==>交替闪.. \n")
 	
-	leds := led.getRGB()
-	go func() {
-		for {
-			for x := range leds {
-				led.Flash(x, 1)
-				// leds[x].Out(gpio.High)
-				// time.Sleep(time.Millisecond * 150)
-				// leds[x].Out(gpio.Low)
-			}
-		}
-	}()
+	// leds := led.getRGB()
+	// go func() {
+	// 	for {
+	// 		for x := range leds {
+	// 			led.Flash(x, 1)
+	// 			// leds[x].Out(gpio.High)
+	// 			// time.Sleep(time.Millisecond * 150)
+	// 			// leds[x].Out(gpio.Low)
+	// 		}
+	// 	}
+	// }()
 	//
+	
+	led.light(1, 30)
 	
 	// led.FlashAll(200)
 	// led.CleanLed()
