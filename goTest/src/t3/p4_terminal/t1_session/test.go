@@ -473,6 +473,20 @@ func obtainAuthPublicKeyCallback(ctx *AuthContext) (func(conn ssh.ConnMetadata, 
 	
 }
 
+func touchDir(filestr string) *os.FileInfo {
+	filedir := filepath.Dir(filestr)
+	dirinfo, err := os.Stat(filedir)
+	if true {
+		return nil
+	}
+	if err != nil {
+		// os.MkdirAll(filedir, )
+	} else {
+		return &dirinfo
+	}
+	return nil
+}
+
 func obtainAuthContext() (authCtx *AuthContext, err error) {
 	ctx := NewAuthContext()
 	// 受信任的客户公钥授权keys,允许这些用户登陆服务器
@@ -481,9 +495,12 @@ func obtainAuthContext() (authCtx *AuthContext, err error) {
 	fmt.Printf("获取当前用户:%v \n", curruser)
 	dir_ssh := filepath.Join(curruser.HomeDir, ".ssh")
 	authkeysFilePath := filepath.Join(dir_ssh, "authorized_keys")
+	touchDir(authkeysFilePath)
 	authkeysBytes, err := ioutil.ReadFile(authkeysFilePath)
 	if err != nil {
-		loggerError.Fatalf("failed to read file [%v],err:%v \n", authkeysFilePath, err)
+		loggerError.Printf("failed to read file [%v],err:%v \n", authkeysFilePath, err)
+		ctx.authPublicKeysMap = make(map[string]*PublicKeyResult)
+		return ctx, nil
 	}
 	// (out PublicKey, comment string, options []string, rest []byte, err error)
 	fmt.Printf("成功获取到授权文件[%v],大小[%v] md5[%x] ,开始进行解析...\n", authkeysFilePath, len(authkeysBytes), md5.Sum(authkeysBytes))
@@ -628,7 +645,11 @@ func testCase2_ssh_server_handrequest(netconn *net.Conn, serverConfig *ssh.Serve
 	
 	loggerInfo.Printf("客户端请求:ip[%v],clientVer:[%v],sessionId:[%v],user:[%v]", serverConn.RemoteAddr(), serverConn.ClientVersion(), serverConn.SessionID(), serverConn.User())
 	//
-	loggerInfo.Printf("logged in with permissions %v", serverConn.Permissions.Extensions)
+	cliPermiss := serverConn.Permissions
+	if cliPermiss != nil {
+		loggerInfo.Printf("logged in with permissions %v", cliPermiss.Extensions)
+	}
+	
 	//
 	// The incoming Request channel must be serviced.为什么是请求的通道作为一个异步服务对象?
 	go ssh.DiscardRequests(chanReq)
