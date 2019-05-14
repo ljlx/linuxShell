@@ -10,14 +10,13 @@
 ---------------------------------------------------
 */
 
-package case1_tcpnet_test
+package case1_test
 
 import (
 	"bufio"
 	"log"
 	"net"
 	"os"
-	"t3/p4_terminal/t2_tcpnet"
 	"testing"
 )
 
@@ -36,7 +35,7 @@ func TestServerListener(t *testing.T) {
 		xip := unitx.ip
 		xport := unitx.port
 		t.Logf("test server listener: ip:%v,port:%v \n", xip, xport)
-		ok, err := case1_tcpnet.ServerListener(&net.TCPAddr{IP: xip, Port: xport})
+		ok, err := ServerListener(&net.TCPAddr{IP: xip, Port: xport})
 		if ! ok {
 			t.Fatalf("test -> 开启服务器监听测试失败:%v ,errMsg:%v \n", unitx, err)
 		}

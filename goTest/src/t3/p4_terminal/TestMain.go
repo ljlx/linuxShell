@@ -19,7 +19,7 @@ import (
 	"os"
 	"reflect"
 	"t3/p4_terminal/t1_session"
-	"t3/p4_terminal/t2_tcpnet"
+	"t3/p4_terminal/t2_tcpnet/case1"
 )
 
 var loginfo = log.New(os.Stdout, "[info]:", log.LstdFlags)
@@ -32,7 +32,7 @@ func testTerminalSession() {
 func test2_tcpnet() {
 	// []byte{0, 0, 0, 0}, 1234},
 	tcpAddr := net.TCPAddr{IP: []byte{0, 0, 0, 0}, Port: 8088}
-	case1_tcpnet.ServerListener(&tcpAddr)
+	case1.ServerListener(&tcpAddr)
 }
 
 func GetTestReader() func() {

@@ -10,7 +10,7 @@
 ---------------------------------------------------
 */
 
-package case1_tcpnet
+package case1
 
 import (
 	"bufio"
