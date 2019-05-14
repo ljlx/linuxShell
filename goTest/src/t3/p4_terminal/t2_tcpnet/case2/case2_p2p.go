@@ -105,13 +105,15 @@ func IntToStringIp2(ipInt int) string {
 func IntToStringIp(ip int) string {
 	for x := 1; x <= 4; x++ {
 		// tmpint := ip & 255
+		loginfo.Printf("IntToStringIp==>二进制字符串%b \n", ip)
 		
 		tmpint := ip & 0xff
 		bitmove := x * 8
-		tmpint = tmpint >> uint64(bitmove)
+		
 		asciiInt := strconv.Itoa(tmpint)
 		
-		loginfo.Printf("%v==>%v \n", x, asciiInt)
+		loginfo.Printf("%v==>%s \n", x, asciiInt)
+		tmpint = tmpint >> uint64(bitmove)
 	}
 	return ""
 }
