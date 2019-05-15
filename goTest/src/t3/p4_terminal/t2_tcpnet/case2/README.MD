@@ -46,6 +46,19 @@
     you resp:hi,server
     >
     
-    ```
+    [user@client]$ netstat -np|grep 192.168.0.51:38726
+    （并非所有进程都能被检测到，所有非本用户的进程信息将不会显示，如果想看到所有信息，则必须切换到 root 用户）
+    tcp        0      1 192.168.0.51:38726      47.52.94.171:8088       FIN_WAIT1   -
     
-5. 
+    [user@client]$ python3 -m http.server 38726
+    Traceback (most recent call last):
+      File "/home/hanxu/anaconda3/lib/python3.6/runpy.py", line 193, in _run_module_as_main
+        "__main__", mod_spec)
+      ......
+        socketserver.TCPServer.server_bind(self)
+      File "/home/hanxu/anaconda3/lib/python3.6/socketserver.py", line 470, in server_bind
+        self.socket.bind(self.server_address)
+        
+    OSError: [Errno 98] Address already in use
+    ```
+5. 这里就要
