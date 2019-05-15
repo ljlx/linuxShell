@@ -47,7 +47,17 @@ var logerr = log.New(os.Stderr, "[err]:", log.LstdFlags)
 
 // ----------end------------const----------end------------
 func ParseTcpAddr(addr string) (tcpaddr *net.TCPAddr, err error) {
-	return nil, nil
+	ipport := strings.Split(addr, ":")
+	// ip
+	intip := StringIpToInt(ipport[0])
+	ip1 := byte((intip >> 24) & 0xff)
+	ip2 := byte((intip >> 16) & 0xff)
+	ip3 := byte((intip >> 8) & 0xff)
+	ip4 := byte((intip) & 0xff)
+	// port
+	port, err := strconv.ParseInt(ipport[1], 10, 16)
+	tcpaddr = &net.TCPAddr{IP: []byte{ip1, ip2, ip3, ip4}, Port: int(port)}
+	return tcpaddr, nil
 }
 
 // func ParseTcpAddr(addr string) (tcpaddr *net.TCPAddr, err error) {
@@ -150,4 +160,13 @@ func IntToStringIpDebug(ip int) string {
 	// 	ip = ip >> uint64(bitmove)
 	// }
 	// return ""
+}
+
+func testp2p() (err error) {
+	
+	// tcpaddr, _ := ParseTcpAddr("0.0.0.0:44444")
+	// listener, err := net.ListenTCP("tcp", tcpaddr)
+	// conn, err := net.DialIP("", nil, nil)
+	// conn.
+	
 }
