@@ -59,6 +59,7 @@ func TestIntToStringIp(t *testing.T) {
 		ipstr := split[0]
 		stringIpToInt := case2_p2p.StringIpToInt(ipstr)
 		//
+		t.Logf("strIp[%v] -> intIp[%v] \n", ipstr, stringIpToInt)
 		stringIp := case2_p2p.IntToStringIp(stringIpToInt)
 		t.Logf("intIp[%v] -> strIp[%v] \n", stringIpToInt, stringIp)
 	}

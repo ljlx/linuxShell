@@ -14,12 +14,12 @@ package case2_p2p
 
 import (
 	"bytes"
+	"fmt"
 	"log"
 	"net"
 	"os"
 	"strconv"
 	"strings"
-	"testing"
 )
 
 // tcp p2p理论理解.
@@ -102,28 +102,52 @@ func IntToStringIp2(ipInt int) string {
 	return buffer.String()
 }
 
+/*
+	4字节int,转化为数字符常用ip形式.
+比如: 180420864 -> 10.193.1.1
+
+*/
 func IntToStringIp(ip int) string {
-	for x := 1; x <= 4; x++ {
-		// tmpint := ip & 255
-		loginfo.Printf("IntToStringIp==>二进制字符串%b \n", ip)
-		
-		tmpint := ip & 0xff
-		bitmove := x * 8
-		
-		asciiInt := strconv.Itoa(tmpint)
-		
-		loginfo.Printf("%v==>%s \n", x, asciiInt)
-		tmpint = tmpint >> uint64(bitmove)
-	}
-	return ""
+	ip1 := (ip >> 24) & 0xff
+	ip2 := (ip >> 16) & 0xff
+	ip3 := (ip >> 8) & 0xff
+	ip4 := ip & 0xff
+	return fmt.Sprintf("%d.%d.%d.%d", ip1, ip2, ip3, ip4)
 }
 
-func TestParseTcpAddr(b testing.B) {
+func IntToStringIpDebug(ip int) string {
+	// 以下提到的范围[x~x],表示的是10进制数字的范围.
+	//
+	// 1. 由于int是4个字节组成的.而ip由每一个'.'号分割的每一个数字范围是[0-255],是由无符号的一个字节(无符号一个字节大小范围是[0-255])组成.(有符号的一个字节所能表示的值是[-127~127] ).
+	// 2. 所以每一个'.'号分割的数字由一个字节8位表示即二进制表示法,范围[00000000~11111111]
+	// 3. 假如有一个ip: 10.193.1.1,其二进制表示:00001010,11000001,00000001,00000001. 转化为10进制数字为:180420864
+	// 4. 求ip2:将上述二进制符往右边移动16位,结果:00000000,00000000,00001010,11000001.
+	// 5. 16进制数字0xff,代表一个字节的全是1位,即 11111111.
+	// 6. 进行与运算.'&' 按照字节的每一位,进行与运算:0&0=0, 1&0=0, 0&1=0 ,1&1=1
+	// 7. 因此将ip2移位后(步骤4)和0xff(步骤5) 进行与运算 ,计算出结果为:00000000,00000000,00000000,11000001. 转成可读10进制数字为: 193
+	//
+	// 具体二进制移位效果和10进制数字.可以使用 程序员计算器app来方便计算得到结果,帮助理解.
+	ip1 := (ip >> 24) & 0xff
+	// ip11 := (ip >> 24)
+	ip2 := (ip >> 16) & 0xff
+	// ip22 := (ip >> 24)
+	ip3 := (ip >> 8) & 0xff
+	// ip33 := (ip >> 8)
+	ip4 := ip & 0xff
+	// print(ip11, ip22, ip33)
+	return fmt.Sprintf("%d.%d.%d.%d", ip1, ip2, ip3, ip4)
 	
-}
-
-func tt() {
-	
-	// net.Listen()
-	// listener, e := net.ListenTCP("tcp", )
+	// for x := 1; x <= 4; x++ {
+	// 	// tmpint := ip & 255
+	// 	loginfo.Printf("IntToStringIp==>二进制字符串%b \n", ip)
+	//
+	// 	tmpint := ip & 0xff
+	// 	bitmove := 8
+	//
+	// 	asciiInt := strconv.Itoa(tmpint)
+	//
+	// 	loginfo.Printf("%v==>%s \n", x, asciiInt)
+	// 	ip = ip >> uint64(bitmove)
+	// }
+	// return ""
 }
