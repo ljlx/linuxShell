@@ -79,6 +79,7 @@ func Mainp2pClient(tagname string) {
 		logerr.Fatalf("写入失败==> \n")
 	}
 	peerData := make([]byte, 1024)
+	// TODO  这里应该是服务端发送的另个客户端的消息.
 	if n, remoteAddr, err := dialUDPConn.ReadFromUDP(peerData); err != nil {
 		logerr.Fatalf("==>client[%v],read err :%v \n", remoteAddr, err)
 	} else {

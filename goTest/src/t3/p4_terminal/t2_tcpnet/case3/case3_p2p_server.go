@@ -13,6 +13,7 @@
 package case3_p2p
 
 import (
+	"encoding/json"
 	"log"
 	"net"
 	"os"
@@ -50,12 +51,18 @@ func loopOpenCliConn(listener *net.UDPConn) {
 			logerr.Printf(" error during read: %v \n ", err)
 		}
 		clientHelloMsg := string(dataBytes[:n])
+		var clientPeerMsg *ClientPeerMsg
+		err = json.Unmarshal(dataBytes[:n], clientPeerMsg)
+		if err != nil {
+			loginfo.Printf("解析json错误==>%v \n", err)
+			
+		}
 		loginfo.Printf("==>客户端远程地址%v,读取%d个字节数据:%v \n", remoteAddr.String(), n, clientHelloMsg)
 		udpAddrsPeers = append(udpAddrsPeers, *remoteAddr)
 		// p2p两个客户端连上来了
 		if len(udpAddrsPeers) == 2 {
 			loginfo.Printf("==>进行UDP打洞, 建立%v <--> %v 的连接 \n", udpAddrsPeers[0].String(), udpAddrsPeers[1].String())
-			
+			// TODO 应该传json结构体到客户端.
 			listener.WriteToUDP([]byte(udpAddrsPeers[0].String()), &udpAddrsPeers[1])
 			listener.WriteToUDP([]byte(udpAddrsPeers[1].String()), &udpAddrsPeers[0])
 			time.Sleep(time.Second * 5)
