@@ -61,4 +61,38 @@
         
     OSError: [Errno 98] Address already in use
     ```
-5. 这里就要
+5. 这个时候我把服务端的进程关掉(/lb可能是因为我服务端没有及时销毁客户端断开的链接吧.),在不断的重复尝试查看连接的状态 ```netstat -np|grep 192.168.0.51:38726```,直到我发现这条连接消失了.我就趁着Net网关还没及时销毁这个内网端口到外网Nat设备的映射信息, 赶紧使用 ``` python3 -m http.server 38726 ``` 来监听住这个内网端口,并且尝试在外网 ``` curl  113.246.87.125:7173 ``` 这个地址,如果这次p2p打洞成功,那么curl 会输出我本地python服务器的响应.
+    ```
+    [user@server]$  curl -v 113.246.87.125:7173
+    *   Trying 113.246.87.125...
+    * TCP_NODELAY set
+    * Connected to 113.246.87.125 (113.246.87.125) port 7173 (#0)
+    > GET / HTTP/1.1
+    > Host: 113.246.87.125:7173
+    > User-Agent: curl/7.63.0
+    > Accept: */*
+    >
+    * HTTP 1.0, assume close after body
+    < HTTP/1.0 200 OK
+    < Server: SimpleHTTP/0.6 Python/3.6.8
+    < Date: Thu, 16 May 2019 01:29:06 GMT
+    < Content-type: text/html; charset=utf-8
+    < Content-Length: 553
+    <
+    <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+    <html>
+    <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Directory listing for /</title>
+    ......
+    </body>
+    </html>
+    * Closing connection 0
+
+    ```
+   如果不幸失败的话,无法连接到这个地址```  113.246.87.125:7173 ```, 就要重复上述的整个过程.
+ ---
+ 6. 
+ 
+ > 总结: 这个过程虽然粗糙简单,而且涉及到tcp协议的相关知识,但是也足以窥见流程是能打通的.能够用代码去实现.
+ 从中也明白, 自己对网络相关的知识欠缺, 不了解tcp的各种状态和属性.需要加强提高啊.
