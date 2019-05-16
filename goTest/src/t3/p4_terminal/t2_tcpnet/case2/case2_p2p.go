@@ -168,5 +168,5 @@ func testp2p() (err error) {
 	// listener, err := net.ListenTCP("tcp", tcpaddr)
 	// conn, err := net.DialIP("", nil, nil)
 	// conn.
-	
+	return nil
 }
