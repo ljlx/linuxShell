@@ -13,12 +13,12 @@
 
 * 编译生成本地平台二进制可执行文件, 不执行
 ```
-    go build main.go
+    go build .
 ```
 
 * 在本地临时目录,编译生成二进制可执行文件,并执行
 ```
-    go run main.go
+    go run .
 ```
 
 * 下载远程环境的包
@@ -34,32 +34,35 @@
   
 * Mac 下编译 Linux 和 Windows 64位可执行程序
 ```
-    CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build main.go
-    CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build main.go
+    CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build .
+    CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build .
 ```
 
 * Linux 下编译 Mac 和 Windows 64位可执行程序
 ```
 
-CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build main.go
+
+CGO_ENABLED=0 GOOS=linux GOARCH=386 go build .
+
+CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build .
 32位架构 Windows
-CGO_ENABLED=0 GOOS=windows GOARCH=386 go build main.go
+CGO_ENABLED=0 GOOS=windows GOARCH=386 go build .
 64位架构 Windows
-CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build main.go
+CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build .
 ARM架构 linux
-CGO_ENABLED=0 GOOS=linux GOARCH=arm go build main.go
+CGO_ENABLED=0 GOOS=linux GOARCH=arm go build .
 ```
 * Windows 下编译 Mac 和 Linux 64位可执行程序
 ```
 SET CGO_ENABLED=0
 SET GOOS=darwin
 SET GOARCH=amd64
-go build main.go
+go build .
 
 SET CGO_ENABLED=0
 SET GOOS=linux
 SET GOARCH=amd64
-go build main.go
+go build .
 ```
 
 #### ARM 了解

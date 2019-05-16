@@ -14,6 +14,7 @@ package testUnitCase
 
 import (
 	"fmt"
+	"github.com/smartystreets/goconvey/convey"
 	"math/rand"
 	// "os"
 	"testing"
@@ -62,6 +63,16 @@ func TestCombination(t *testing.T) {
 		}
 		
 	}
+}
+
+/*
+https://github.com/smartystreets/goconvey
+*/
+func TestAddAB(t *testing.T) {
+	convey.Convey("give some integer with a starting value", t, func() {
+		// x:=1
+		// convey.conv
+	})
 }
 
 // 性能测试

@@ -29,3 +29,7 @@ func combination(m, n int) int {
 	
 	return c
 }
+
+func AddAB(a, b int) int {
+	return a + b
+}
